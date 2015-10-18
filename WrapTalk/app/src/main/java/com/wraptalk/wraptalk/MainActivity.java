@@ -69,8 +69,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        for (int i = 0 ; i < 3 ; i++) {
-
+        for (int i = 0 ; i < 4 ; i++) {
             tabLayout.addTab(tabLayout.newTab().setText("Tab " + i), i);
         }
 
