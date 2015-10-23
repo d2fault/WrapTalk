@@ -25,6 +25,4 @@ public class TabSettingFragment extends android.support.v4.app.Fragment {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_tab_setting, container, false);
     }
-
-
 }

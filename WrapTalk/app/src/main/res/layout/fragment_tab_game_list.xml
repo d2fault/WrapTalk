@@ -2,22 +2,10 @@
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent" tools:context="com.wraptalk.wraptalk.TabGameListFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-
-    <LinearLayout
+    <ListView
+        android:id="@+id/listView_gameList"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
+    </ListView>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="game app list" />
-
-        <ListView
-            android:id="@+id/listView_gameList"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-        </ListView>
-    </LinearLayout>
 </FrameLayout>
