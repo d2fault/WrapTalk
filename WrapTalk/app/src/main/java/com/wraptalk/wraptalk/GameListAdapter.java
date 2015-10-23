@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -57,8 +56,8 @@ public class GameListAdapter extends BaseAdapter {
             viewHolder = new GameListHolder();
             convertView = layoutInflater.inflate(R.layout.layout_game_list, parent, false);
 
-            viewHolder.textView_GameAppName = (TextView) convertView.findViewById(R.id.textView_GameAppName);
-            viewHolder.imageView_GameAppIcon = (ImageView) convertView.findViewById(R.id.imageView_GameAppIcon);
+            viewHolder.textView_gameAppName = (TextView) convertView.findViewById(R.id.textView_gameTitle);
+            //viewHolder.imageView_gameAppIcon = (ImageView) convertView.findViewById(R.id.imageView_gameIcon);
 
             convertView.setTag(viewHolder);
         }
@@ -67,7 +66,7 @@ public class GameListAdapter extends BaseAdapter {
             viewHolder = (GameListHolder) convertView.getTag();
         }
 
-        viewHolder.textView_GameAppName.setText(data.gameAppName);
+        viewHolder.textView_gameAppName.setText(data.gameAppName);
 
         return convertView;
     }

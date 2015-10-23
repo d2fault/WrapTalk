@@ -8,6 +8,6 @@ import android.widget.TextView;
  */
 public class GameListHolder {
 
-    ImageView imageView_GameAppIcon;
-    TextView textView_GameAppName;
+    ImageView imageView_gameAppIcon;
+    TextView textView_gameAppName;
 }
