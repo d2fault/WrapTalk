@@ -57,7 +57,6 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
-
     }
 
 
@@ -118,13 +117,13 @@ public class MainActivity extends AppCompatActivity {
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                    return "SECTION 1";
+                    return "GameApp";
                 case 1:
-                    return "SECTION 2";
+                    return "Category";
                 case 2:
-                    return "SECTION 3";
+                    return "MyChannel";
                 case 3:
-                    return "SECTION 4";
+                    return "Setting";
             }
             return null;
         }

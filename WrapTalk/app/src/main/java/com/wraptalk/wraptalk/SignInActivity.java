@@ -94,8 +94,8 @@ public class SignInActivity extends AppCompatActivity implements LoaderCallbacks
 
         mEmailView = (AutoCompleteTextView) findViewById(R.id.editText_email);
         mPasswordView = (EditText) findViewById(R.id.editText_password);
-        mButtonSignIn = (Button) findViewById(R.id.button_Signin);
-        mButtonSignUp = (Button) findViewById(R.id.button_Signup);
+        mButtonSignIn = (Button) findViewById(R.id.button_signIn);
+        mButtonSignUp = (Button) findViewById(R.id.button_signUp);
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.progress_login);
     }
