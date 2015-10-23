@@ -2,8 +2,9 @@
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent" tools:context="com.wraptalk.wraptalk.TabMyChannelFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView android:layout_width="match_parent" android:layout_height="match_parent"
-        android:text="my channel" />
+    <ListView
+        android:id="@+id/listView_myChannel"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"></ListView>
 
 </FrameLayout>
