@@ -3,25 +3,17 @@
     android:layout_height="match_parent" tools:context="com.wraptalk.wraptalk.TabCategoryFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <LinearLayout
+
+    <GridView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/gridView_category"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:gravity="center"
+        android:horizontalSpacing="4dp"
+        android:numColumns="2"
+        android:padding="4dp"
+        android:scrollbars="none"
+        android:stretchMode="columnWidth"
+        android:verticalSpacing="4dp" />
 
-        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:text="Category" />
-
-        <GridView xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/gridView_category"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:horizontalSpacing="4dp"
-            android:numColumns="2"
-            android:padding="4dp"
-            android:scrollbars="none"
-            android:stretchMode="columnWidth"
-            android:verticalSpacing="4dp" />
-
-    </LinearLayout>
 </FrameLayout>

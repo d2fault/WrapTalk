@@ -50,9 +50,7 @@ public class TabMyChannelFragment extends android.support.v4.app.Fragment {
         data.countUnreadMessage = 85;
         source.add(data);
 
-        customAdapter.setSource(source);
         customAdapter.notifyDataSetChanged();
-
     }
 
     private void initController() {

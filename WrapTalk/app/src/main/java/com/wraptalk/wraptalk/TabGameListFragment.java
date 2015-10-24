@@ -46,9 +46,7 @@ public class TabGameListFragment extends android.support.v4.app.Fragment {
         data.gameAppName = "카카오톡";
         source.add(data);
 
-        customAdapter.setSource(source);
         customAdapter.notifyDataSetChanged();
-
     }
 
     private void initController() {

@@ -47,9 +47,7 @@ public class TabCategoryFragment extends android.support.v4.app.Fragment {
         data.category = "STUDY";
         source.add(data);
 
-        customAdapter.setSource(source);
         customAdapter.notifyDataSetChanged();
-
     }
 
     private void initController() {
