@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="10">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="8"
+            android:padding="8dp"
+            android:orientation="vertical">
+
+            <TextView
+            android:id="@+id/textView_channelTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Channel Title"
+            android:textSize="18dp"
+            android:textColor="#727272" />
+
+            <TextView
+                android:id="@+id/textView_masterNickname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Channel Title"
+                android:textSize="13dp"
+                android:textColor="#727272" />
+        </LinearLayout>
+        <Button
+            android:id="@+id/button_enter"
+            android:focusable="false"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:layout_gravity="center"
+            android:text="ENTER"/>
+    </LinearLayout>
+
+</LinearLayout>
