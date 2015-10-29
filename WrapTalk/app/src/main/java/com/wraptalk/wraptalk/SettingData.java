@@ -6,4 +6,13 @@ package com.wraptalk.wraptalk;
 public class SettingData {
 
     String setting;
+
+    public String getSetting() {
+        return setting;
+    }
+
+    public void setSetting(String setting) {
+        this.setting = setting;
+    }
+
 }

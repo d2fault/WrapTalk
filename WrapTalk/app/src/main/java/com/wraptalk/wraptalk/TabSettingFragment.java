@@ -19,6 +19,7 @@ public class TabSettingFragment extends android.support.v4.app.Fragment {
 
     View view;
     ArrayList<SettingData> source;
+    ArrayList<String> settingList;
     SettingAdapter customAdapter = null;
     ListView listView_result;
 
@@ -38,15 +39,25 @@ public class TabSettingFragment extends android.support.v4.app.Fragment {
 
     private void initModel() {
         source = new ArrayList<>();
+        settingList = new ArrayList<>();
+
+        settingList.add("공지사항");
+        settingList.add("비밀번호 변경");
+        settingList.add("Floating ON/OFF");
+        settingList.add("App Version");
+        settingList.add("로그아웃");
+        settingList.add("회원탈퇴");
+
         listView_result  = (ListView) view.findViewById(R.id.listVeiw_setting);
     }
 
     private void initView() {
-        SettingData data = new SettingData();
 
-        data.setting = "setting1";
-        source.add(data);
-
+        for (int i = 0 ; i < settingList.size() ; i++) {
+            SettingData data = new SettingData();
+            data.setSetting(settingList.get(i));
+            source.add(data);
+        }
         customAdapter.notifyDataSetChanged();
     }
 

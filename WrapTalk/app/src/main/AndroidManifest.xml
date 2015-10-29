@@ -52,8 +52,7 @@
         </activity>
         <activity
             android:name=".ChannelActivity"
-            android:label="@string/title_activity_channel"
-            android:theme="@style/AppTheme.NoActionBar" >
+            android:label="@string/title_activity_channel">
         </activity>
     </application>
 
