@@ -19,7 +19,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
@@ -45,7 +44,6 @@ public class MainActivity extends AppCompatActivity {
     Context context;
 
     String regid;
-    private TextView mDisplay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
