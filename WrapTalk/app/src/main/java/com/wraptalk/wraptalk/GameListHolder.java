@@ -1,5 +1,6 @@
 package com.wraptalk.wraptalk;
 
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -10,4 +11,5 @@ public class GameListHolder {
 
     ImageView imageView_gameAppIcon;
     TextView textView_gameAppName;
+    Button button_regist;
 }

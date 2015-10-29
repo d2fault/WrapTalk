@@ -48,14 +48,12 @@ public class TabGameListFragment extends android.support.v4.app.Fragment {
     }
 
     private void initView() {
-        GameListData data = new GameListData();
-        //source.add(data);
 
         customAdapter.notifyDataSetChanged();
     }
 
     private void initController() {
-        customAdapter = new GameListAdapter(getActivity().getApplicationContext(), source, packageManager);
+        customAdapter = new GameListAdapter(getActivity(), source, packageManager);
         listView_result.setAdapter(customAdapter);
     }
 
@@ -63,17 +61,17 @@ public class TabGameListFragment extends android.support.v4.app.Fragment {
         PackageManager packageManager;
 
         packageManager = getActivity().getPackageManager();
-        List<PackageInfo> packageList = packageManager
+        List<PackageInfo> tempPackageList = packageManager
                 .getInstalledPackages(PackageManager.GET_PERMISSIONS);
 
-        List<PackageInfo> packageList1 = new ArrayList<PackageInfo>();
+        List<PackageInfo> resultPackageList = new ArrayList<>();
 
         /*To filter out System apps*/
-        for(PackageInfo pi : packageList) {
+        for(PackageInfo pi : tempPackageList) {
             GameListData data = new GameListData();
             boolean flag = isSystemPackage(pi);
             if(!flag) {
-                packageList1.add(pi);
+                resultPackageList.add(pi);
                 data.setPackageInfo(pi);
                 source.add(data);
             }
