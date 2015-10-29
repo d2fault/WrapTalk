@@ -1,12 +1,19 @@
 package com.wraptalk.wraptalk;
 
-import android.graphics.drawable.Drawable;
+import android.content.pm.PackageInfo;
 
 /**
  * Created by jiyoungpark on 15. 10. 21..
  */
 public class GameListData {
 
-    String gameAppName;
-    Drawable gameAppIcon;
+    PackageInfo packageInfo;
+
+    public PackageInfo getPackageInfo() {
+        return packageInfo;
+    }
+
+    public void setPackageInfo(PackageInfo packageInfo) {
+        this.packageInfo = packageInfo;
+    }
 }
