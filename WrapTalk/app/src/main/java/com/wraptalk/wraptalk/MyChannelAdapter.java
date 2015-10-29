@@ -55,7 +55,7 @@ public class MyChannelAdapter extends BaseAdapter{
             viewHolder = new MyChannelHolder();
             convertView = layoutInflater.inflate(R.layout.layout_my_channel, parent, false);
 
-            viewHolder.textView_channelTtitle = (TextView) convertView.findViewById(R.id.textView_channelTtitle);
+            viewHolder.textView_myChannelTtitle = (TextView) convertView.findViewById(R.id.textView_myChannelTitle);
             viewHolder.textView_myNickname = (TextView) convertView.findViewById(R.id.textView_myNickname);
             viewHolder.textView_countUnreadMessage = (TextView) convertView.findViewById(R.id.textView_countUnreadMessage);
             //viewHolder.imageView_gameAppIcon = (ImageView) convertView.findViewById(R.id.imageView_gameIcon);
@@ -67,7 +67,7 @@ public class MyChannelAdapter extends BaseAdapter{
             viewHolder = (MyChannelHolder) convertView.getTag();
         }
 
-        viewHolder.textView_channelTtitle.setText(data.channelTitle);
+        viewHolder.textView_myChannelTtitle.setText(data.myChannelTitle);
         viewHolder.textView_myNickname.setText(data.myNickname);
         viewHolder.textView_countUnreadMessage.setText(String.valueOf(data.countUnreadMessage));
 

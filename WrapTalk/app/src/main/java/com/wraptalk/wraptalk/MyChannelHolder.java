@@ -9,7 +9,7 @@ import android.widget.TextView;
 public class MyChannelHolder {
 
     ImageView imageView_gameIcon;
-    TextView textView_channelTtitle;
+    TextView textView_myChannelTtitle;
     TextView textView_myNickname;
     TextView textView_countUnreadMessage;
 }

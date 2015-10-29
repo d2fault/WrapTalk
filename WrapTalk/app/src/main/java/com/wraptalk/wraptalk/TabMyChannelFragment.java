@@ -16,8 +16,6 @@ import java.util.ArrayList;
  */
 public class TabMyChannelFragment extends android.support.v4.app.Fragment {
 
-
-
     View view;
     ArrayList<MyChannelData> source;
     MyChannelAdapter customAdapter = null;
@@ -45,7 +43,7 @@ public class TabMyChannelFragment extends android.support.v4.app.Fragment {
     private void initView() {
         MyChannelData data = new MyChannelData();
 
-        data.channelTitle = "title";
+        data.myChannelTitle = "title";
         data.myNickname = "nickname";
         data.countUnreadMessage = 85;
         source.add(data);

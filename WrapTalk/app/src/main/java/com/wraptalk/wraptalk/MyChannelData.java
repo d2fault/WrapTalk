@@ -5,7 +5,7 @@ package com.wraptalk.wraptalk;
  */
 public class MyChannelData {
     //icon
-    String channelTitle;
+    String myChannelTitle;
     String myNickname;
     int countUnreadMessage;
 }
