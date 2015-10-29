@@ -2,6 +2,7 @@ package com.wraptalk.wraptalk;
 
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -42,7 +43,12 @@ public class TabGameListFragment extends android.support.v4.app.Fragment {
         listView_result.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
                 Log.e("num", String.valueOf(position));
+                if(source.get(position).isFlag()) {
+                    Intent intent = new Intent(getActivity(), ChannelActivity.class);
+                    startActivity(intent);
+                }
             }
         });
         // Inflate the layout for this fragment
@@ -56,7 +62,6 @@ public class TabGameListFragment extends android.support.v4.app.Fragment {
     }
 
     private void initView() {
-
         customAdapter.notifyDataSetChanged();
     }
 
@@ -72,15 +77,14 @@ public class TabGameListFragment extends android.support.v4.app.Fragment {
         List<PackageInfo> tempPackageList = packageManager
                 .getInstalledPackages(PackageManager.GET_PERMISSIONS);
 
-        List<PackageInfo> resultPackageList = new ArrayList<>();
-
         /*To filter out System apps*/
         for(PackageInfo pi : tempPackageList) {
-            GameListData data = new GameListData();
             boolean flag = isSystemPackage(pi);
             if(!flag) {
-                resultPackageList.add(pi);
+                GameListData data = new GameListData();
                 data.setPackageInfo(pi);
+                data.setAppName(packageManager.getApplicationLabel(data.getPackageInfo().applicationInfo).toString());
+                data.setAppIcon(packageManager.getApplicationIcon(data.packageInfo.applicationInfo));
                 source.add(data);
             }
         }

@@ -62,8 +62,6 @@ public class GameListAdapter extends BaseAdapter {
         final GameListHolder viewHolder;
 
         if(convertView == null){
-            data.setAppName(packageManager.getApplicationLabel(data.getPackageInfo().applicationInfo).toString());
-            data.setAppIcon(packageManager.getApplicationIcon(data.packageInfo.applicationInfo));
 
             viewHolder = new GameListHolder();
             convertView = layoutInflater.inflate(R.layout.layout_game_list, parent, false);
