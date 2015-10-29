@@ -96,6 +96,7 @@ public class GameListAdapter extends BaseAdapter {
             }
         });
 
+
         return convertView;
     }
 
