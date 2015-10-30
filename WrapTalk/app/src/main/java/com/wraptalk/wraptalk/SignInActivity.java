@@ -46,7 +46,7 @@ public class SignInActivity extends AppCompatActivity implements LoaderCallbacks
     };
 
     private UserLoginTask mAuthTask = null;
-    private SendPostSignIn sendPostSignIn;
+    //private SendPostSignIn sendPostSignIn;
 
     // UI references.
     private AutoCompleteTextView mEmailView;
@@ -81,11 +81,11 @@ public class SignInActivity extends AppCompatActivity implements LoaderCallbacks
         mButtonSignIn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                sendPostSignIn.execute();
-                Intent intent = new Intent(SignInActivity.this, MainActivity.class);
+                //sendPostSignIn.execute();
+                /*Intent intent = new Intent(SignInActivity.this, MainActivity.class);
                 startActivity(intent);
-                finish();
-                //attemptLogin();
+                finish();*/
+                attemptLogin();
             }
         });
 
@@ -100,7 +100,7 @@ public class SignInActivity extends AppCompatActivity implements LoaderCallbacks
 
     private void Init() {
 
-        sendPostSignIn = new SendPostSignIn();
+        //sendPostSignIn = new ();
 
         mEmailView = (AutoCompleteTextView) findViewById(R.id.editText_email);
         mPasswordView = (EditText) findViewById(R.id.editText_password);
@@ -110,92 +110,6 @@ public class SignInActivity extends AppCompatActivity implements LoaderCallbacks
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.progress_login);
-    }
-
-
-    private class SendPostSignIn extends AsyncTask<Void, Void, String> {
-
-        protected String doInBackground(Void... unused) {
-            String content = null;
-            try {
-                content = executeClient();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return content;
-        }
-
-        protected void onPostExecute(String result) {
-            // 모두 작업을 마치고 실행할 일 (메소드 등등)
-
-        }
-
-        // 실제 전송하는 부분
-        public String executeClient() throws IOException {
-
-            String body = "user_id=abcd@b.com&user_pw=1234&device_id=temp&gcm_id=temp";
-
-            URL url = new URL("http://133.130.113.101:7010/user/login?" + body);
-
-            // 전송하는 부분
-
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("POST");
-            // OutputStream으로 POST 데이터를 넘겨주겠다는 옵션.
-            conn.setDoOutput(true);
-            // InputStream으로 서버로 부터 응답을 받겠다는 옵션.
-            conn.setDoInput(true);
-
-
-
-            try (OutputStream os = conn.getOutputStream();) {
-                os.write(body.getBytes());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            try(
-                    InputStream is = conn.getInputStream();
-                    ByteArrayOutputStream baos = new ByteArrayOutputStream(40960);
-            ) {
-
-                // 데이터 받는 부분
-
-                byte tmpRead[] = new byte[10240];
-
-                while(true) {
-                    int nRead = is.read(tmpRead);
-                    if(nRead == -1)
-                        break;
-                    baos.write(tmpRead, 0, nRead);
-                }
-
-                byte readData[] = baos.toByteArray();
-                String strData = new String(readData);
-
-                Log.e("서버에서 받은 내용", strData);
-
-//                OutputStreamWriter osw = new OutputStreamWriter(conn.getOutputStream());
-//                osw.write(body);
-//                osw.flush();
-//
-//                InputStreamReader tmp = new InputStreamReader(conn.getInputStream(), "UTF-8");
-//                BufferedReader reader = new BufferedReader(tmp);
-//                StringBuilder builder = new StringBuilder();
-//                String str;
-//
-//                while ((str = reader.readLine()) != null) {
-//                    builder.append(str);
-//                }
-//                sResult = builder.toString();
-
-
-            } catch (Exception e) {
-                e.printStackTrace();
-
-            }
-            return null;
-        }
     }
 
     private void populateAutoComplete() {
@@ -346,7 +260,7 @@ public class SignInActivity extends AppCompatActivity implements LoaderCallbacks
         mEmailView.setAdapter(adapter);
     }
 
-    public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
+    public class UserLoginTask extends AsyncTask<Void, Void, String> {
 
         private final String mEmail;
         private final String mPassword;
@@ -357,34 +271,40 @@ public class SignInActivity extends AppCompatActivity implements LoaderCallbacks
         }
 
         @Override
-        protected Boolean doInBackground(Void... params) {
+        protected String doInBackground(Void... params) {
             // TODO: attempt authentication against a network service.
+            String content = null;
 
             try {
                 // Simulate network access.
+                content = executeClient();
                 Thread.sleep(2000);
             } catch (InterruptedException e) {
-                return false;
+                return content;
+            } catch (IOException e) {
+                e.printStackTrace();
             }
 
             for (String credential : DUMMY_CREDENTIALS) {
                 String[] pieces = credential.split(":");
                 if (pieces[0].equals(mEmail)) {
                     // Account exists, return true if the password matches.
-                    return pieces[1].equals(mPassword);
+                    return content;
                 }
             }
 
             // TODO: register the new account here.
-            return true;
+            return content;
         }
 
         @Override
-        protected void onPostExecute(final Boolean success) {
+        protected void onPostExecute(String result) {
             mAuthTask = null;
             showProgress(false);
 
-            if (success) {
+            if (result.equals("true")) {
+                Intent intent = new Intent(SignInActivity.this, MainActivity.class);
+                startActivity(intent);
                 finish();
             } else {
                 mPasswordView.setError("This password is incorrect");
@@ -396,6 +316,79 @@ public class SignInActivity extends AppCompatActivity implements LoaderCallbacks
         protected void onCancelled() {
             mAuthTask = null;
             showProgress(false);
+        }
+
+        public String executeClient() throws IOException {
+
+            String body = null;
+            body = "user_id=" + mEmail + "user_pw=" + mPassword + "device_id=" + "temp" + "gcm_id" + "temp";
+
+            URL url = new URL("http://133.130.113.101:7010/user/login?" + body);
+
+            // 전송하는 부분
+
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("POST");
+            // OutputStream으로 POST 데이터를 넘겨주겠다는 옵션.
+            conn.setDoOutput(true);
+            // InputStream으로 서버로 부터 응답을 받겠다는 옵션.
+            conn.setDoInput(true);
+
+
+            try (OutputStream os = conn.getOutputStream();) {
+                os.write(body.getBytes());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            try (
+                    InputStream is = conn.getInputStream();
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream(40960);
+            ) {
+                // 데이터 받는 부분
+                byte tmpRead[] = new byte[10240];
+
+                while (true) {
+                    int nRead = is.read(tmpRead);
+                    if (nRead == -1)
+                        break;
+                    baos.write(tmpRead, 0, nRead);
+                }
+
+                byte readData[] = baos.toByteArray();
+                String strData = new String(readData);
+
+                if (!strData.contains("login success")) {
+                    Log.e("Login 결과", "성공");
+                    return "true";
+                } else {
+                    Log.e("Login 결과", "실패");
+                    return "false";
+                }
+
+                //Log.e("서버에서 받은 내용", strData);
+
+//                OutputStreamWriter osw = new OutputStreamWriter(conn.getOutputStream());
+//                osw.write(body);
+//                osw.flush();
+//
+//                InputStreamReader tmp = new InputStreamReader(conn.getInputStream(), "UTF-8");
+//                BufferedReader reader = new BufferedReader(tmp);
+//                StringBuilder builder = new StringBuilder();
+//                String str;
+//
+//                while ((str = reader.readLine()) != null) {
+//                    builder.append(str);
+//                }
+//                sResult = builder.toString();
+
+
+            } catch (Exception e) {
+                e.printStackTrace();
+
+            }
+
+            return "false";
         }
     }
 }

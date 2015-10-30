@@ -71,7 +71,7 @@ public class SignUpActivity extends AppCompatActivity {
         // 실제 전송하는 부분
         public String executeClient() throws IOException {
 
-            String body = "user_id=abcde@b.com&user_pw=1234&device_id=temp&gcm_id=temp";
+            String body = "user_id=abcde@b.com&user_pw=123456&device_id=temp&gcm_id=temp";
 
             URL url = new URL("http://133.130.113.101:7010/user/join?" + body);
 
