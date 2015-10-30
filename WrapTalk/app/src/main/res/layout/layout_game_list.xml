@@ -18,18 +18,19 @@
 
             <ImageView
                 android:id="@+id/imageView_gameIcon"
-                android:layout_width="45dp"
-                android:layout_height="45dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:paddingLeft="5dp"
                 android:src="@mipmap/ic_launcher"/>
             <TextView
                 android:id="@+id/textView_gameTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="10dp"
+                android:paddingLeft="10dp"
                 android:layout_gravity="center"
                 android:text="Game Title"
-                android:textSize="22dp"
-                android:textColor="#727272" />
+                android:textSize="15dp"
+                android:textColor="#000000" />
         </LinearLayout>
         <Button
             android:id="@+id/button_regist"

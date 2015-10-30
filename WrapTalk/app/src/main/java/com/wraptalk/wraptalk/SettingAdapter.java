@@ -56,6 +56,9 @@ public class SettingAdapter extends BaseAdapter {
             if(position == 2) {
                 convertView = layoutInflater.inflate(R.layout.layout_setting_switch, parent, false);
             }
+            else if(position == 4) {
+                convertView = layoutInflater.inflate(R.layout.layout_setting_version, parent, false);
+            }
             else {
                 convertView = layoutInflater.inflate(R.layout.layout_setting, parent, false);
             }
