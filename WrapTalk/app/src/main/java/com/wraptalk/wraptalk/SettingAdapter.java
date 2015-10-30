@@ -51,9 +51,14 @@ public class SettingAdapter extends BaseAdapter {
         SettingHolder viewHolder;
 
         if(convertView == null){
-
             viewHolder = new SettingHolder();
-            convertView = layoutInflater.inflate(R.layout.layout_setting, parent, false);
+
+            if(position == 2) {
+                convertView = layoutInflater.inflate(R.layout.layout_setting_switch, parent, false);
+            }
+            else {
+                convertView = layoutInflater.inflate(R.layout.layout_setting, parent, false);
+            }
 
             viewHolder.textView_setting = (TextView) convertView.findViewById(R.id.textView_setting);
 

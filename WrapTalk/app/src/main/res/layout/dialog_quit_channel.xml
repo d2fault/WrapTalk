@@ -8,9 +8,8 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:text="채널에서 나오시겠습니까?
-채팅방에 있던 데이터가 모두 삭제됩니다."
-        android:textSize="15dp"
+        android:text="채널에서 나오시겠습니까?\n채팅방에 있던 데이터가 모두 삭제됩니다."
+        android:textSize="16dp"
         android:layout_gravity="center"
         android:gravity="center"/>
 

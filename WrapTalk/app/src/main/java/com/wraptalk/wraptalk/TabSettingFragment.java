@@ -44,6 +44,7 @@ public class TabSettingFragment extends android.support.v4.app.Fragment {
         settingList.add("공지사항");
         settingList.add("비밀번호 변경");
         settingList.add("Floating ON/OFF");
+        settingList.add("투명도 변경");
         settingList.add("App Version");
         settingList.add("로그아웃");
         settingList.add("회원탈퇴");
