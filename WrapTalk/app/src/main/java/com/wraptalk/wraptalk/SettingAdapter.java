@@ -50,30 +50,28 @@ public class SettingAdapter extends BaseAdapter {
         SettingData data = (SettingData) getItem(position);
         SettingHolder viewHolder;
 
-        if(convertView == null){
+        if (convertView == null) {
             viewHolder = new SettingHolder();
 
-            if(position == 2) {
+            if (position == 3) {
                 convertView = layoutInflater.inflate(R.layout.layout_setting_switch, parent, false);
-            }
-            else if(position == 4) {
+            } else if (position == 4) {
                 convertView = layoutInflater.inflate(R.layout.layout_setting_version, parent, false);
-            }
-            else {
+            } else {
                 convertView = layoutInflater.inflate(R.layout.layout_setting, parent, false);
             }
 
             viewHolder.textView_setting = (TextView) convertView.findViewById(R.id.textView_setting);
 
             convertView.setTag(viewHolder);
-        }
-
-        else {
+        } else {
             viewHolder = (SettingHolder) convertView.getTag();
         }
 
         viewHolder.textView_setting.setText(data.setting);
 
+
         return convertView;
     }
 }
+

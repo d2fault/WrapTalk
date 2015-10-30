@@ -8,7 +8,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:text="채널에 가입하시겠습니까?"
+        android:text="WrapTalk에서 로그아웃 하시겠습니까?"
         android:textSize="16dp"
         android:layout_gravity="center"
         android:gravity="center"/>

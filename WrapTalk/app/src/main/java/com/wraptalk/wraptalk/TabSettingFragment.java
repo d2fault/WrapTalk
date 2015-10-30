@@ -2,10 +2,13 @@ package com.wraptalk.wraptalk;
 
 
 import android.app.Fragment;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -33,6 +36,18 @@ public class TabSettingFragment extends android.support.v4.app.Fragment {
         initController();
         initView();
 
+        listView_result.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if (position == source.size() - 1) {
+                    onClickLogout();
+                }
+                else if(position == source.size()) {
+                    onClickQuit();
+                }
+            }
+        });
+
         // Inflate the layout for this fragment
         return view;
     }
@@ -42,19 +57,20 @@ public class TabSettingFragment extends android.support.v4.app.Fragment {
         settingList = new ArrayList<>();
 
         settingList.add("공지사항");
-        settingList.add("비밀번호 변경");
-        settingList.add("Floating ON/OFF");
+        settingList.add("채팅방 즐겨찾기 관리");
         settingList.add("투명도 변경");
+        settingList.add("Floating ON/OFF");
         settingList.add("App Version");
+        settingList.add("비밀번호 변경");
         settingList.add("로그아웃");
         settingList.add("회원탈퇴");
 
-        listView_result  = (ListView) view.findViewById(R.id.listVeiw_setting);
+        listView_result = (ListView) view.findViewById(R.id.listVeiw_setting);
     }
 
     private void initView() {
 
-        for (int i = 0 ; i < settingList.size() ; i++) {
+        for (int i = 0; i < settingList.size(); i++) {
             SettingData data = new SettingData();
             data.setSetting(settingList.get(i));
             source.add(data);
@@ -71,4 +87,68 @@ public class TabSettingFragment extends android.support.v4.app.Fragment {
         // Required empty public constructor
     }
 
+    public void onClickLogout() {
+        //res폴더>>layout폴더>>dialog_addmember.xml 레이아웃 리소스 파일로 View 객체 생성
+        //Dialog의 listener에서 사용하기 위해 final로 참조변수 선언
+
+        final View dialogView = getActivity().getLayoutInflater().inflate(R.layout.dialog_logout_wraptalk, null);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+        builder.setView(dialogView);
+
+        builder.setPositiveButton("LOGOUT", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        });
+
+        builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        });
+
+        //설정한 값으로 AlertDialog 객체 생성
+        AlertDialog dialog = builder.create();
+
+        //Dialog의 바깥쪽을 터치했을 때 Dialog를 없앨지 설정
+        dialog.setCanceledOnTouchOutside(false);//없어지지 않도록 설정
+
+        //Dialog 보이기
+        dialog.show();
+    }
+
+
+    public void onClickQuit() {
+        //res폴더>>layout폴더>>dialog_addmember.xml 레이아웃 리소스 파일로 View 객체 생성
+        //Dialog의 listener에서 사용하기 위해 final로 참조변수 선언
+
+        final View dialogView = getActivity().getLayoutInflater().inflate(R.layout.dialog_quit_wraptalk, null);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+        builder.setView(dialogView);
+
+        builder.setPositiveButton("LOGOUT", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        });
+
+        builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        });
+
+        //설정한 값으로 AlertDialog 객체 생성
+        AlertDialog dialog = builder.create();
+
+        //Dialog의 바깥쪽을 터치했을 때 Dialog를 없앨지 설정
+        dialog.setCanceledOnTouchOutside(false);//없어지지 않도록 설정
+
+        //Dialog 보이기
+        dialog.show();
+    }
 }

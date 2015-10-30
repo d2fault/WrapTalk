@@ -150,7 +150,7 @@ public class GameListAdapter extends BaseAdapter {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 data.setFlag(false);
-                viewHolder.button_regist.setText("ADD");
+                viewHolder.button_regist.setText("SUB");
             }
         });
 
