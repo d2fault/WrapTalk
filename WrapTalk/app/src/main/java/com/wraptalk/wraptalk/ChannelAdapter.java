@@ -1,8 +1,8 @@
 package com.wraptalk.wraptalk;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +12,8 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+
+//import android.support.v7.app.AlertDialog;
 
 /**
  * Created by jiyoungpark on 15. 10. 30..
@@ -96,7 +98,7 @@ public class ChannelAdapter extends BaseAdapter{
 
         final View dialogView = layoutInflater.inflate(R.layout.dialog_join_channel, null);
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(context.getApplicationContext());
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
         builder.setView(dialogView);
 
