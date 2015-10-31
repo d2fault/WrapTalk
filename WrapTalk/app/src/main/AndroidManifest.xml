@@ -52,7 +52,9 @@
         </activity>
         <activity
             android:name=".ChannelActivity"
-            android:label="@string/title_activity_channel">
+            android:label="@string/title_activity_channel" >
+        </activity>
+        <activity android:name=".NoticeActivity" >
         </activity>
     </application>
 

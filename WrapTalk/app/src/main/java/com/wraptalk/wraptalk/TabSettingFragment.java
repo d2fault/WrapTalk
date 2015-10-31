@@ -3,6 +3,7 @@ package com.wraptalk.wraptalk;
 
 import android.app.Fragment;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
@@ -39,7 +40,11 @@ public class TabSettingFragment extends android.support.v4.app.Fragment {
         listView_result.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (position == settingList.size() - 2) {
+                if(position == 0) {
+                    Intent intent = new Intent(getActivity(), NoticeActivity.class);
+                    startActivity(intent);
+                }
+                else if (position == settingList.size() - 2) {
                     onClickLogout();
                 }
                 else if(position == settingList.size() - 1) {
