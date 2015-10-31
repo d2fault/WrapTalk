@@ -39,10 +39,10 @@ public class TabSettingFragment extends android.support.v4.app.Fragment {
         listView_result.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (position == source.size() - 1) {
+                if (position == settingList.size() - 2) {
                     onClickLogout();
                 }
-                else if(position == source.size()) {
+                else if(position == settingList.size() - 1) {
                     onClickQuit();
                 }
             }
@@ -130,7 +130,7 @@ public class TabSettingFragment extends android.support.v4.app.Fragment {
 
         builder.setView(dialogView);
 
-        builder.setPositiveButton("LOGOUT", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("탈퇴하기", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
             }
