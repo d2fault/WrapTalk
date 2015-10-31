@@ -9,7 +9,6 @@ import java.util.ArrayList;
 
 public class ChannelActivity extends AppCompatActivity {
 
-    public static ChannelActivity thisObj;
     View view;
     ArrayList<ChannelData> source;
     ChannelAdapter customAdapter = null;
@@ -19,7 +18,6 @@ public class ChannelActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_channel);
-        thisObj = this;
         initModel();
         initController();
         initView();

@@ -75,6 +75,9 @@ public class ChannelAdapter extends BaseAdapter{
             viewHolder = (ChannelHolder) convertView.getTag();
         }
 
+        viewHolder.textView_channelTitle.setText(data.getChannelName());
+        viewHolder.textView_masterNickname.setText(data.getMasterNickname());
+
         viewHolder.button_enter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -87,7 +90,6 @@ public class ChannelAdapter extends BaseAdapter{
                 Log.e("listener", String.valueOf(position));
             }
         });
-
 
         return convertView;
     }
