@@ -42,7 +42,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".SignInActivity"
             android:label="@string/app_name" >
@@ -59,6 +58,8 @@
             android:label="@string/title_activity_channel" >
         </activity>
         <activity android:name=".NoticeActivity" >
+        </activity>
+        <activity android:name=".ChattingActivity" >
         </activity>
     </application>
 

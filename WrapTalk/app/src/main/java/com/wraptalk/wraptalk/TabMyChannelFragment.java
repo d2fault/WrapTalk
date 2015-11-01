@@ -2,10 +2,12 @@ package com.wraptalk.wraptalk;
 
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -32,6 +34,14 @@ public class TabMyChannelFragment extends android.support.v4.app.Fragment {
         initModel();
         initController();
         initView();
+
+        listView_result.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(getActivity(), ChattingActivity.class);
+                startActivity(intent);
+            }
+        });
 
         // Inflate the layout for this fragment
         return view;

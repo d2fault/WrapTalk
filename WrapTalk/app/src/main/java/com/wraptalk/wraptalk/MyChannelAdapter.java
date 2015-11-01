@@ -58,7 +58,6 @@ public class MyChannelAdapter extends BaseAdapter{
             viewHolder.textView_myChannelTtitle = (TextView) convertView.findViewById(R.id.textView_myChannelTitle);
             viewHolder.textView_myNickname = (TextView) convertView.findViewById(R.id.textView_myNickname);
             viewHolder.textView_countUnreadMessage = (TextView) convertView.findViewById(R.id.textView_countUnreadMessage);
-            //viewHolder.imageView_gameAppIcon = (ImageView) convertView.findViewById(R.id.imageView_gameIcon);
 
             convertView.setTag(viewHolder);
         }
