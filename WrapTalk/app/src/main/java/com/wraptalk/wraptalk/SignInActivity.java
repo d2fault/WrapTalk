@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.LoaderManager.LoaderCallbacks;
+import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
@@ -14,6 +15,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
+import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -57,11 +59,18 @@ public class SignInActivity extends AppCompatActivity implements LoaderCallbacks
     Button mButtonSignIn;
     Button mButtonSignUp;
 
+    UserData data;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
         // Set up the login form.
+
+        Intent intent = getIntent();
+        data = intent.getParcelableExtra("userData");
+
+        Log.e("userData", data.toString());
 
         Init();
 
@@ -93,6 +102,7 @@ public class SignInActivity extends AppCompatActivity implements LoaderCallbacks
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(SignInActivity.this, SignUpActivity.class);
+                intent.putExtra("userData", data);
                 startActivity(intent);
             }
         });
@@ -309,6 +319,7 @@ public class SignInActivity extends AppCompatActivity implements LoaderCallbacks
             } else {
                 mPasswordView.setError("This password is incorrect");
                 mPasswordView.requestFocus();
+
             }
         }
 
@@ -321,9 +332,13 @@ public class SignInActivity extends AppCompatActivity implements LoaderCallbacks
         public String executeClient() throws IOException {
 
             String body = null;
-            body = "user_id=" + mEmail + "user_pw=" + mPassword + "device_id=" + "temp" + "gcm_id" + "temp";
+
+            TelephonyManager tm =(TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
+
+            body = "user_id=" + mEmail + "&user_pw=" + mPassword + "&device_id=" + data.getDeviceId() + "&gcm_id=" + data.getGcmKey();
 
             URL url = new URL("http://133.130.113.101:7010/user/login?" + body);
+            Log.e("서버에 보내는 내용", url.toString());
 
             // 전송하는 부분
 
@@ -358,7 +373,9 @@ public class SignInActivity extends AppCompatActivity implements LoaderCallbacks
                 byte readData[] = baos.toByteArray();
                 String strData = new String(readData);
 
-                if (!strData.contains("login success")) {
+                Log.e("서버에서 받은 내용", strData);
+
+                if (strData.contains("login success")) {
                     Log.e("Login 결과", "성공");
                     return "true";
                 } else {
@@ -366,7 +383,7 @@ public class SignInActivity extends AppCompatActivity implements LoaderCallbacks
                     return "false";
                 }
 
-                //Log.e("서버에서 받은 내용", strData);
+
 
 //                OutputStreamWriter osw = new OutputStreamWriter(conn.getOutputStream());
 //                osw.write(body);
@@ -387,6 +404,7 @@ public class SignInActivity extends AppCompatActivity implements LoaderCallbacks
                 e.printStackTrace();
 
             }
+
 
             return "false";
         }

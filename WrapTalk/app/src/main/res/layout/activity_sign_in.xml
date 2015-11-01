@@ -23,7 +23,7 @@
                 <AutoCompleteTextView android:id="@+id/editText_email" android:layout_width="match_parent"
                     android:layout_height="wrap_content" android:hint="Email"
                     android:inputType="textEmailAddress" android:maxLines="1"
-                    android:text="abcde@b.com"
+                    android:text="ab@a.com"
                     android:singleLine="true" />
 
             </android.support.design.widget.TextInputLayout>
@@ -37,7 +37,7 @@
                     android:imeActionLabel="Password is too short"
                     android:imeOptions="actionUnspecified" android:inputType="textPassword"
                     android:maxLines="1"
-                    android:text="123456" android:singleLine="true" />
+                    android:text="aaaaaa" android:singleLine="true" />
 
             </android.support.design.widget.TextInputLayout>
 

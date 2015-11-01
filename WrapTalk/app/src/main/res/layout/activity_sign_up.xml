@@ -7,14 +7,14 @@
     android:paddingTop="@dimen/activity_vertical_margin" tools:context=".LoginActivity">
 
     <!-- Login progress -->
-    <ProgressBar android:id="@+id/progress_login" style="?android:attr/progressBarStyleLarge"
+    <ProgressBar android:id="@+id/progress_signup" style="?android:attr/progressBarStyleLarge"
         android:layout_width="wrap_content" android:layout_height="wrap_content"
         android:layout_marginBottom="8dp" android:visibility="gone" />
 
-    <ScrollView android:id="@+id/login_form" android:layout_width="match_parent"
+    <ScrollView android:id="@+id/signup_form" android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <LinearLayout android:id="@+id/email_login_form" android:layout_width="match_parent"
+        <LinearLayout android:id="@+id/email_signup_form" android:layout_width="match_parent"
             android:layout_height="wrap_content" android:orientation="vertical">
 
             <android.support.design.widget.TextInputLayout android:layout_width="match_parent"
@@ -44,7 +44,7 @@
 
                 <EditText android:id="@+id/editText_password2" android:layout_width="match_parent"
                     android:layout_height="wrap_content" android:hint="Password"
-                    android:imeActionId="@+id/login"
+                    android:imeActionId="@+id/signup"
                     android:imeActionLabel="Password is too short"
                     android:imeOptions="actionUnspecified" android:inputType="textPassword"
                     android:maxLines="1" android:singleLine="true" />
