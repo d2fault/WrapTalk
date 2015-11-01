@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="300dp"
+    android:layout_height="200dp"
+    android:orientation="vertical"
+    android:padding="10dp"
+    android:gravity="center">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="채팅창의 투명도를 조정해주세요."/>
+    <SeekBar
+        android:id="@+id/seekBar_opacity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="채널에 가입하시겠습니까?"
+        android:textSize="16dp" />
+</LinearLayout>

@@ -42,16 +42,28 @@ public class TabSettingFragment extends android.support.v4.app.Fragment {
         listView_result.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if(position == 0) {
+            switch (position) {
+
+                case 0:
                     Intent intent = new Intent(getActivity(), NoticeActivity.class);
                     startActivity(intent);
-                }
-                else if (position == settingList.size() - 2) {
+                    break;
+                case 1:
+                    break;
+                case 2:
+                    onClickOpacity();
+                    break;
+                case 5:
+                    break;
+                case 6:
                     onClickLogout();
-                }
-                else if(position == settingList.size() - 1) {
+                    break;
+                case 7:
                     onClickQuit();
-                }
+                    break;
+                default:
+                    break;
+            }
             }
         });
 
@@ -92,6 +104,38 @@ public class TabSettingFragment extends android.support.v4.app.Fragment {
 
     public TabSettingFragment() {
         // Required empty public constructor
+    }
+
+    public void onClickOpacity() {
+        //res폴더>>layout폴더>>dialog_addmember.xml 레이아웃 리소스 파일로 View 객체 생성
+        //Dialog의 listener에서 사용하기 위해 final로 참조변수 선언
+
+        final View dialogView = getActivity().getLayoutInflater().inflate(R.layout.dialog_channel_window_opacity, null);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+        builder.setView(dialogView);
+
+        builder.setPositiveButton("설정하기", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        });
+
+        builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        });
+
+        //설정한 값으로 AlertDialog 객체 생성
+        AlertDialog dialog = builder.create();
+
+        //Dialog의 바깥쪽을 터치했을 때 Dialog를 없앨지 설정
+        dialog.setCanceledOnTouchOutside(false);//없어지지 않도록 설정
+
+        //Dialog 보이기
+        dialog.show();
     }
 
     public void onClickLogout() {
