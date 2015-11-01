@@ -27,6 +27,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -90,10 +91,6 @@ public class SignInActivity extends AppCompatActivity implements LoaderCallbacks
         mButtonSignIn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                //sendPostSignIn.execute();
-                /*Intent intent = new Intent(SignInActivity.this, MainActivity.class);
-                startActivity(intent);
-                finish();*/
                 attemptLogin();
             }
         });
@@ -316,10 +313,14 @@ public class SignInActivity extends AppCompatActivity implements LoaderCallbacks
                 Intent intent = new Intent(SignInActivity.this, MainActivity.class);
                 startActivity(intent);
                 finish();
-            } else {
+            }
+            else if(result.equals("fail")){
                 mPasswordView.setError("This password is incorrect");
                 mPasswordView.requestFocus();
 
+            }
+            else {
+                Toast.makeText(getApplicationContext(), "서버와의 접속이 원활하지 않습니다.", Toast.LENGTH_SHORT).show();
             }
         }
 

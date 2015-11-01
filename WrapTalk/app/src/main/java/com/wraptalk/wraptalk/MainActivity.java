@@ -106,11 +106,11 @@ public class MainActivity extends AppCompatActivity {
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                    return "GameApp";
+                    return "Game App";
                 case 1:
                     return "Category";
                 case 2:
-                    return "MyChannel";
+                    return "Channels";
                 case 3:
                     return "Setting";
             }
