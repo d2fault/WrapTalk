@@ -27,6 +27,8 @@ public class TabMyChannelFragment extends android.support.v4.app.Fragment {
 
         view = inflater.inflate(R.layout.fragment_tab_my_channel, container, false);
 
+        //((MainActivity) getActivity()).getSupportActionBar().setTitle("c");
+
         initModel();
         initController();
         initView();

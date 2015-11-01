@@ -28,13 +28,13 @@ public class TabCategoryFragment extends android.support.v4.app.Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         view = inflater.inflate(R.layout.fragment_tab_category, container, false);
+
+        //((MainActivity) getActivity()).getSupportActionBar().setTitle("b");
 
         initModel();
         initController();
         initView();
-
 
         gridView_result.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

@@ -35,6 +35,9 @@ public class TabGameListFragment extends android.support.v4.app.Fragment {
 
         view = inflater.inflate(R.layout.fragment_tab_game_list, container, false);
 
+        //((MainActivity) getActivity()).getSupportActionBar().setTitle("a");
+
+
         initModel();
         getInstalledApplication();
         initController();

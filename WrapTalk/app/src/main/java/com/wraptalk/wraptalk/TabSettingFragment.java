@@ -30,8 +30,10 @@ public class TabSettingFragment extends android.support.v4.app.Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        //((MainActivity) getActivity()).getSupportActionBar().setTitle("d");
 
         view = inflater.inflate(R.layout.fragment_tab_setting, container, false);
+
 
         initModel();
         initController();
