@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -109,12 +110,27 @@ public class GameListAdapter extends BaseAdapter {
         builder.setIcon(data.getAppIcon());
         builder.setTitle(data.getAppName());
         builder.setView(dialogView);
+        dialogView.getTextAlignment();
 
         builder.setPositiveButton("SET", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                data.setFlag(true);
-                viewHolder.button_regist.setText("SUB");
+
+                EditText editText = (EditText)dialogView.findViewById(R.id.editText_nickname);
+                String url = "http://133.130.113.101:7010/user/registApp?" +
+                        "token=" + UserData.getInstance().token + "&app_id=" + data.getPackageInfo().applicationInfo.packageName + "&user_nick=" + editText.getText().toString();
+
+                RequestUtil.asyncHttp(url, new OnRequest() {
+                    @Override
+                    public void onSuccess(String url, byte[] receiveData) {
+                        data.setFlag(true);
+                        viewHolder.button_regist.setText("SUB");
+                    }
+
+                    @Override
+                    public void onFail(String url, String error) {
+                    }
+                });
             }
         });
 
@@ -146,7 +162,7 @@ public class GameListAdapter extends BaseAdapter {
         builder.setTitle(data.getAppName());
         builder.setView(dialogView);
 
-        builder.setPositiveButton("SET", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("SUB", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 data.setFlag(false);
