@@ -64,7 +64,7 @@ public class ChannelAdapter extends BaseAdapter{
             convertView = layoutInflater.inflate(R.layout.layout_channel, parent, false);
 
             viewHolder.textView_channelTitle = (TextView) convertView.findViewById(R.id.textView_channelTitle);
-            viewHolder.textView_masterNickname = (TextView) convertView.findViewById(R.id.textView_masterNickname);
+            viewHolder.textView_masterNickname = (TextView) convertView.findViewById(R.id.textView_userCount);
 
             viewHolder.button_enter = (Button) convertView.findViewById(R.id.button_enter);
 
@@ -76,7 +76,7 @@ public class ChannelAdapter extends BaseAdapter{
         }
 
         viewHolder.textView_channelTitle.setText(data.getChannelName());
-        viewHolder.textView_masterNickname.setText(data.getMasterNickname());
+        viewHolder.textView_masterNickname.setText(data.getuserCount());
 
         viewHolder.button_enter.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -115,6 +115,8 @@ public class ChannelAdapter extends BaseAdapter{
         builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+
+
             }
         });
 

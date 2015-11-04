@@ -6,7 +6,7 @@ package com.wraptalk.wraptalk;
 public class ChannelData {
 
     String channelName;
-    String masterNickname;
+    String userCount;
     Boolean flag = false;
 
     public String getChannelName() {
@@ -17,12 +17,12 @@ public class ChannelData {
         this.channelName = channelName;
     }
 
-    public String getMasterNickname() {
-        return masterNickname;
+    public String getuserCount() {
+        return userCount;
     }
 
-    public void setMasterNickname(String masterNickname) {
-        this.masterNickname = masterNickname;
+    public void setuserCount(String userCount) {
+        this.userCount = userCount;
     }
 
     public Boolean getFlag() {
