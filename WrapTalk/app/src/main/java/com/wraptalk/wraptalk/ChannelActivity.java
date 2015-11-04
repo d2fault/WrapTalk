@@ -1,16 +1,20 @@
 package com.wraptalk.wraptalk;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -29,7 +33,6 @@ public class ChannelActivity extends AppCompatActivity {
     EditText editText_searchChannel;
     Button button_search;
 
-    PackageManager packageManager;
     PackageInfo packageInfo;
     String searchKeyword;
 
@@ -42,14 +45,16 @@ public class ChannelActivity extends AppCompatActivity {
         packageInfo = (PackageInfo) intent.getExtras().get("packageInfo");
 
         initModel();
-        initNetwork();
+        getChannelList();
         initController();
+
+
 
         button_search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 searchKeyword = editText_searchChannel.getText().toString();
-                channelSearch();
+                searchChannel();
             }
         });
     }
@@ -68,11 +73,14 @@ public class ChannelActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (id) {
+            case R.id.action_changeNickname :
+                setNickname();
+                break;
+            case R.id.action_createChannel :
+                createChannel();
+                break;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -88,9 +96,98 @@ public class ChannelActivity extends AppCompatActivity {
         listView_result.setAdapter(customAdapter);
     }
 
-    private void initNetwork() {
-        String url = "http://133.130.113.101:7010/user/appChannel?" +
-                "token=" + UserData.getInstance().token + "&app_id=" + packageInfo.packageName;
+    private void setNickname() {
+
+        final View dialogView = getLayoutInflater().inflate(R.layout.dialog_set_nickname, null);
+        PackageManager packageManager = this.getPackageManager();
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        if(packageInfo != null) {
+            builder.setIcon(packageManager.getApplicationIcon(packageInfo.applicationInfo));
+            builder.setTitle(packageManager.getApplicationLabel(packageInfo.applicationInfo).toString());
+        }
+        else {
+            builder.setTitle(RegisterCategoryInfo.getInstance().categoryName);
+        }
+
+        builder.setView(dialogView);
+
+        builder.setPositiveButton("SET", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        });
+
+        builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        });
+
+        //설정한 값으로 AlertDialog 객체 생성
+        AlertDialog dialog = builder.create();
+
+        //Dialog의 바깥쪽을 터치했을 때 Dialog를 없앨지 설정
+        dialog.setCanceledOnTouchOutside(false);//없어지지 않도록 설정
+
+        //Dialog 보이기
+        dialog.show();
+    }
+    private void createChannel() {
+
+        final View dialogView = getLayoutInflater().inflate(R.layout.dialog_create_channel, null);
+        Spinner spinner;
+        ArrayAdapter<CharSequence> adapter;
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        spinner = (Spinner) dialogView.findViewById(R.id.spinner_userCount);
+
+        ArrayList<CharSequence> list = new ArrayList<>();
+        for(int i = 1; i < 101 ; i++)
+            list.add(String.valueOf(i));
+
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, list);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter); // OK!!
+
+        builder.setTitle("채널 생성");
+        builder.setView(dialogView);
+
+
+        builder.setPositiveButton("CREATE", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        });
+
+        builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        });
+
+        //설정한 값으로 AlertDialog 객체 생성
+        AlertDialog dialog = builder.create();
+
+        //Dialog의 바깥쪽을 터치했을 때 Dialog를 없앨지 설정
+        dialog.setCanceledOnTouchOutside(false);//없어지지 않도록 설정
+
+        //Dialog 보이기
+        dialog.show();
+    }
+
+    private void getChannelList() {
+
+        String url = "http://133.130.113.101:7010/user/appChannel?" + "token=" + UserInfo.getInstance().token + "&app_id=";
+
+        if(packageInfo != null) {
+            url += packageInfo.packageName;
+        }
+        else {
+            url += RegisterCategoryInfo.getInstance().categoryName;
+        }
 
         RequestUtil.asyncHttp(url, new OnRequest() {
             @Override
@@ -100,7 +197,7 @@ public class ChannelActivity extends AppCompatActivity {
                     JSONObject json = new JSONObject(jsonStr);
                     int result_code = json.optInt("result_code", -1);
 
-                    if(result_code != 0) {
+                    if (result_code != 0) {
                         String result_msg = json.optString("result_msg", "fail");
                         Toast.makeText(getApplicationContext(), result_msg, Toast.LENGTH_SHORT).show();
 
@@ -108,7 +205,7 @@ public class ChannelActivity extends AppCompatActivity {
                     }
 
                     JSONArray list_channel = json.optJSONArray("list_channel");
-                    for (int i = 0 ; i < list_channel.length() ; i++) {
+                    for (int i = 0; i < list_channel.length(); i++) {
                         JSONObject channelObj = list_channel.getJSONObject(i);
 
                         ChannelData data = new ChannelData();
@@ -134,9 +231,16 @@ public class ChannelActivity extends AppCompatActivity {
         });
     }
 
-    private void channelSearch() {
-        String url = "http://133.130.113.101:7010/user/searchChannel?" +
-                "token=" + UserData.getInstance().token + "&keyword=" + searchKeyword + "&app_id=" + packageInfo.packageName;
+    private void searchChannel() {
+
+        String url = "http://133.130.113.101:7010/user/appChannel?" + "token=" + UserInfo.getInstance().token + "&keyword=" + searchKeyword + "&app_id=";
+
+        if(packageInfo != null) {
+            url += packageInfo.packageName;
+        }
+        else {
+            url += RegisterCategoryInfo.getInstance().categoryName;
+        }
 
         RequestUtil.asyncHttp(url, new OnRequest() {
             @Override
