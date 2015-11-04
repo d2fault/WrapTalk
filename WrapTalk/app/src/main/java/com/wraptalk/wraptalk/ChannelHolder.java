@@ -9,6 +9,6 @@ import android.widget.TextView;
 public class ChannelHolder {
 
     TextView textView_channelTitle;
-    TextView textView_masterNickname;
+    TextView textView_channelOnoff;
     Button button_enter;
 }

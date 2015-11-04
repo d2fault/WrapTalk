@@ -23,14 +23,14 @@
             android:layout_gravity="center"
             android:text="Channel Title"
             android:textSize="18dp"
-            android:textColor="#727272" />
+            android:textColor="#000000" />
 
             <TextView
-                android:id="@+id/textView_userCount"
+                android:id="@+id/textView_channelOnoff"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="Channel Title"
+                android:text="공개"
                 android:textSize="13dp"
                 android:textColor="#727272" />
         </LinearLayout>

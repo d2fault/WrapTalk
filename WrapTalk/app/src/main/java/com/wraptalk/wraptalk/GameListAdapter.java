@@ -116,7 +116,7 @@ public class GameListAdapter extends BaseAdapter {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
-                EditText editText = (EditText)dialogView.findViewById(R.id.editText_nickname);
+                EditText editText = (EditText) dialogView.findViewById(R.id.editText_nickname);
                 String url = "http://133.130.113.101:7010/user/registApp?" +
                         "token=" + UserInfo.getInstance().token + "&app_id=" + data.getPackageInfo().applicationInfo.packageName + "&user_nick=" + editText.getText().toString();
 
