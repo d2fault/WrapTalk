@@ -61,6 +61,10 @@
         </activity>
         <activity android:name=".ChattingActivity" >
         </activity>
+        <activity android:name=".ChangePasswordActivity" >
+        </activity>
+        <activity android:name=".FavoriteChannelActivity" >
+        </activity>
     </application>
 
 </manifest>

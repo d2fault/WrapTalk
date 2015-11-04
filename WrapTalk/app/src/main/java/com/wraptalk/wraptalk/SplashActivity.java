@@ -8,7 +8,6 @@ import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.telephony.TelephonyManager;
 import android.util.Log;
@@ -31,7 +30,6 @@ public class SplashActivity extends AppCompatActivity {
     String SENDER_ID = "wraptalk-1109";
 
     GoogleCloudMessaging gcm;
-    SharedPreferences prefs;
     Context context;
 
     TelephonyManager tm;
@@ -55,8 +53,8 @@ public class SplashActivity extends AppCompatActivity {
             Log.i(TAG, "No valid Google Play Services APK found.");
         }
 
-        data.setGcmKey(regid);
-        data.setDeviceId(tm.getDeviceId());
+        UserData.getInstance().deviceId = tm.getDeviceId();
+        UserData.getInstance().gcmKey = regid;
 
         Handler hd = new Handler();
 
@@ -64,7 +62,6 @@ public class SplashActivity extends AppCompatActivity {
             @Override
             public void run() {
                 Intent intent = new Intent(SplashActivity.this, SignInActivity.class);
-                intent.putExtra("userData", (Parcelable) data);
                 startActivity(intent);
                 finish();
             }
@@ -73,9 +70,6 @@ public class SplashActivity extends AppCompatActivity {
 
 
     private void Init() {
-
-        data = new UserData();
-
         context = getApplicationContext();
 
         gcm = GoogleCloudMessaging.getInstance(this);
@@ -128,7 +122,7 @@ public class SplashActivity extends AppCompatActivity {
                     if (gcm == null) {
                         gcm = GoogleCloudMessaging.getInstance(context);
                     }
-                    regid = gcm.register(SENDER_ID);
+                    UserData.getInstance().gcmKey = gcm.register(SENDER_ID);
                     msg = "Device registered, registration ID=" + regid;
 
                     // 서버에 발급받은 등록 아이디를 전송한다.
