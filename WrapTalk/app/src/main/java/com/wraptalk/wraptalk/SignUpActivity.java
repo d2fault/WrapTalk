@@ -329,7 +329,7 @@ public class SignUpActivity extends AppCompatActivity implements LoaderManager.L
 
             String body = null;
 
-            body = "user_id=" + mEmail + "&user_pw=" + mPassword + "&device_id=" + UserData.getInstance().deviceId + "&gcm_id=" + UserData.getInstance().gcmKey;
+            body = "user_id=" + mEmail + "&user_pw=" + mPassword + "&device_id=" + UserInfo.getInstance().deviceId + "&gcm_id=" + UserInfo.getInstance().gcmKey;
 
             URL url = new URL("http://133.130.113.101:7010/user/join?" + body);
 

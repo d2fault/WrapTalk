@@ -3,19 +3,19 @@ package com.wraptalk.wraptalk;
 /**
  * Created by jiyoungpark on 15. 11. 1..
  */
-public class UserData {
+public class UserInfo {
 
     String email;
     String deviceId;
     String gcmKey;
     String token;
 
-    static UserData g_userData = new UserData();
+    static UserInfo g_userInfo = new UserInfo();
 
-    private UserData() {
+    private UserInfo() {
     }
 
-    public static UserData getInstance() {
-        return g_userData;
+    public static UserInfo getInstance() {
+        return g_userInfo;
     }
 }

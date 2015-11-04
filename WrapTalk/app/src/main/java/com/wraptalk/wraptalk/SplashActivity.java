@@ -36,7 +36,7 @@ public class SplashActivity extends AppCompatActivity {
 
     String regid;
 
-    UserData data;
+    UserInfo data;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,8 +53,8 @@ public class SplashActivity extends AppCompatActivity {
             Log.i(TAG, "No valid Google Play Services APK found.");
         }
 
-        UserData.getInstance().deviceId = tm.getDeviceId();
-        UserData.getInstance().gcmKey = regid;
+        UserInfo.getInstance().deviceId = tm.getDeviceId();
+        UserInfo.getInstance().gcmKey = regid;
 
         Handler hd = new Handler();
 
@@ -122,7 +122,7 @@ public class SplashActivity extends AppCompatActivity {
                     if (gcm == null) {
                         gcm = GoogleCloudMessaging.getInstance(context);
                     }
-                    UserData.getInstance().gcmKey = gcm.register(SENDER_ID);
+                    UserInfo.getInstance().gcmKey = gcm.register(SENDER_ID);
                     msg = "Device registered, registration ID=" + regid;
 
                     // 서버에 발급받은 등록 아이디를 전송한다.

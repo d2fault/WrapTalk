@@ -152,7 +152,7 @@ public class SignInActivity extends AppCompatActivity implements LoaderCallbacks
             showProgress(true);
 
             String url = "http://133.130.113.101:7010/user/login?" +
-                "user_id=" + email + "&user_pw=" + password + "&device_id=" + UserData.getInstance().deviceId + "&gcm_id=" + UserData.getInstance().gcmKey;
+                "user_id=" + email + "&user_pw=" + password + "&device_id=" + UserInfo.getInstance().deviceId + "&gcm_id=" + UserInfo.getInstance().gcmKey;
             RequestUtil.asyncHttp(url, new OnRequest() {
                 @Override
                 public void onSuccess(String url, byte[] receiveData) {
@@ -160,11 +160,11 @@ public class SignInActivity extends AppCompatActivity implements LoaderCallbacks
                     try {
                         JSONObject json = new JSONObject(jsonStr);
                         int result_code = json.optInt("result_code", -1);
-                        UserData.getInstance().email = email;
+                        UserInfo.getInstance().email = email;
 
                         if(result_code == 0) {
                             String token = json.optString("token");
-                            UserData.getInstance().token = token;
+                            UserInfo.getInstance().token = token;
                         }
                         else {
                             String result_msg = json.optString("result_msg", "fail");

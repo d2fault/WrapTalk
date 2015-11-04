@@ -30,8 +30,6 @@ public class TabCategoryFragment extends android.support.v4.app.Fragment {
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_tab_category, container, false);
 
-        //((MainActivity) getActivity()).getSupportActionBar().setTitle("b");
-
         initModel();
         initController();
         initView();
@@ -39,7 +37,9 @@ public class TabCategoryFragment extends android.support.v4.app.Fragment {
         gridView_result.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                RegisterCategoryInfo.getInstance().categoryName = categoryList.get(position);
                 Intent intent = new Intent(getActivity(), ChannelActivity.class);
+                intent.putExtra("categoryName", categoryList.get(position));
                 startActivity(intent);
             }
         });

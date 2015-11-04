@@ -84,8 +84,8 @@ public class TabGameListFragment extends android.support.v4.app.Fragment {
             if(!flag) {
                 GameListData data = new GameListData();
                 data.setPackageInfo(pi);
-                data.setAppName(packageManager.getApplicationLabel(data.getPackageInfo().applicationInfo).toString());
                 data.setAppIcon(packageManager.getApplicationIcon(data.packageInfo.applicationInfo));
+                data.setAppName(packageManager.getApplicationLabel(data.getPackageInfo().applicationInfo).toString());
                 source.add(data);
             }
         }

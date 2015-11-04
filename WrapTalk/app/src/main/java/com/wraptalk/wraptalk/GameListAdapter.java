@@ -67,8 +67,8 @@ public class GameListAdapter extends BaseAdapter {
             viewHolder = new GameListHolder();
             convertView = layoutInflater.inflate(R.layout.layout_game_list, parent, false);
 
-            viewHolder.textView_gameAppName = (TextView) convertView.findViewById(R.id.textView_gameTitle);
             viewHolder.imageView_gameAppIcon = (ImageView) convertView.findViewById(R.id.imageView_gameIcon);
+            viewHolder.textView_gameAppName = (TextView) convertView.findViewById(R.id.textView_gameTitle);
 
             viewHolder.button_regist = (Button) convertView.findViewById(R.id.button_regist);
 
@@ -79,8 +79,8 @@ public class GameListAdapter extends BaseAdapter {
             viewHolder = (GameListHolder) convertView.getTag();
         }
 
-        viewHolder.textView_gameAppName.setText(data.getAppName());
         viewHolder.imageView_gameAppIcon.setImageDrawable(data.appIcon);
+        viewHolder.textView_gameAppName.setText(data.getAppName());
 
         viewHolder.button_regist.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -118,7 +118,7 @@ public class GameListAdapter extends BaseAdapter {
 
                 EditText editText = (EditText)dialogView.findViewById(R.id.editText_nickname);
                 String url = "http://133.130.113.101:7010/user/registApp?" +
-                        "token=" + UserData.getInstance().token + "&app_id=" + data.getPackageInfo().applicationInfo.packageName + "&user_nick=" + editText.getText().toString();
+                        "token=" + UserInfo.getInstance().token + "&app_id=" + data.getPackageInfo().applicationInfo.packageName + "&user_nick=" + editText.getText().toString();
 
                 RequestUtil.asyncHttp(url, new OnRequest() {
                     @Override

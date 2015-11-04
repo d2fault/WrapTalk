@@ -3,6 +3,8 @@ package com.wraptalk.wraptalk;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import org.json.JSONObject;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -72,17 +74,16 @@ public class RequestUtil extends AsyncTask<Void, Void, byte[]> {
 
             byte readData[] = baos.toByteArray();
             String strData = new String(readData);
+            JSONObject json = new JSONObject(strData);
+            int result_code = json.optInt("result_code", -1);
 
             Log.e("서버에서 받은 내용", strData);
 
-            if (strData.contains("success")) {
-                Log.e("Server 결과", "성공");
-                return readData;
-            } else {
-                Log.e("Server 결과", "실패");
+            if (result_code != 0) {
                 return null;
             }
 
+            return readData;
 
 
 //                OutputStreamWriter osw = new OutputStreamWriter(conn.getOutputStream());
