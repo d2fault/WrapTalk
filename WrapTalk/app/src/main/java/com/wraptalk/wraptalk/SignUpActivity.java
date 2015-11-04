@@ -53,16 +53,12 @@ public class SignUpActivity extends AppCompatActivity implements LoaderManager.L
 
     Button mButtonJoin;
 
-    UserData data;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
         // Set up the signup form.
-
-        Intent intent = getIntent();
-        data = (UserData) intent.getParcelableExtra("userData");
 
         Init();
 
@@ -311,7 +307,6 @@ public class SignUpActivity extends AppCompatActivity implements LoaderManager.L
 
             if (result.equals("true")) {
                 Intent intent = new Intent(SignUpActivity.this, SignInActivity.class);
-                intent.putExtra("userData", data);
                 startActivity(intent);
                 finish();
             }
@@ -334,7 +329,7 @@ public class SignUpActivity extends AppCompatActivity implements LoaderManager.L
 
             String body = null;
 
-            body = "user_id=" + mEmail + "&user_pw=" + mPassword + "&device_id=" + data.getDeviceId() + "&gcm_id=" + data.getGcmKey();
+            body = "user_id=" + mEmail + "&user_pw=" + mPassword + "&device_id=" + UserData.getInstance().deviceId + "&gcm_id=" + UserData.getInstance().gcmKey;
 
             URL url = new URL("http://133.130.113.101:7010/user/join?" + body);
 
