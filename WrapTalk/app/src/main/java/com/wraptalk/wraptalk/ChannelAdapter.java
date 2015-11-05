@@ -76,7 +76,7 @@ public class ChannelAdapter extends BaseAdapter{
         }
 
         viewHolder.textView_channelTitle.setText(data.getChannelName());
-        viewHolder.textView_channelOnoff.setText(data.getchannelOnoff());
+        viewHolder.textView_channelOnoff.setText(data.getChannelOnoff());
 
         viewHolder.button_enter.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -94,7 +94,7 @@ public class ChannelAdapter extends BaseAdapter{
         return convertView;
     }
 
-    public void onClickJoinButton(final ChannelHolder viewHolder, final ChannelData data) {
+    private void onClickJoinButton(final ChannelHolder viewHolder, final ChannelData data) {
         //res폴더>>layout폴더>>dialog_addmember.xml 레이아웃 리소스 파일로 View 객체 생성
         //Dialog의 listener에서 사용하기 위해 final로 참조변수 선언
 
@@ -107,6 +107,7 @@ public class ChannelAdapter extends BaseAdapter{
         builder.setPositiveButton("JOIN", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                joinChannel(data);
                 data.setFlag(true);
                 viewHolder.button_enter.setText("QUIT");
             }
@@ -128,7 +129,7 @@ public class ChannelAdapter extends BaseAdapter{
         dialog.show();
     }
 
-    public void onClickQuitButton(final ChannelHolder viewHolder, final ChannelData data) {
+    private void onClickQuitButton(final ChannelHolder viewHolder, final ChannelData data) {
         //res폴더>>layout폴더>>dialog_addmember.xml 레이아웃 리소스 파일로 View 객체 생성
         //Dialog의 listener에서 사용하기 위해 final로 참조변수 선언
 
@@ -141,6 +142,7 @@ public class ChannelAdapter extends BaseAdapter{
         builder.setPositiveButton("QUIT", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                quitChannel(data);
                 data.setFlag(false);
                 viewHolder.button_enter.setText("ADD");
             }
@@ -160,5 +162,44 @@ public class ChannelAdapter extends BaseAdapter{
 
         //Dialog 보이기
         dialog.show();
+    }
+
+    private void joinChannel(ChannelData data) {
+        String url = "http://133.130.113.101:7010/user/joinChannel?token=" + UserInfo.getInstance().token + "&channel_id=" + data.getChannelId() +
+                "&user_nick=임시닉네임";
+
+        if (data.getChannelOnoff().equals("off")) {
+            url += "&channel_pw=" + "1234"; // 현재는 임시. 나중에는 dialog 띄워서 받아야함
+        }
+
+        url += "&app_id=" + data.getAppId();
+
+        RequestUtil.asyncHttp(url, new OnRequest() {
+            @Override
+            public void onSuccess(String url, byte[] receiveData) {
+
+            }
+
+            @Override
+            public void onFail(String url, String error) {
+
+            }
+        });
+    }
+
+    private void quitChannel(ChannelData data) {
+        String url = "http://133.130.113.101:7010/user/withdrawChannel?token=" + UserInfo.getInstance().token + "&channel_id=" + data.getChannelId();
+
+        RequestUtil.asyncHttp(url, new OnRequest() {
+            @Override
+            public void onSuccess(String url, byte[] receiveData) {
+
+            }
+
+            @Override
+            public void onFail(String url, String error) {
+
+            }
+        });
     }
 }

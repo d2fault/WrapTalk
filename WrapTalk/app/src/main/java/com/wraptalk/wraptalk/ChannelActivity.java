@@ -292,7 +292,16 @@ public class ChannelActivity extends AppCompatActivity {
                         ChannelData data = new ChannelData();
 
                         data.setChannelName(channelObj.optString("channel_name"));
-                        data.setchannelOnoff(channelObj.optString("public_onoff"));
+                        data.setChannelOnoff(channelObj.optString("public_onoff"));
+                        data.setChannelLimit(channelObj.optString("channel_limit"));
+                        data.setChannelId(channelObj.optString("channel_id"));
+
+                        if(packageInfo != null) {
+                            data.setAppId(packageInfo.packageName);
+                        }
+                        else {
+                            data.setAppId(RegisterCategoryInfo.getInstance().categoryName);
+                        }
 
                         source.add(data);
                     }
@@ -345,7 +354,16 @@ public class ChannelActivity extends AppCompatActivity {
                         ChannelData data = new ChannelData();
 
                         data.setChannelName(channelObj.optString("channel_name"));
-                        data.setchannelOnoff(channelObj.optString("user_count"));
+                        data.setChannelOnoff(channelObj.optString("public_onoff"));
+                        data.setChannelLimit(channelObj.optString("channel_limit"));
+                        data.setChannelId(channelObj.optString("channel_id"));
+
+                        if(packageInfo != null) {
+                            data.setAppId(packageInfo.packageName);
+                        }
+                        else {
+                            data.setAppId(RegisterCategoryInfo.getInstance().categoryName);
+                        }
 
                         source.add(data);
                     }
