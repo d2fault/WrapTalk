@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:orientation="horizontal" android:padding="10dp"
+    android:weightSum="13">
+
+    <TextView
+        android:id="@+id/textView_noticeTitle"
+        android:layout_width="5dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="10"
+        android:paddingLeft="10dp"
+        android:textSize="20dp"
+        android:textColor="#000000"
+        android:text="공지사항입니다."/>
+
+    <TextView
+        android:id="@+id/textView_noticeDate"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="2015-12-01"
+        android:layout_weight="3"
+        android:textColor="#4f4f4f"/>
+</LinearLayout>

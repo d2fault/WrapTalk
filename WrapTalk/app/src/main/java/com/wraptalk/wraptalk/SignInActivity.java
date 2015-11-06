@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -24,6 +23,10 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +41,10 @@ public class SignInActivity extends AppCompatActivity implements LoaderCallbacks
             "foo@example.com:hello", "bar@example.com:world"
     };
 
-    private UserLoginTask mAuthTask = null;
+    private String email;
+
+//    private UserLoginTask mAuthTask = null;
+    //private SendPostSignIn sendPostSignIn;
 
     // UI references.
     private AutoCompleteTextView mEmailView;
@@ -54,6 +60,7 @@ public class SignInActivity extends AppCompatActivity implements LoaderCallbacks
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
         // Set up the login form.
+
 
         Init();
 
@@ -73,10 +80,7 @@ public class SignInActivity extends AppCompatActivity implements LoaderCallbacks
         mButtonSignIn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(SignInActivity.this, MainActivity.class);
-                startActivity(intent);
-                finish();
-                //attemptLogin();
+                attemptLogin();
             }
         });
 
@@ -89,13 +93,16 @@ public class SignInActivity extends AppCompatActivity implements LoaderCallbacks
         });
     }
 
-
     private void Init() {
+
+        //sendPostSignIn = new ();
 
         mEmailView = (AutoCompleteTextView) findViewById(R.id.editText_email);
         mPasswordView = (EditText) findViewById(R.id.editText_password);
+
         mButtonSignIn = (Button) findViewById(R.id.button_signIn);
         mButtonSignUp = (Button) findViewById(R.id.button_signUp);
+
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.progress_login);
     }
@@ -105,16 +112,13 @@ public class SignInActivity extends AppCompatActivity implements LoaderCallbacks
     }
 
     private void attemptLogin() {
-        if (mAuthTask != null) {
-            return;
-        }
 
         // Reset errors.
         mEmailView.setError(null);
         mPasswordView.setError(null);
 
         // Store values at the time of the login attempt.
-        String email = mEmailView.getText().toString();
+        email = mEmailView.getText().toString();
         String password = mPasswordView.getText().toString();
 
         boolean cancel = false;
@@ -146,8 +150,49 @@ public class SignInActivity extends AppCompatActivity implements LoaderCallbacks
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            mAuthTask = new UserLoginTask(email, password);
-            mAuthTask.execute((Void) null);
+
+            String url = "http://133.130.113.101:7010/user/login?" +
+                "user_id=" + email + "&user_pw=" + password + "&device_id=" + UserInfo.getInstance().deviceId + "&gcm_id=" + UserInfo.getInstance().gcmKey;
+            RequestUtil.asyncHttp(url, new OnRequest() {
+                @Override
+                public void onSuccess(String url, byte[] receiveData) {
+                    String jsonStr = new String(receiveData);
+                    try {
+                        JSONObject json = new JSONObject(jsonStr);
+                        int result_code = json.optInt("result_code", -1);
+                        UserInfo.getInstance().email = email;
+
+                        if(result_code == 0) {
+                            String token = json.optString("token");
+                            UserInfo.getInstance().token = token;
+                        }
+                        else {
+                            String result_msg = json.optString("result_msg", "fail");
+                            Toast.makeText(getApplicationContext(), result_msg, Toast.LENGTH_SHORT).show();
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    showProgress(false);
+
+                    Intent intent = new Intent(SignInActivity.this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+
+                @Override
+                public void onFail(String url, String error) {
+                    showProgress(false);
+
+                    if(error == null)
+                    {
+                        Toast.makeText(getApplicationContext(), "서버와의 접속이 원활하지 않습니다.", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+
         }
     }
 
@@ -248,57 +293,5 @@ public class SignInActivity extends AppCompatActivity implements LoaderCallbacks
         mEmailView.setAdapter(adapter);
     }
 
-    public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
-
-        private final String mEmail;
-        private final String mPassword;
-
-        UserLoginTask(String email, String password) {
-            mEmail = email;
-            mPassword = password;
-        }
-
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            // TODO: attempt authentication against a network service.
-
-            try {
-                // Simulate network access.
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                return false;
-            }
-
-            for (String credential : DUMMY_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-                if (pieces[0].equals(mEmail)) {
-                    // Account exists, return true if the password matches.
-                    return pieces[1].equals(mPassword);
-                }
-            }
-
-            // TODO: register the new account here.
-            return true;
-        }
-
-        @Override
-        protected void onPostExecute(final Boolean success) {
-            mAuthTask = null;
-            showProgress(false);
-
-            if (success) {
-                finish();
-            } else {
-                mPasswordView.setError("This password is incorrect");
-                mPasswordView.requestFocus();
-            }
-        }
-
-        @Override
-        protected void onCancelled() {
-            mAuthTask = null;
-            showProgress(false);
-        }
-    }
 }
 

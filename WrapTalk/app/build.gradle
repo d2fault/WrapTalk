@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "com.wraptalk.wraptalk"
-        minSdkVersion 16
+        minSdkVersion 19
         targetSdkVersion 22
         versionCode 1
         versionName "1.0"
@@ -24,4 +24,5 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:22.2.1'
     compile 'com.android.support:design:22.2.1'
+    compile 'com.google.android.gms:play-services:8.1.0'
 }

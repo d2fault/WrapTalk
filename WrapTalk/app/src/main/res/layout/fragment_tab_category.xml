@@ -3,8 +3,7 @@
     android:layout_height="match_parent" tools:context="com.wraptalk.wraptalk.TabCategoryFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView android:layout_width="match_parent" android:layout_height="match_parent"
-        android:text="Category" />
+
     <GridView xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/gridView_category"
         android:layout_width="match_parent"
@@ -16,4 +15,5 @@
         android:scrollbars="none"
         android:stretchMode="columnWidth"
         android:verticalSpacing="4dp" />
+
 </FrameLayout>
