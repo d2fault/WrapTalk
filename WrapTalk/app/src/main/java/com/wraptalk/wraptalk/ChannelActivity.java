@@ -13,9 +13,10 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -23,11 +24,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 
 public class ChannelActivity extends AppCompatActivity {
 
-    View view;
     ArrayList<ChannelData> source;
     ChannelAdapter customAdapter = null;
     ListView listView_result;
@@ -36,6 +38,7 @@ public class ChannelActivity extends AppCompatActivity {
     Button button_search;
 
     PackageInfo packageInfo;
+    String categoryName;
     String searchKeyword;
 
     CreateChannelData channelData;
@@ -48,6 +51,7 @@ public class ChannelActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         packageInfo = (PackageInfo) intent.getExtras().get("packageInfo");
+        categoryName = intent.getStringExtra("categoryName");
 
         initModel();
         getChannelList();
@@ -78,10 +82,10 @@ public class ChannelActivity extends AppCompatActivity {
 
         switch (id) {
             case R.id.action_changeNickname :
-                setNickname();
+                showChangeNickDialog();
                 break;
             case R.id.action_createChannel :
-                createChannel();
+                showCreateChannelDialog();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -99,8 +103,9 @@ public class ChannelActivity extends AppCompatActivity {
         listView_result.setAdapter(customAdapter);
     }
 
-    private void setNickname() {
+    private void showChangeNickDialog() {
 
+        // Diaolog 생성
         final View dialogView = getLayoutInflater().inflate(R.layout.dialog_set_nickname, null);
         PackageManager packageManager = this.getPackageManager();
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -110,14 +115,15 @@ public class ChannelActivity extends AppCompatActivity {
 
         url = "http://133.130.113.101:7010/user/registNick?token=" + UserInfo.getInstance().token + "&app_id=";
 
-        if(packageInfo != null) {
+        if(categoryName != null && categoryName.startsWith(TabCategoryFragment.PRE_CHANNEL_PREFIX)) {
+            builder.setTitle(categoryName);
+            url += categoryName;//
+        }
+        else {
+
             builder.setIcon(packageManager.getApplicationIcon(packageInfo.applicationInfo));
             builder.setTitle(packageManager.getApplicationLabel(packageInfo.applicationInfo).toString());
             url += packageInfo.packageName;
-        }
-        else {
-            builder.setTitle(RegisterCategoryInfo.getInstance().categoryName);
-            url += RegisterCategoryInfo.getInstance().categoryName;
         }
 
         builder.setPositiveButton("SET", new DialogInterface.OnClickListener() {
@@ -156,9 +162,27 @@ public class ChannelActivity extends AppCompatActivity {
         dialog.show();
     }
 
-    private void createChannel() {
+    private void showCreateChannelDialog() {
 
         final View dialogView = getLayoutInflater().inflate(R.layout.dialog_create_channel, null);
+
+        final CheckBox checkBox_channelOnoff = (CheckBox) dialogView.findViewById(R.id.checkBox_channelOnoff);
+        final EditText editText_setPassword = (EditText) dialogView.findViewById(R.id.editText_setPassword);
+
+        editText_setPassword.setVisibility(View.INVISIBLE);
+
+        checkBox_channelOnoff.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked) {
+                    editText_setPassword.setVisibility(View.INVISIBLE);
+                }
+                else {
+                    editText_setPassword.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
 
         final Spinner spinner_userCount = (Spinner) dialogView.findViewById(R.id.spinner_userCount);
         ArrayAdapter<CharSequence> adapter;
@@ -188,6 +212,9 @@ public class ChannelActivity extends AppCompatActivity {
                 Toast.makeText(ChannelActivity.this, "인원을 선택해주세요.", Toast.LENGTH_SHORT).show();
             }
         });
+
+
+
 
         builder.setPositiveButton("CREATE", new DialogInterface.OnClickListener() {
             @Override
@@ -229,45 +256,47 @@ public class ChannelActivity extends AppCompatActivity {
     private void getChannelInfo(View v) {
 
         final EditText editText_channelName = (EditText) v.findViewById(R.id.editText_channelName);
-        final RadioButton radioButton_close = (RadioButton) v.findViewById(R.id.radioButton_close);
         final EditText editText_setPassword = (EditText) v.findViewById(R.id.editText_setPassword);
+        final CheckBox checkBox_channelOnoff = (CheckBox) v.findViewById(R.id.checkBox_channelOnoff);
 
-        String tempUrl = null;
 
         channelData.setChannelName(editText_channelName.getText().toString());
         /* url 생성 */
 
         url = "http://133.130.113.101:7010/user/makeChannel?token=" + UserInfo.getInstance().token + "&app_id=";
 
-        if(packageInfo != null) {
+        if(categoryName != null && categoryName.startsWith(TabCategoryFragment.PRE_CHANNEL_PREFIX)) {
+            url += categoryName;
+        }
+        else {
             url += packageInfo.packageName;
         }
-        else {
-            url += RegisterCategoryInfo.getInstance().categoryName;
+
+        try {
+            url += "&channel_name=" + URLEncoder.encode(channelData.getChannelName(), "utf-8") + "&public_onoff=";
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
         }
 
-        url += "&channel_name=" + channelData.getChannelName() + "&public_onoff=";
-
-        if(radioButton_close.isChecked()) {
-            url += "off&channel_pw=" + editText_setPassword.getText().toString();
-        }
-        else {
+        if(checkBox_channelOnoff.isChecked()) {
             url += "on";
         }
+        else {
+            url += "off&channel_pw=" + editText_setPassword.getText().toString();
+        }
 
-        tempUrl = "&channel_limit=" + channelData.getChannelLimit() + "&user_nick=" + "임시닉네임";
-        url += tempUrl;
+        url += "&channel_limit=" + channelData.getChannelLimit() + "&user_nick=" + "임시닉네임";
     }
 
     private void getChannelList() {
 
         url = "http://133.130.113.101:7010/user/appChannel?" + "token=" + UserInfo.getInstance().token + "&app_id=";
 
-        if(packageInfo != null) {
-            url += packageInfo.packageName;
+        if(categoryName != null && categoryName.startsWith(TabCategoryFragment.PRE_CHANNEL_PREFIX)) {
+            url += categoryName;//RegisterCategoryInfo.getInstance().categoryName;
         }
         else {
-            url += RegisterCategoryInfo.getInstance().categoryName;
+            url += packageInfo.packageName;
         }
 
         RequestUtil.asyncHttp(url, new OnRequest() {
@@ -296,11 +325,11 @@ public class ChannelActivity extends AppCompatActivity {
                         data.setChannelLimit(channelObj.optString("channel_limit"));
                         data.setChannelId(channelObj.optString("channel_id"));
 
-                        if(packageInfo != null) {
-                            data.setAppId(packageInfo.packageName);
+                        if(categoryName != null && categoryName.startsWith(TabCategoryFragment.PRE_CHANNEL_PREFIX)) {
+                            data.setAppId(categoryName);
                         }
                         else {
-                            data.setAppId(RegisterCategoryInfo.getInstance().categoryName);
+                            data.setAppId(packageInfo.packageName);
                         }
 
                         source.add(data);
@@ -323,19 +352,22 @@ public class ChannelActivity extends AppCompatActivity {
 
     private void searchChannel() {
 
-        String url = "http://133.130.113.101:7010/user/appChannel?" + "token=" + UserInfo.getInstance().token + "&keyword=" + searchKeyword + "&app_id=";
+        String url = "http://133.130.113.101:7010/user/appChannel?" + "token=" + UserInfo.getInstance().token + "&channel_name=" + searchKeyword + "&app_id=";
 
-        if(packageInfo != null) {
-            url += packageInfo.packageName;
+
+        if(categoryName != null && categoryName.startsWith(TabCategoryFragment.PRE_CHANNEL_PREFIX)) {
+            url += categoryName;
         }
         else {
-            url += RegisterCategoryInfo.getInstance().categoryName;
+            url += packageInfo.packageName;
         }
 
         RequestUtil.asyncHttp(url, new OnRequest() {
             @Override
             public void onSuccess(String url, byte[] receiveData) {
                 String jsonStr = new String(receiveData);
+                source.removeAll(source);
+
                 try {
                     JSONObject json = new JSONObject(jsonStr);
                     int result_code = json.optInt("result_code", -1);
@@ -362,9 +394,8 @@ public class ChannelActivity extends AppCompatActivity {
                             data.setAppId(packageInfo.packageName);
                         }
                         else {
-                            data.setAppId(RegisterCategoryInfo.getInstance().categoryName);
+                            data.setAppId(categoryName);
                         }
-
                         source.add(data);
                     }
 
