@@ -57,8 +57,8 @@ public class GameListAdapter extends BaseAdapter {
             viewHolder = new GameListHolder();
             convertView = layoutInflater.inflate(R.layout.layout_game_list, parent, false);
 
-            viewHolder.textView_GameAppName = (TextView) convertView.findViewById(R.id.textView_GameAppName);
-            viewHolder.imageView_GameAppIcon = (ImageView) convertView.findViewById(R.id.imageView_GameAppIcon);
+            viewHolder.textView_GameAppName = (TextView) convertView.findViewById(R.id.textView_gameTitle);
+            viewHolder.imageView_GameAppIcon = (ImageView) convertView.findViewById(R.id.imageView_gameIcon);
 
             convertView.setTag(viewHolder);
         }
