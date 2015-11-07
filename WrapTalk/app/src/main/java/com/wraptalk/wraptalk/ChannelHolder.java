@@ -1,6 +1,7 @@
 package com.wraptalk.wraptalk;
 
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 /**
@@ -10,5 +11,5 @@ public class ChannelHolder {
 
     TextView textView_channelTitle;
     TextView textView_channelOnoff;
-    Button button_enter;
+    ImageButton button_enter;
 }

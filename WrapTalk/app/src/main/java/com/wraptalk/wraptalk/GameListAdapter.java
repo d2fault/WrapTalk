@@ -9,8 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -72,7 +72,7 @@ public class GameListAdapter extends BaseAdapter {
             viewHolder.imageView_gameAppIcon = (ImageView) convertView.findViewById(R.id.imageView_gameIcon);
             viewHolder.textView_gameAppName = (TextView) convertView.findViewById(R.id.textView_gameTitle);
 
-            viewHolder.button_regist = (Button) convertView.findViewById(R.id.button_regist);
+            viewHolder.button_regist = (ImageButton) convertView.findViewById(R.id.button_regist);
 
             convertView.setTag(viewHolder);
         }
@@ -132,7 +132,7 @@ public class GameListAdapter extends BaseAdapter {
                     @Override
                     public void onSuccess(String url, byte[] receiveData) {
                         data.setFlag(true);
-                        viewHolder.button_regist.setText("SUB");
+                        viewHolder.button_regist.setBackgroundResource(R.mipmap.ic_minus);
                     }
 
                     @Override
@@ -174,7 +174,7 @@ public class GameListAdapter extends BaseAdapter {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 data.setFlag(false);
-                viewHolder.button_regist.setText("SUB");
+                viewHolder.button_regist.setBackgroundResource(R.mipmap.ic_plus);
             }
         });
 
