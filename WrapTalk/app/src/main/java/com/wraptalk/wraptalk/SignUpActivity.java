@@ -45,13 +45,13 @@ public class SignUpActivity extends AppCompatActivity implements LoaderManager.L
     //private SendPostSignIn sendPostSignIn;
 
     // UI references.
-    private AutoCompleteTextView mEmailView;
-    private EditText mPasswordView1;
-    private EditText mPasswordView2;
-    private View mProgressView;
-    private View mSignupFormView;
+    private AutoCompleteTextView editText_email;
+    private EditText editText_password1;
+    private EditText editText_password2;
+    private View progress_signup;
+    private View signup_form;
 
-    Button mButtonJoin;
+    Button button_join;
 
 
     @Override
@@ -64,7 +64,7 @@ public class SignUpActivity extends AppCompatActivity implements LoaderManager.L
 
         populateAutoComplete();
 
-        mPasswordView1.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        editText_password1.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
                 if (id == R.id.signup || id == EditorInfo.IME_NULL) {
@@ -75,7 +75,7 @@ public class SignUpActivity extends AppCompatActivity implements LoaderManager.L
             }
         });
 
-        mPasswordView2.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        editText_password2.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
                 if (id == R.id.signup || id == EditorInfo.IME_NULL) {
@@ -86,7 +86,7 @@ public class SignUpActivity extends AppCompatActivity implements LoaderManager.L
             }
         });
 
-        mButtonJoin.setOnClickListener(new View.OnClickListener() {
+        button_join.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 attemptSignup();
@@ -96,16 +96,14 @@ public class SignUpActivity extends AppCompatActivity implements LoaderManager.L
 
     private void Init() {
 
-        //sendPostSignIn = new ();
+        editText_email = (AutoCompleteTextView) findViewById(R.id.editText_email);
+        editText_password1 = (EditText) findViewById(R.id.editText_password1);
+        editText_password2 = (EditText) findViewById(R.id.editText_password2);
 
-        mEmailView = (AutoCompleteTextView) findViewById(R.id.editText_email);
-        mPasswordView1 = (EditText) findViewById(R.id.editText_password1);
-        mPasswordView2 = (EditText) findViewById(R.id.editText_password2);
+        button_join = (Button) findViewById(R.id.button_join);
 
-        mButtonJoin = (Button) findViewById(R.id.button_join);
-
-        mSignupFormView = findViewById(R.id.signup_form);
-        mProgressView = findViewById(R.id.progress_signup);
+        signup_form = findViewById(R.id.signup_form);
+        progress_signup = findViewById(R.id.progress_signup);
     }
 
     private void populateAutoComplete() {
@@ -118,38 +116,38 @@ public class SignUpActivity extends AppCompatActivity implements LoaderManager.L
         }
 
         // Reset errors.
-        mEmailView.setError(null);
-        mPasswordView1.setError(null);
-        mPasswordView2.setError(null);
+        editText_email.setError(null);
+        editText_password1.setError(null);
+        editText_password2.setError(null);
 
         // Store values at the time of the signup attempt.
-        String email = mEmailView.getText().toString();
-        String password1 = mPasswordView1.getText().toString();
-        String password2 = mPasswordView2.getText().toString();
+        String email = editText_email.getText().toString();
+        String password1 = editText_password1.getText().toString();
+        String password2 = editText_password2.getText().toString();
 
         boolean cancel = false;
         View focusView = null;
 
         // Check for a valid password, if the user entered one.
         if (!TextUtils.isEmpty(password1) && (!isPasswordValid(password1))) {
-            mPasswordView1.setError(("This password is too short"));
-            focusView = mPasswordView1;
+            editText_password1.setError(("This password is too short"));
+            focusView = editText_password1;
             cancel = true;
         } else if(!password1.equals(password2)) {
             Log.e(password1, password2);
-            mPasswordView2.setError("The password2 is different from the password1");
-            focusView = mPasswordView2;
+            editText_password2.setError("The password2 is different from the password1");
+            focusView = editText_password2;
             cancel = true;
         }
 
         // Check for a valid email address.
         if (TextUtils.isEmpty(email)) {
-            mEmailView.setError("This field is required");
-            focusView = mEmailView;
+            editText_email.setError("This field is required");
+            focusView = editText_email;
             cancel = true;
         } else if (!isEmailValid(email)) {
-            mEmailView.setError("This email address is invalid");
-            focusView = mEmailView;
+            editText_email.setError("This email address is invalid");
+            focusView = editText_email;
             cancel = true;
         }
 
@@ -184,28 +182,28 @@ public class SignUpActivity extends AppCompatActivity implements LoaderManager.L
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
             int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
 
-            mSignupFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-            mSignupFormView.animate().setDuration(shortAnimTime).alpha(
+            signup_form.setVisibility(show ? View.GONE : View.VISIBLE);
+            signup_form.animate().setDuration(shortAnimTime).alpha(
                     show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationEnd(Animator animation) {
-                    mSignupFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+                    signup_form.setVisibility(show ? View.GONE : View.VISIBLE);
                 }
             });
 
-            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-            mProgressView.animate().setDuration(shortAnimTime).alpha(
+            progress_signup.setVisibility(show ? View.VISIBLE : View.GONE);
+            progress_signup.animate().setDuration(shortAnimTime).alpha(
                     show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationEnd(Animator animation) {
-                    mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+                    progress_signup.setVisibility(show ? View.VISIBLE : View.GONE);
                 }
             });
         } else {
             // The ViewPropertyAnimator APIs are not available, so simply show
             // and hide the relevant UI components.
-            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-            mSignupFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+            progress_signup.setVisibility(show ? View.VISIBLE : View.GONE);
+            signup_form.setVisibility(show ? View.GONE : View.VISIBLE);
         }
     }
 
@@ -260,7 +258,7 @@ public class SignUpActivity extends AppCompatActivity implements LoaderManager.L
                 new ArrayAdapter<>(SignUpActivity.this,
                         android.R.layout.simple_dropdown_item_1line, emailAddressCollection);
 
-        mEmailView.setAdapter(adapter);
+        editText_email.setAdapter(adapter);
     }
 
     public class UserSignUpTask extends AsyncTask<Void, Void, String> {
@@ -311,8 +309,8 @@ public class SignUpActivity extends AppCompatActivity implements LoaderManager.L
                 finish();
             }
             else if(result.equals("fail")){
-                mEmailView.setError("This email is duplicates");
-                mEmailView.requestFocus();
+                editText_email.setError("This email is duplicates");
+                editText_email.requestFocus();
             }
             else {
                 Toast.makeText(getApplicationContext(), "서버와의 접속이 원활하지 않습니다.", Toast.LENGTH_SHORT).show();
@@ -368,35 +366,6 @@ public class SignUpActivity extends AppCompatActivity implements LoaderManager.L
 
                 byte readData[] = baos.toByteArray();
                 String strData = new String(readData);
-                Log.e("서버", strData);
-
-                if (strData.contains("success")) {
-                    Log.e("SignUp 결과", "성공");
-                    return "true";
-                }
-                else if(strData.contains("-1")) {
-                    return "fail";
-                }
-                else {
-                    Log.e("SignUp 결과", "실패");
-                    return "false";
-                }
-
-
-//                OutputStreamWriter osw = new OutputStreamWriter(conn.getOutputStream());
-//                osw.write(body);
-//                osw.flush();
-//
-//                InputStreamReader tmp = new InputStreamReader(conn.getInputStream(), "UTF-8");
-//                BufferedReader reader = new BufferedReader(tmp);
-//                StringBuilder builder = new StringBuilder();
-//                String str;
-//
-//                while ((str = reader.readLine()) != null) {
-//                    builder.append(str);
-//                }
-//                sResult = builder.toString();
-
 
             } catch (Exception e) {
                 e.printStackTrace();

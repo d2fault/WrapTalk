@@ -32,7 +32,7 @@
 
                 <EditText android:id="@+id/editText_password1" android:layout_width="match_parent"
                     android:layout_height="wrap_content" android:hint="Password"
-                    android:imeActionId="@+id/login"
+                    android:imeActionId="@+id/signup"
                     android:imeActionLabel="Password is too short"
                     android:imeOptions="actionUnspecified" android:inputType="textPassword"
                     android:maxLines="1" android:singleLine="true" />

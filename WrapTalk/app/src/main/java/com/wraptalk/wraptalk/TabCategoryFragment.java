@@ -18,6 +18,7 @@ import java.util.ArrayList;
  */
 public class TabCategoryFragment extends android.support.v4.app.Fragment {
 
+    public static final String PRE_CHANNEL_PREFIX = "_talk_:";
 
     View view;
     ArrayList<CategoryData> source;
@@ -37,9 +38,8 @@ public class TabCategoryFragment extends android.support.v4.app.Fragment {
         gridView_result.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                RegisterCategoryInfo.getInstance().categoryName = categoryList.get(position);
                 Intent intent = new Intent(getActivity(), ChannelActivity.class);
-                intent.putExtra("categoryName", categoryList.get(position));
+                intent.putExtra("categoryName", PRE_CHANNEL_PREFIX + categoryList.get(position));
                 startActivity(intent);
             }
         });

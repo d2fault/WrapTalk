@@ -14,6 +14,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 
 /**
@@ -118,7 +120,13 @@ public class GameListAdapter extends BaseAdapter {
 
                 EditText editText = (EditText) dialogView.findViewById(R.id.editText_nickname);
                 String url = "http://133.130.113.101:7010/user/registApp?" +
-                        "token=" + UserInfo.getInstance().token + "&app_id=" + data.getPackageInfo().applicationInfo.packageName + "&user_nick=" + editText.getText().toString();
+                        "token=" + UserInfo.getInstance().token + "&app_id=" + data.getPackageInfo().applicationInfo.packageName +
+                        "&user_nick=";
+                try {
+                    url += URLEncoder.encode(editText.getText().toString(), "utf-8");
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
 
                 RequestUtil.asyncHttp(url, new OnRequest() {
                     @Override

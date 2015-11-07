@@ -27,7 +27,7 @@ public class SplashActivity extends AppCompatActivity {
     private static final String PROPERTY_APP_VERSION = "appVersion";
     private static final String TAG = "ICELANCER";
 
-    String SENDER_ID = "wraptalk-1109";
+    String SENDER_ID = "100866488970";
 
     GoogleCloudMessaging gcm;
     Context context;
@@ -122,7 +122,9 @@ public class SplashActivity extends AppCompatActivity {
                     if (gcm == null) {
                         gcm = GoogleCloudMessaging.getInstance(context);
                     }
-                    UserInfo.getInstance().gcmKey = gcm.register(SENDER_ID);
+                    regid = gcm.register(SENDER_ID);
+                    UserInfo.getInstance().gcmKey = regid;
+
                     msg = "Device registered, registration ID=" + regid;
 
                     // 서버에 발급받은 등록 아이디를 전송한다.

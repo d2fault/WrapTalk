@@ -10,6 +10,10 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 
@@ -33,7 +37,7 @@ public class TabMyChannelFragment extends android.support.v4.app.Fragment {
 
         initModel();
         initController();
-        initView();
+        getMyChannelList();
 
         listView_result.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -52,15 +56,47 @@ public class TabMyChannelFragment extends android.support.v4.app.Fragment {
         listView_result = (ListView) view.findViewById(R.id.listView_myChannel);
     }
 
-    private void initView() {
-        MyChannelData data = new MyChannelData();
+    private void getMyChannelList() {
 
-        data.myChannelTitle = "title";
-        data.myNickname = "nickname";
-        data.countUnreadMessage = 85;
-        source.add(data);
+        String url = "http://133.130.113.101:7010/user/listChannel?" + "token=" + UserInfo.getInstance().token;
 
-        customAdapter.notifyDataSetChanged();
+        RequestUtil.asyncHttp(url, new OnRequest() {
+            @Override
+            public void onSuccess(String url, byte[] receiveData) {
+                String jsonStr = new String(receiveData);
+                try {
+                    JSONObject json = new JSONObject(jsonStr);
+                    int result_code = json.optInt("result_code", -1);
+
+                    if (result_code != 0) {
+                        String result_msg = json.optString("result_msg", "fail");
+                        return;
+                    }
+
+                    JSONArray list_channel = json.optJSONArray("list_channel");
+                    for (int i = 0; i < list_channel.length(); i++) {
+                        JSONObject channelObj = list_channel.getJSONObject(i);
+
+                        MyChannelData data = new MyChannelData();
+
+                        data.setMyChannelTitle(channelObj.optString("channel_name"));
+                        data.setMyNickname("임시닉네임");
+
+                        source.add(data);
+                    }
+                    customAdapter.notifyDataSetChanged();
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onFail(String url, String error) {
+
+            }
+        });
     }
 
     private void initController() {
