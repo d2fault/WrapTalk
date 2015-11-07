@@ -65,6 +65,8 @@
         </activity>
         <activity android:name=".FavoriteChannelActivity" >
         </activity>
+        <activity android:name=".NoticeContentActivity" >
+        </activity>
     </application>
 
 </manifest>

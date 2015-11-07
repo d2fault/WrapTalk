@@ -56,7 +56,7 @@ public class NoticeAdapter extends BaseAdapter{
             convertView = layoutInflater.inflate(R.layout.layout_notice, parent, false);
 
             viewHolder.textView_noticeTitle = (TextView) convertView.findViewById(R.id.textView_noticeTitle);
-            viewHolder.textView_noticeDate = (TextView) convertView.findViewById(R.id.textView_noticeDate);
+            viewHolder.textView_noticeNumber = (TextView) convertView.findViewById(R.id.textView_noticeNumber);
 
             convertView.setTag(viewHolder);
         }
@@ -66,7 +66,7 @@ public class NoticeAdapter extends BaseAdapter{
         }
 
         viewHolder.textView_noticeTitle.setText(data.getTitle());
-        viewHolder.textView_noticeDate.setText(data.getDate());
+        viewHolder.textView_noticeNumber.setText(data.getNoticeNumber());
 
         return convertView;
     }

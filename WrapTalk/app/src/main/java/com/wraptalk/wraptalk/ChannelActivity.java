@@ -18,6 +18,7 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -130,7 +131,13 @@ public class ChannelActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
-                url += "&nick=" + editText_nickname.getText().toString();
+                url += "&nick=";
+
+                try {
+                    url += URLEncoder.encode(editText_nickname.getText().toString(), "utf-8");
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
 
                 RequestUtil.asyncHttp(url, new OnRequest() {
                     @Override
@@ -168,16 +175,20 @@ public class ChannelActivity extends AppCompatActivity {
 
         final CheckBox checkBox_channelOnoff = (CheckBox) dialogView.findViewById(R.id.checkBox_channelOnoff);
         final EditText editText_setPassword = (EditText) dialogView.findViewById(R.id.editText_setPassword);
+        final TextView textView_password = (TextView) dialogView.findViewById(R.id.textView_password);
 
+        textView_password.setVisibility(View.INVISIBLE);
         editText_setPassword.setVisibility(View.INVISIBLE);
 
         checkBox_channelOnoff.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked) {
+                    textView_password.setVisibility(View.INVISIBLE);
                     editText_setPassword.setVisibility(View.INVISIBLE);
                 }
                 else {
+                    textView_password.setVisibility(View.VISIBLE);
                     editText_setPassword.setVisibility(View.VISIBLE);
                 }
             }

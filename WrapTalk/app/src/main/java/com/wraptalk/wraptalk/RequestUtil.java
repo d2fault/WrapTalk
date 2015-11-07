@@ -32,13 +32,6 @@ public class RequestUtil extends AsyncTask<Void, Void, byte[]> {
 
     protected static byte[] requestHttp(String urlStr) throws IOException {
 
-//        String body = null;
-//
-//        TelephonyManager tm =(TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
-//
-//        body = "user_id=" + mEmail + "&user_pw=" + mPassword + "&device_id=" + data.getDeviceId() + "&gcm_id=" + data.getGcmKey();
-
-//        URL url = new URL("http://133.130.113.101:7010/user/login?" + body);
         URL url = new URL(urlStr);
         Log.e("서버에 보내는 내용", url.toString());
 
@@ -50,13 +43,6 @@ public class RequestUtil extends AsyncTask<Void, Void, byte[]> {
         conn.setDoOutput(true);
         // InputStream으로 서버로 부터 응답을 받겠다는 옵션.
         conn.setDoInput(true);
-
-
-//        try (OutputStream os = conn.getOutputStream();) {
-//            os.write(body.getBytes());
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
 
         try (
                 InputStream is = conn.getInputStream();
@@ -85,28 +71,9 @@ public class RequestUtil extends AsyncTask<Void, Void, byte[]> {
 
             return readData;
 
-
-//                OutputStreamWriter osw = new OutputStreamWriter(conn.getOutputStream());
-//                osw.write(body);
-//                osw.flush();
-//
-//                InputStreamReader tmp = new InputStreamReader(conn.getInputStream(), "UTF-8");
-//                BufferedReader reader = new BufferedReader(tmp);
-//                StringBuilder builder = new StringBuilder();
-//                String str;
-//
-//                while ((str = reader.readLine()) != null) {
-//                    builder.append(str);
-//                }
-//                sResult = builder.toString();
-
-
         } catch (Exception e) {
             e.printStackTrace();
-
         }
-
-
         return null;
     }
 

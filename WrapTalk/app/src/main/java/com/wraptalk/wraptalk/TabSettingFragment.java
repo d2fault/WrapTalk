@@ -21,17 +21,17 @@ import java.util.ArrayList;
 public class TabSettingFragment extends android.support.v4.app.Fragment {
 
 
+    Intent intent;
     View view;
     ArrayList<SettingData> source;
     ArrayList<String> settingList;
     SettingAdapter customAdapter = null;
     ListView listView_result;
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        //((MainActivity) getActivity()).getSupportActionBar().setTitle("d");
-
         view = inflater.inflate(R.layout.fragment_tab_setting, container, false);
 
 
@@ -43,9 +43,8 @@ public class TabSettingFragment extends android.support.v4.app.Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             switch (position) {
-
                 case 0:
-                    Intent intent = new Intent(getActivity(), NoticeActivity.class);
+                    intent = new Intent(getActivity(), NoticeActivity.class);
                     startActivity(intent);
                     break;
                 case 1:
@@ -54,6 +53,8 @@ public class TabSettingFragment extends android.support.v4.app.Fragment {
                     onClickOpacity();
                     break;
                 case 5:
+                    intent = new Intent(getActivity(), ChangePasswordActivity.class);
+                    startActivity(intent);
                     break;
                 case 6:
                     onClickLogout();

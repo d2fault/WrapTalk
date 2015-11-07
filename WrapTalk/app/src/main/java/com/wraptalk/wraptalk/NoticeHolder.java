@@ -8,5 +8,5 @@ import android.widget.TextView;
 public class NoticeHolder {
 
     TextView textView_noticeTitle;
-    TextView textView_noticeDate;
+    TextView textView_noticeNumber;
 }
