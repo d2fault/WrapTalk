@@ -43,6 +43,7 @@ public class TabMyChannelFragment extends android.support.v4.app.Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(getActivity(), ChattingActivity.class);
+                intent.putExtra("channelName", source.get(position).getMyChannelTitle());
                 startActivity(intent);
             }
         });

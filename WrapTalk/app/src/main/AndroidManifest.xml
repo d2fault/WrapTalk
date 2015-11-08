@@ -61,7 +61,9 @@
         </activity>
         <activity android:name=".NoticeActivity" >
         </activity>
-        <activity android:name=".ChattingActivity" >
+        <activity
+            android:name=".ChattingActivity"
+            android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity android:name=".ChangePasswordActivity" >
         </activity>
