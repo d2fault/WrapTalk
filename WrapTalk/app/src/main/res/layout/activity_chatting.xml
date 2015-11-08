@@ -17,6 +17,24 @@
             app:layout_scrollFlags="scroll|enterAlways"
             app:titleTextAppearance="@style/Toolbar.TitleText">
 
+            <ImageButton
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="right"
+                android:id="@+id/imageButton_setting"
+                android:background="@mipmap/ic_setting"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true" />
+
+            <ImageButton
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="right"
+                android:id="@+id/imageButton_ring"
+                android:background="@mipmap/ic_bell_on"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true" />
+
         </android.support.v7.widget.Toolbar>
     </android.support.design.widget.AppBarLayout>
 
