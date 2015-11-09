@@ -1,5 +1,6 @@
 package com.wraptalk.wraptalk;
 
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -10,6 +11,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 
 public class MainActivity extends AppCompatActivity {
@@ -44,6 +46,21 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.getTabAt(1).setIcon(R.mipmap.ic_category);
         tabLayout.getTabAt(2).setIcon(R.mipmap.ic_mychannel);
         tabLayout.getTabAt(3).setIcon(R.mipmap.ic_setting);
+
+        SQLiteUserHandler sqLiteUserHandler = SQLiteUserHandler.open(getApplicationContext());
+        sqLiteUserHandler.insert(UserInfo.getInstance().token, UserInfo.getInstance().deviceId, UserInfo.getInstance().email, UserInfo.getInstance().gcmKey);
+
+        Cursor c = sqLiteUserHandler.select();
+
+        while(c.moveToNext()) {
+            String token = c.getString(c.getColumnIndex("token"));
+            String device_id = c.getString(c.getColumnIndex("device_id"));
+            String user_id = c.getString(c.getColumnIndex("user_id"));
+            String gcm_key = c.getString(c.getColumnIndex("gcm_key"));
+
+            Log.e("DATA", "token:" + token + " / device_id:" + device_id + " / user_id:" + user_id + " / gcm_key:" + gcm_key);
+        }//end while
+        sqLiteUserHandler.close();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
