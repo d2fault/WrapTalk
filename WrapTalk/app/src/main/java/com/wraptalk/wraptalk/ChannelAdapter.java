@@ -8,7 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -66,7 +66,7 @@ public class ChannelAdapter extends BaseAdapter{
             viewHolder.textView_channelTitle = (TextView) convertView.findViewById(R.id.textView_channelTitle);
             viewHolder.textView_channelOnoff = (TextView) convertView.findViewById(R.id.textView_channelOnoff);
 
-            viewHolder.button_enter = (Button) convertView.findViewById(R.id.button_enter);
+            viewHolder.button_enter = (ImageButton) convertView.findViewById(R.id.button_enter);
 
             convertView.setTag(viewHolder);
         }
@@ -109,7 +109,7 @@ public class ChannelAdapter extends BaseAdapter{
             public void onClick(DialogInterface dialog, int which) {
                 joinChannel(data);
                 data.setFlag(true);
-                viewHolder.button_enter.setText("QUIT");
+                viewHolder.button_enter.setBackgroundResource(R.mipmap.ic_minus);
             }
         });
 
@@ -144,7 +144,7 @@ public class ChannelAdapter extends BaseAdapter{
             public void onClick(DialogInterface dialog, int which) {
                 quitChannel(data);
                 data.setFlag(false);
-                viewHolder.button_enter.setText("ADD");
+                viewHolder.button_enter.setBackgroundResource(R.mipmap.ic_plus);
             }
         });
 

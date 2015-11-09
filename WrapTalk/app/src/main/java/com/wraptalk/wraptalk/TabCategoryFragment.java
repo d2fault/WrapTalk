@@ -18,7 +18,7 @@ import java.util.ArrayList;
  */
 public class TabCategoryFragment extends android.support.v4.app.Fragment {
 
-    public static final String PRE_CHANNEL_PREFIX = "_talk_:";
+    public static final String PRE_CHANNEL_PREFIX = "category.";
 
     View view;
     ArrayList<CategoryData> source;

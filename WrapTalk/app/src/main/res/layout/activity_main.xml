@@ -11,14 +11,16 @@
         android:paddingTop="@dimen/appbar_padding_top" android:theme="@style/AppTheme.AppBarOverlay">
 
         <android.support.v7.widget.Toolbar android:id="@+id/toolbar"
-            android:layout_width="match_parent" android:layout_height="?attr/actionBarSize"
+            android:layout_width="match_parent" android:layout_height="@dimen/main_toolbar_height"
             android:background="?attr/colorPrimary"
             app:popupTheme="@style/AppTheme.PopupOverlay"
-            app:layout_scrollFlags="scroll|enterAlways">
+            app:layout_scrollFlags="scroll|enterAlways"
+            app:titleTextAppearance="@style/Toolbar.TitleText">
 
         </android.support.v7.widget.Toolbar>
 
-        <android.support.design.widget.TabLayout android:id="@+id/tabs"
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tabs"
             app:tabTextAppearance="@style/TabTextAppearance"
             android:layout_width="match_parent" android:layout_height="wrap_content" />
 
