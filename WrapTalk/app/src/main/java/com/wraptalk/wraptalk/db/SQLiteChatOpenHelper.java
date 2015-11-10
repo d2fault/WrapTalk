@@ -16,6 +16,7 @@ public class SQLiteChatOpenHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         String sql = "CREATE TABLE IF NOT EXISTS chat_info(" +
                         "package_name TEXT primary key, " +
+                        "channel_id TEXT, " +
                         "channel_title TEXT, " +
                         "channel_password INTEGER, " +
                         "master_id TEXT, " +

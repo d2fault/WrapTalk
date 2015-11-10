@@ -30,10 +30,11 @@ public class SQLiteChatHandler {
     }
 
     //저장
-    public void insert(String package_name, String channel_title, Integer channel_password, String master_id, Integer check_onoff, Integer fixed_number) {
+    public void insert(String package_name, String channel_id, String channel_title, Integer channel_password, String master_id, Integer check_onoff, Integer fixed_number) {
         db = helper.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put("package_name", package_name);
+        values.put("channel_id", channel_id);
         values.put("channel_title", channel_title);
         values.put("channel_password", channel_password);
         values.put("master_id", master_id);
