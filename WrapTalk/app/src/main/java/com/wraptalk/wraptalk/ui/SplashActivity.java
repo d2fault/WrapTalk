@@ -3,8 +3,10 @@ package com.wraptalk.wraptalk.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -14,10 +16,12 @@ import android.util.Log;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.wraptalk.wraptalk.R;
+import com.wraptalk.wraptalk.models.GameListData;
 import com.wraptalk.wraptalk.models.UserInfo;
 import com.wraptalk.wraptalk.utils.DBManager;
 
 import java.io.IOException;
+import java.util.List;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -63,6 +67,8 @@ public class SplashActivity extends AppCompatActivity {
 
         Handler hd = new Handler();
 
+        getInstalledApplication();
+
         hd.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -70,7 +76,7 @@ public class SplashActivity extends AppCompatActivity {
                 startActivity(intent);
                 finish();
             }
-        }, 2000);
+        }, 1000);
     }
 
 
@@ -167,6 +173,63 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     private void sendRegistrationIdToBackend() {
+    }
 
+    private void saveAppInfo() {
+
+    }
+
+    private void getInstalledApplication() {
+        PackageManager packageManager;
+
+        packageManager = getPackageManager();
+        List<PackageInfo> tempPackageList = packageManager
+                .getInstalledPackages(PackageManager.GET_PERMISSIONS);
+        String query;
+
+        /*To filter out System apps*/
+        for(PackageInfo pi : tempPackageList) {
+            boolean flag = isSystemPackage(pi);
+            if(!flag) {
+                GameListData data = new GameListData();
+                data.setPackageInfo(pi);
+                data.setAppIcon(packageManager.getApplicationIcon(data.packageInfo.applicationInfo));
+                data.setAppName(packageManager.getApplicationLabel(data.getPackageInfo().applicationInfo).toString());
+
+                query = String.format("INSERT INTO app_info (package_name, app_name, nickname, check_registration) VALUES ('%s', '%s', '%s', %d)",
+                        pi.packageName, packageManager.getApplicationLabel(data.getPackageInfo().applicationInfo).toString(), "temp", 0);
+
+                try {
+                    DBManager.getInstance().write(query);
+                } catch (RuntimeException e) {
+                }
+            }
+        }
+
+        DBManager.getInstance().select("SELECT app_name FROM app_info", new DBManager.OnSelect() {
+            @Override
+            public void onSelect(Cursor cursor) {
+                cursor.moveToFirst();
+                while(!cursor.isLast()) {
+                    try{
+                        Log.e("app_name", cursor.getString(cursor.getColumnIndex("app_name")));
+                        cursor.moveToNext();
+                    }
+                    catch (IllegalStateException e) {
+                        cursor.moveToNext();
+                    }
+                }
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        });
+    }
+
+    private boolean isSystemPackage(PackageInfo pkgInfo) {
+        return ((pkgInfo.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0) ? true
+                : false;
     }
 }

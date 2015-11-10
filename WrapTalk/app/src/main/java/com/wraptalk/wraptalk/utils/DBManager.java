@@ -27,21 +27,21 @@ public class DBManager extends SQLiteOpenHelper {
 
 
         String sql = "CREATE TABLE IF NOT EXISTS user_info(" +
-                        "token TEXT PRIMARY KEY , " +
+                        "token TEXT PRIMARY KEY, " +
                         "device_id TEXT, " +
                         "user_id TEXT, " +
                         "gcm_key TEXT);";
         db.execSQL(sql);
 
         sql = "CREATE TABLE IF NOT EXISTS app_info(" +
-                "package_name TEXT primary key, " +
+                "package_name TEXT PRIMARY KEY UNIQUE, " +
                 "app_name TEXT, " +
                 "nickname TEXT, " +
                 "check_registration INTEGER);"; // boolean처럼 사용할 것. 앱 등록 여부.
         db.execSQL(sql);
 
         sql = "CREATE TABLE IF NOT EXISTS chat_info(" +
-                "package_name TEXT primary key, " +
+                "package_name TEXT PRIMARY KEY UNIQUE , " +
                 "channel_id TEXT, " +
                 "channel_title TEXT, " +
                 "channel_password INTEGER, " +
@@ -79,5 +79,4 @@ public class DBManager extends SQLiteOpenHelper {
         public void onSelect(Cursor cursor);
         public void onComplete();
     }
-
 }
