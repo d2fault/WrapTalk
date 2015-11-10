@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
             String gcm_key = c.getString(c.getColumnIndex("gcm_key"));
 
             Log.e("DATA", "token:" + token + " / device_id:" + device_id + " / user_id:" + user_id + " / gcm_key:" + gcm_key);
-        }//end while
+        }
         sqLiteUserHandler.close();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
