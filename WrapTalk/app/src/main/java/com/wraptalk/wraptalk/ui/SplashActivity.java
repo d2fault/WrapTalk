@@ -16,7 +16,6 @@ import android.util.Log;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.wraptalk.wraptalk.R;
-import com.wraptalk.wraptalk.models.GameListData;
 import com.wraptalk.wraptalk.models.UserInfo;
 import com.wraptalk.wraptalk.utils.DBManager;
 
@@ -183,21 +182,15 @@ public class SplashActivity extends AppCompatActivity {
         PackageManager packageManager;
 
         packageManager = getPackageManager();
-        List<PackageInfo> tempPackageList = packageManager
-                .getInstalledPackages(PackageManager.GET_PERMISSIONS);
+        List<PackageInfo> tempPackageList = packageManager.getInstalledPackages(PackageManager.GET_PERMISSIONS);
         String query;
 
         /*To filter out System apps*/
         for(PackageInfo pi : tempPackageList) {
             boolean flag = isSystemPackage(pi);
             if(!flag) {
-                GameListData data = new GameListData();
-                data.setPackageInfo(pi);
-                data.setAppIcon(packageManager.getApplicationIcon(data.packageInfo.applicationInfo));
-                data.setAppName(packageManager.getApplicationLabel(data.getPackageInfo().applicationInfo).toString());
-
                 query = String.format("INSERT INTO app_info (package_name, app_name, nickname, check_registration) VALUES ('%s', '%s', '%s', %d)",
-                        pi.packageName, packageManager.getApplicationLabel(data.getPackageInfo().applicationInfo).toString(), "temp", 0);
+                        pi.packageName, packageManager.getApplicationLabel(pi.applicationInfo).toString(), "temp", 0);
 
                 try {
                     DBManager.getInstance().write(query);
@@ -209,15 +202,10 @@ public class SplashActivity extends AppCompatActivity {
         DBManager.getInstance().select("SELECT app_name FROM app_info", new DBManager.OnSelect() {
             @Override
             public void onSelect(Cursor cursor) {
-                cursor.moveToFirst();
+                cursor.moveToFirst(); // 꼭 처음으로 돌려주고 시작해야함.
                 while(!cursor.isLast()) {
-                    try{
-                        Log.e("app_name", cursor.getString(cursor.getColumnIndex("app_name")));
-                        cursor.moveToNext();
-                    }
-                    catch (IllegalStateException e) {
-                        cursor.moveToNext();
-                    }
+                    Log.e("app_name", cursor.getString(cursor.getColumnIndex("app_name")));
+                    cursor.moveToNext();
                 }
             }
 

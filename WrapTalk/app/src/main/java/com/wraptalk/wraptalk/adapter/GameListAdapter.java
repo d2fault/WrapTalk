@@ -95,7 +95,7 @@ public class GameListAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
 
-                if (!data.flag) {
+                if (data.flag == 0) {
                     onClickAddButton(viewHolder, data);
                 } else {
                     onClickSubButton(viewHolder, data);
@@ -137,7 +137,7 @@ public class GameListAdapter extends BaseAdapter {
                 RequestUtil.asyncHttp(url, new OnRequest() {
                     @Override
                     public void onSuccess(String url, byte[] receiveData) {
-                        data.setFlag(true);
+                        data.setFlag(1);
                         viewHolder.button_regist.setBackgroundResource(R.mipmap.ic_minus);
                     }
 
@@ -179,7 +179,7 @@ public class GameListAdapter extends BaseAdapter {
         builder.setPositiveButton("SUB", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                data.setFlag(false);
+                data.setFlag(0);
                 viewHolder.button_regist.setBackgroundResource(R.mipmap.ic_plus);
             }
         });
