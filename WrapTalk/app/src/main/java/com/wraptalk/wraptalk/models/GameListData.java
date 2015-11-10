@@ -37,7 +37,7 @@ public class GameListData {
     public void setAppIcon(Drawable appIcon) {
         this.appIcon = appIcon;
     }
-    public int isFlag() {
+    public int getFlag() {
         return flag;
     }
     public void setFlag(int flag) {

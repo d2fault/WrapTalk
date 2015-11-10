@@ -31,7 +31,6 @@ public class TabGameListFragment extends android.support.v4.app.Fragment {
     ArrayList<GameListData> source;
     GameListAdapter customAdapter = null;
     ListView listView_result;
-    String query;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -40,16 +39,15 @@ public class TabGameListFragment extends android.support.v4.app.Fragment {
         view = inflater.inflate(R.layout.fragment_tab_game_list, container, false);
 
         initModel();
-        getInstalledApplication();
+        getAppInfoByDB();
         initController();
         initView();
 
         listView_result.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
                 Log.e("num", String.valueOf(position));
-                if(source.get(position).isFlag() == 1) {
+                if(source.get(position).getFlag() == 1) {
                     Intent intent = new Intent(getActivity(), ChannelActivity.class);
                     intent.putExtra("packageInfo", source.get(position).getPackageInfo());
                     startActivity(intent);
@@ -75,7 +73,7 @@ public class TabGameListFragment extends android.support.v4.app.Fragment {
         listView_result.setAdapter(customAdapter);
     }
 
-    private void getInstalledApplication() {
+    private void getAppInfoByDB() {
         final PackageManager packageManager;
 
         packageManager = getActivity().getPackageManager();
@@ -87,10 +85,9 @@ public class TabGameListFragment extends android.support.v4.app.Fragment {
                     GameListData data = new GameListData();
                     try {
                         data.setPackageInfo(packageManager.getPackageInfo(cursor.getString(cursor.getColumnIndex("package_name")), PackageManager.GET_PERMISSIONS));
-                        Log.e("packageName", String.valueOf(cursor.getColumnIndex("package_name")));
                         data.setAppIcon(packageManager.getApplicationIcon(data.getPackageInfo().applicationInfo));
                         data.setAppName(cursor.getString(cursor.getColumnIndex("app_name")));
-                        data.setFlag(cursor.getColumnIndex("check_registration"));
+                        data.setFlag(cursor.getInt(cursor.getColumnIndex("check_registration")));
                         source.add(data);
                     } catch (PackageManager.NameNotFoundException e) {
                         e.printStackTrace();
