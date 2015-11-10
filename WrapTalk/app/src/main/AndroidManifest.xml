@@ -25,7 +25,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme" >
         <receiver
-            android:name=".GcmBroadcastReceiver"
+            android:name=".utils.GcmBroadcastReceiver"
             android:permission="com.google.android.c2dm.permission.SEND" >
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
@@ -34,13 +34,13 @@
             </intent-filter>
         </receiver>
 
-        <service android:name=".GcmIntentService" />
+        <service android:name=".services.GcmIntentService" />
         <service
-            android:name=".service.ChattingService"
+            android:name=".services.ChattingService"
             android:exported="false" />
 
         <activity
-            android:name=".SplashActivity"
+            android:name=".ui.SplashActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -49,31 +49,31 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".SignInActivity"
+            android:name=".ui.SignInActivity"
             android:label="@string/app_name" >
         </activity>
-        <activity android:name=".SignUpActivity" >
+        <activity android:name=".ui.SignUpActivity" >
         </activity>
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.MainActivity"
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
-            android:name=".ChannelActivity"
+            android:name=".ui.ChannelActivity"
             android:label="@string/title_activity_channel" >
         </activity>
-        <activity android:name=".NoticeActivity" >
+        <activity android:name=".ui.NoticeActivity" >
         </activity>
         <activity
-            android:name=".ChattingActivity"
+            android:name=".ui.ChattingActivity"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
-        <activity android:name=".ChangePasswordActivity" >
+        <activity android:name=".ui.ChangePasswordActivity" >
         </activity>
-        <activity android:name=".FavoriteChannelActivity" >
+        <activity android:name=".ui.FavoriteChannelActivity" >
         </activity>
-        <activity android:name=".NoticeContentActivity" >
+        <activity android:name=".ui.NoticeContentActivity" >
         </activity>
     </application>
 
