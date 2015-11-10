@@ -1,7 +1,7 @@
 package com.wraptalk.wraptalk;
 
 import android.content.Intent;
-import android.database.Cursgor;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
