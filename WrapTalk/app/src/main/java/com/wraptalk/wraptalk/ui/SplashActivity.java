@@ -15,6 +15,7 @@ import android.util.Log;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.wraptalk.wraptalk.R;
 import com.wraptalk.wraptalk.models.UserInfo;
+import com.wraptalk.wraptalk.utils.DBManager;
 
 import java.io.IOException;
 
@@ -28,6 +29,8 @@ public class SplashActivity extends AppCompatActivity {
     // SharedPreferences에 저장할 때 key 값으로 사용됨.
     private static final String PROPERTY_APP_VERSION = "appVersion";
     private static final String TAG = "ICELANCER";
+
+    DBManager dbManager;
 
     String SENDER_ID = "100866488970";
 
@@ -67,12 +70,13 @@ public class SplashActivity extends AppCompatActivity {
                 startActivity(intent);
                 finish();
             }
-        }, 3000);
+        }, 2000);
     }
 
 
     private void Init() {
         context = getApplicationContext();
+        dbManager = new DBManager(context, "wraptalkdb.sqlite", null, 1);
 
         gcm = GoogleCloudMessaging.getInstance(this);
         regid = getRegistrationId(context);

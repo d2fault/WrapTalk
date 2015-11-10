@@ -17,7 +17,6 @@ import android.widget.ListView;
 import com.wraptalk.wraptalk.R;
 import com.wraptalk.wraptalk.adapter.GameListAdapter;
 import com.wraptalk.wraptalk.models.GameListData;
-import com.wraptalk.wraptalk.ui.ChannelActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +32,7 @@ public class TabGameListFragment extends android.support.v4.app.Fragment {
     ArrayList<GameListData> source;
     GameListAdapter customAdapter = null;
     ListView listView_result;
+    String query;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
