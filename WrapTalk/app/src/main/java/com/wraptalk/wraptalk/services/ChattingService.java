@@ -268,7 +268,7 @@ public class ChattingService extends Service implements View.OnClickListener {
                                                    obj.put("type", "publish");
                                                    obj.put("address", "to.server.channel");
                                                    JSONObject body = new JSONObject();
-                                                   body.put("type", "notice");
+                                                   body.put("type", "normal");
                                                    body.put("channel_id", "channel_id");
                                                    body.put("sender_id", "aaa");
                                                    body.put("sender_nick", "닉넴");

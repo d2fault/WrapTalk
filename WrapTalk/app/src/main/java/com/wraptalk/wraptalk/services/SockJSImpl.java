@@ -107,9 +107,29 @@ public class SockJSImpl extends WebSocketClient {
             obj.put("address", address);
 
             send(obj);
+            joinLogSend();
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    private void joinLogSend() {
+        JSONObject log = new JSONObject();
+        try {
+            log.put("type", "publish");
+            log.put("address", "to.server.channel");
+            JSONObject body = new JSONObject();
+            body.put("type", "log");
+            body.put("channel_id", "channel_id");
+            body.put("sender_id", "aaa");
+            body.put("sender_nick", "닉넴");
+            body.put("msg", "님이 입장하셨습니다.");
+            log.put("body", body);
+            send(log);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
     }
 
     /**
