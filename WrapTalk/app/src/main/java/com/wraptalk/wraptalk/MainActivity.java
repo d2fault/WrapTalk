@@ -1,6 +1,7 @@
 package com.wraptalk.wraptalk;
 
-import android.database.Cursor;
+import android.content.Intent;
+import android.database.Cursgor;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -13,6 +14,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+
+import com.wraptalk.wraptalk.service.ChattingService;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -59,13 +62,14 @@ public class MainActivity extends AppCompatActivity {
             String gcm_key = c.getString(c.getColumnIndex("gcm_key"));
 
             Log.e("DATA", "token:" + token + " / device_id:" + device_id + " / user_id:" + user_id + " / gcm_key:" + gcm_key);
-        }//end while
+        }
         sqLiteUserHandler.close();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                startService(new Intent(MainActivity.this, ChattingService.class));
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
