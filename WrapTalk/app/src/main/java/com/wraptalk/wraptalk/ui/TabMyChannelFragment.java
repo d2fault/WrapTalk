@@ -102,7 +102,11 @@ public class TabMyChannelFragment extends android.support.v4.app.Fragment {
                                 source.get(i).getChannel_id(), source.get(i).getApp_id(), source.get(i).getChannel_name(),
                                 source.get(i).getUser_nick(), source.get(i).getChief_id(), source.get(i).getUser_color());
 
-                        DBManager.getInstance().write(query);
+                        try {
+                            DBManager.getInstance().write(query);
+                        } catch (RuntimeException e) {
+                        }
+
                     }
                     customAdapter.notifyDataSetChanged();
 
@@ -117,10 +121,6 @@ public class TabMyChannelFragment extends android.support.v4.app.Fragment {
         });
     }
 
-    private void insertDB(int position) {
-
-
-    }
     private void initController() {
         customAdapter = new MyChannelAdapter(getActivity().getApplicationContext(), source);
         listView_result.setAdapter(customAdapter);
