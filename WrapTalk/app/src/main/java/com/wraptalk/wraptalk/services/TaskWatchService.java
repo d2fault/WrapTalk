@@ -25,6 +25,20 @@ public class TaskWatchService{
     public TaskWatchService(Context context, TaskWatchCallback callback){
         this.context = context;
         this.callback = callback;
+
+        mActivityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+
+        String[] activePackages;
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT_WATCH) {
+            activePackages = getActivePackages();
+        } else {
+            activePackages = getActivePackagesCompat();
+        }
+        if (activePackages != null) {
+            for (String activePackage : activePackages) {
+                currentTask = activePackage;
+            }
+        }
     }
 
     public void setCallback(TaskWatchCallback callback){
@@ -34,7 +48,8 @@ public class TaskWatchService{
     public void start() {
         Log.e("WatchService", "Start Service");
         final Handler handler = new Handler();
-        mActivityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+
+
 
         Runnable runThread = new Runnable() {
             @Override

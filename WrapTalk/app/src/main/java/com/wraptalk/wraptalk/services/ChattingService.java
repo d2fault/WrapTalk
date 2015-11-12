@@ -513,6 +513,7 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
     @Override
     public boolean TaskCallback(String task) {
         Log.i("task", task);
+        sockJS.closeSession();
         return true;
     }
 
