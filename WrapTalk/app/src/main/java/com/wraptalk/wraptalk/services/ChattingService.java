@@ -114,7 +114,13 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
 
         mWindowManager.addView(mImageView, mParams);
 
+        connectSockJS();
+    }
+
+    private void connectSockJS() {
         try {
+            chatdata.clear();
+            adapter.notifyDataSetChanged();
             sockJS = new SockJSImpl("http://133.130.113.101:7030/eventbus", "channel_id") {
 
                 @Override
@@ -141,7 +147,6 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-
                                     chatdata.add(data);
                                     adapter.notifyDataSetChanged();
                                 }
@@ -514,6 +519,8 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
     public boolean TaskCallback(String task) {
         Log.i("task", task);
         sockJS.closeSession();
+        connectSockJS();
+
         return true;
     }
 
