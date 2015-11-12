@@ -4,9 +4,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,13 +23,14 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.wraptalk.wraptalk.R;
 import com.wraptalk.wraptalk.adapter.ChannelAdapter;
 import com.wraptalk.wraptalk.models.ChannelData;
 import com.wraptalk.wraptalk.models.CreateChannelData;
-import com.wraptalk.wraptalk.utils.OnRequest;
-import com.wraptalk.wraptalk.R;
-import com.wraptalk.wraptalk.utils.RequestUtil;
 import com.wraptalk.wraptalk.models.UserInfo;
+import com.wraptalk.wraptalk.utils.DBManager;
+import com.wraptalk.wraptalk.utils.OnRequest;
+import com.wraptalk.wraptalk.utils.RequestUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -52,6 +55,10 @@ public class ChannelActivity extends AppCompatActivity {
 
     CreateChannelData channelData;
     String url;
+
+    String channel_id, package_name, channel_title, master_id, user_color;
+    int size = 0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -139,7 +146,7 @@ public class ChannelActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
-                url += "&nick=";
+                url += "&user_nick=";
 
                 try {
                     url += URLEncoder.encode(editText_nickname.getText().toString(), "utf-8");
@@ -239,13 +246,45 @@ public class ChannelActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
-                getChannelInfo(dialogView);
+                getNewChannelInfo(dialogView);
 
                 RequestUtil.asyncHttp(url, new OnRequest() {
                     @Override
                     public void onSuccess(String url, byte[] receiveData) {
-                        /* 바뀐 것 바로 반영하고 싶은데... */
+
+                        String jsonStr = new String(receiveData);
+                        try {
+                            JSONObject json = new JSONObject(jsonStr);
+                            channel_id = json.optString("channel_id");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        String query = String.format( "INSERT INTO chat_info " +
+                                        "(channel_id, package_name, channel_title, master_id, user_color) " +
+                                        "VALUES ('%s', '%s', '%s', '%s', '%s')",
+                                channel_id, package_name, channel_title, master_id, user_color);
+
+                        DBManager.getInstance().write(query);
+
                         Toast.makeText(ChannelActivity.this, "채널 생성에 성공하셨습니다.", Toast.LENGTH_SHORT).show();
+
+                        DBManager.getInstance().select("SELECT * FROM chat_info", new DBManager.OnSelect() {
+                            @Override
+                            public void onSelect(Cursor cursor) {
+                                cursor.moveToFirst();
+
+                                Log.e("예아",  cursor.getString(cursor.getColumnIndex("channel_id")));
+                            }
+
+                            @Override
+                            public void onComplete() {
+
+                            }
+                        });
+
+                        getChannelList();
+                        customAdapter.notifyDataSetChanged();
                     }
 
                     @Override
@@ -272,7 +311,7 @@ public class ChannelActivity extends AppCompatActivity {
         dialog.show();
     }
 
-    private void getChannelInfo(View v) {
+    private void getNewChannelInfo(View v) {
 
         final EditText editText_channelName = (EditText) v.findViewById(R.id.editText_channelName);
         final EditText editText_setPassword = (EditText) v.findViewById(R.id.editText_setPassword);
@@ -286,13 +325,16 @@ public class ChannelActivity extends AppCompatActivity {
 
         if(categoryName != null && categoryName.startsWith(TabCategoryFragment.PRE_CHANNEL_PREFIX)) {
             url += categoryName;
+            package_name = categoryName;
         }
         else {
             url += packageInfo.packageName;
+            package_name = packageInfo.packageName;
         }
 
         try {
             url += "&channel_name=" + URLEncoder.encode(channelData.getChannelName(), "utf-8") + "&public_onoff=";
+            channel_title = channelData.getChannelName();
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
@@ -304,6 +346,8 @@ public class ChannelActivity extends AppCompatActivity {
             url += "off&channel_pw=" + editText_setPassword.getText().toString();
         }
 
+        master_id = UserInfo.getInstance().email;
+        user_color = "#000000";
         url += "&channel_limit=" + channelData.getChannelLimit() + "&user_nick=" + "임시닉네임";
     }
 
@@ -344,16 +388,16 @@ public class ChannelActivity extends AppCompatActivity {
                         data.setChannelLimit(channelObj.optString("channel_limit"));
                         data.setChannelId(channelObj.optString("channel_id"));
 
-                        if(categoryName != null && categoryName.startsWith(TabCategoryFragment.PRE_CHANNEL_PREFIX)) {
+                        if (categoryName != null && categoryName.startsWith(TabCategoryFragment.PRE_CHANNEL_PREFIX)) {
                             data.setAppId(categoryName);
-                        }
-                        else {
+                        } else {
                             data.setAppId(packageInfo.packageName);
                         }
 
                         source.add(data);
                     }
 
+                    setIconRegisterdChannel();
                     customAdapter.notifyDataSetChanged();
 
                 } catch (JSONException e) {
@@ -391,7 +435,7 @@ public class ChannelActivity extends AppCompatActivity {
                     JSONObject json = new JSONObject(jsonStr);
                     int result_code = json.optInt("result_code", -1);
 
-                    if(result_code != 0) {
+                    if (result_code != 0) {
                         String result_msg = json.optString("result_msg", "fail");
                         Toast.makeText(getApplicationContext(), result_msg, Toast.LENGTH_SHORT).show();
 
@@ -399,25 +443,27 @@ public class ChannelActivity extends AppCompatActivity {
                     }
 
                     JSONArray list_channel = json.optJSONArray("list_channel");
-                    for (int i = 0 ; i < list_channel.length() ; i++) {
+                    for (int i = 0; i < list_channel.length(); i++) {
                         JSONObject channelObj = list_channel.getJSONObject(i);
 
                         ChannelData data = new ChannelData();
 
+                        data.setChannelId(channelObj.optString("channel_id"));
                         data.setChannelName(channelObj.optString("channel_name"));
                         data.setChannelOnoff(channelObj.optString("public_onoff"));
                         data.setChannelLimit(channelObj.optString("channel_limit"));
-                        data.setChannelId(channelObj.optString("channel_id"));
+                        data.setMasterId(channelObj.optString("chief_id"));
 
-                        if(packageInfo != null) {
+                        if (packageInfo != null) {
                             data.setAppId(packageInfo.packageName);
-                        }
-                        else {
+                        } else {
                             data.setAppId(categoryName);
                         }
+                        insertJoinChannelList(data);
                         source.add(data);
                     }
 
+                    setIconRegisterdChannel();
                     customAdapter.notifyDataSetChanged();
 
                 } catch (JSONException e) {
@@ -431,5 +477,55 @@ public class ChannelActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    private void setIconRegisterdChannel() {
+        DBManager.getInstance().select("SELECT package_name == \'" + package_name + "\'FROM chat_info", new DBManager.OnSelect() {
+            @Override
+            public void onSelect(Cursor cursor) {
+                for (int i = 0; i < source.size(); i++) {
+                    cursor.moveToFirst();
+                    try {
+                        while (!cursor.isLast()) {
+                            if (source.get(i).getChannelId().equals(cursor.getString(cursor.getColumnIndex("channel_id")))) {
+                                source.get(i).setFlag(1);
+                            }
+                        }
+                    }
+                    catch (Exception e) {
+
+                    }
+
+                }
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        });
+    }
+
+    // channel activity에서 받아야 하는 내용!!
+    private void insertJoinChannelList(ChannelData data) {
+        String query;
+
+        if(categoryName != null && categoryName.startsWith(TabCategoryFragment.PRE_CHANNEL_PREFIX)) {
+            query = String.format( "INSERT INTO chat_info " +
+                            "(channel_id, package_name, channel_title, master_id, user_color) " +
+                            "VALUES ('%s', '%s', '%s', '%s', '%s')",
+                    data.getChannelId(), packageInfo.packageName, data.getChannelName(), data.getMasterId(), "#000000");
+        }
+        else {
+            query = String.format( "INSERT INTO chat_info " +
+                            "(channel_id, package_name, channel_title, master_id, user_color) " +
+                            "VALUES ('%s', '%s', '%s', '%s', '%s')",
+                    data.getChannelId(), categoryName, data.getChannelName(), data.getMasterId(), "#000000");
+        }
+
+        try {
+            DBManager.getInstance().write(query);
+        } catch (RuntimeException e) {
+        }
     }
 }

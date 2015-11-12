@@ -88,7 +88,7 @@ public class TabMyChannelFragment extends android.support.v4.app.Fragment {
                         MyChannelData data = new MyChannelData();
 
                         data.setMyChannelTitle(channelObj.optString("channel_name"));
-                        data.setMyNickname("임시닉네임");
+                        data.setMyNickname(channelObj.optString("user_nick"));
 
                         source.add(data);
                     }
@@ -97,9 +97,7 @@ public class TabMyChannelFragment extends android.support.v4.app.Fragment {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-
             }
-
             @Override
             public void onFail(String url, String error) {
 
@@ -107,6 +105,12 @@ public class TabMyChannelFragment extends android.support.v4.app.Fragment {
         });
     }
 
+    private void insertDB() {
+        String query = String.format( "INSERT INTO chat_info (channel_id, package_name, channel_title, channel_password, master_id, check_onoff, fixed_number) VALUES ('%s', '%s', '%s', '%s')",
+                UserInfo.getInstance().token, UserInfo.getInstance().deviceId, UserInfo.getInstance().email, UserInfo.getInstance().gcmKey);
+
+
+    }
     private void initController() {
         customAdapter = new MyChannelAdapter(getActivity().getApplicationContext(), source);
         listView_result.setAdapter(customAdapter);

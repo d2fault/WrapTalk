@@ -103,6 +103,7 @@ public class GameListAdapter extends BaseAdapter {
         viewHolder.imageButton_regist.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 if (data.getFlag() == 0) {
                     onClickAddButton(viewHolder, data);
                 } else {

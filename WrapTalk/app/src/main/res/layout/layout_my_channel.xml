@@ -10,7 +10,9 @@
         android:paddingBottom="8dp"
         android:orientation="horizontal"
         android:gravity="center"
-        android:weightSum="11">
+        android:weightSum="11"
+        android:clickable="false"
+        android:focusable="false">
 
         <LinearLayout
             android:layout_width="0dp"

@@ -23,8 +23,10 @@ public class ChannelData {
     private String channelLimit;
     private String channelId;
     private String appId;
+    private String userColor;
+    private String masterId;
 
-    Boolean flag = false;
+    Integer flag = 0;
 
     public String getChannelName() {
         return channelName;
@@ -66,11 +68,27 @@ public class ChannelData {
         this.appId = appId;
     }
 
-    public Boolean getFlag() {
+    public String getUserColor() {
+        return userColor;
+    }
+
+    public void setUserColor(String userColor) {
+        this.userColor = userColor;
+    }
+
+    public String getMasterId() {
+        return masterId;
+    }
+
+    public void setMasterId(String masterId) {
+        this.masterId = masterId;
+    }
+
+    public Integer getFlag() {
         return flag;
     }
 
-    public void setFlag(Boolean flag) {
+    public void setFlag(Integer flag) {
         this.flag = flag;
     }
 }

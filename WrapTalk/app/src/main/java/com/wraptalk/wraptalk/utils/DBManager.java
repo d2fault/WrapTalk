@@ -41,13 +41,11 @@ public class DBManager extends SQLiteOpenHelper {
         db.execSQL(sql);
 
         sql = "CREATE TABLE IF NOT EXISTS chat_info(" +
-                "package_name TEXT PRIMARY KEY UNIQUE , " +
-                "channel_id TEXT, " +
+                "channel_id TEXT PRIMARY KEY UNIQUE, " +
+                "package_name TEXT, " +
                 "channel_title TEXT, " +
-                "channel_password INTEGER, " +
                 "master_id TEXT, " +
-                "check_onoff INTEGER, " +
-                "fixed_number INTEGER);";
+                "user_color TEXT);";
         db.execSQL(sql);
 
         Log.e("DBManager", "onCreate");
