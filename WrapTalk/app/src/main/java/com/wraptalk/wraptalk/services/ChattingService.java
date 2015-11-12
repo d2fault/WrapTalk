@@ -38,7 +38,7 @@ import java.util.ArrayList;
 /**
  * Created by lk on 2015. 10. 23..
  */
-public class ChattingService extends Service implements View.OnClickListener {
+public class ChattingService extends Service implements View.OnClickListener, TaskWatchCallback {
 
     /**
      * For ChatHead
@@ -106,11 +106,13 @@ public class ChattingService extends Service implements View.OnClickListener {
         initView();
         initParams();
 
+        TaskWatchService taskWatchService = new TaskWatchService(getApplicationContext(), this);
+        taskWatchService.setCallback(this);
+        taskWatchService.start();
+
         mHandler = new Handler();
 
-
         mWindowManager.addView(mImageView, mParams);
-
 
         try {
             sockJS = new SockJSImpl("http://133.130.113.101:7030/eventbus", "channel_id") {
@@ -506,6 +508,12 @@ public class ChattingService extends Service implements View.OnClickListener {
                 showchat = 0;
             }
         }
+    }
+
+    @Override
+    public boolean TaskCallback(String task) {
+        Log.i("task", task);
+        return true;
     }
 
     private class LongPressClass implements Runnable {

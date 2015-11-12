@@ -19,6 +19,7 @@ import com.wraptalk.wraptalk.R;
 import com.wraptalk.wraptalk.db.SQLiteUserHandler;
 import com.wraptalk.wraptalk.models.UserInfo;
 import com.wraptalk.wraptalk.services.ChattingService;
+import com.wraptalk.wraptalk.services.TaskWatchService;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -72,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                startService(new Intent(MainActivity.this, TaskWatchService.class));
                 startService(new Intent(MainActivity.this, ChattingService.class));
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
