@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.wraptalk.wraptalk.utils.DBManager;
 import com.wraptalk.wraptalk.utils.OnRequest;
 import com.wraptalk.wraptalk.R;
 import com.wraptalk.wraptalk.utils.RequestUtil;
@@ -50,7 +51,7 @@ public class TabMyChannelFragment extends android.support.v4.app.Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(getActivity(), ChattingActivity.class);
-                intent.putExtra("channelName", source.get(position).getMyChannelTitle());
+                intent.putExtra("channelName", source.get(position).getChannel_name());
                 startActivity(intent);
             }
         });
@@ -64,7 +65,7 @@ public class TabMyChannelFragment extends android.support.v4.app.Fragment {
         listView_result = (ListView) view.findViewById(R.id.listView_myChannel);
     }
 
-    private void getMyChannelList() {
+    public void getMyChannelList() {
 
         String url = "http://133.130.113.101:7010/user/listChannel?" + "token=" + UserInfo.getInstance().token;
 
@@ -87,10 +88,21 @@ public class TabMyChannelFragment extends android.support.v4.app.Fragment {
 
                         MyChannelData data = new MyChannelData();
 
-                        data.setMyChannelTitle(channelObj.optString("channel_name"));
-                        data.setMyNickname(channelObj.optString("user_nick"));
+                        data.setChannel_id(channelObj.optString("channel_id"));
+                        data.setApp_id(channelObj.optString("app_id"));
+                        data.setChannel_name(channelObj.optString("channel_name"));
+                        data.setUser_nick(channelObj.optString("user_nick"));
+                        data.setChief_id(channelObj.optString("chief_id"));
+                        data.setUser_color(channelObj.optString("user_color"));
 
                         source.add(data);
+
+                        String query = String.format( "INSERT INTO chat_info (" +
+                                        "channel_id, app_id, channel_name, user_nick, chief_id, user_color) VALUES ('%s', '%s', '%s', '%s', '%s', %s)",
+                                source.get(i).getChannel_id(), source.get(i).getApp_id(), source.get(i).getChannel_name(),
+                                source.get(i).getUser_nick(), source.get(i).getChief_id(), source.get(i).getUser_color());
+
+                        DBManager.getInstance().write(query);
                     }
                     customAdapter.notifyDataSetChanged();
 
@@ -105,9 +117,7 @@ public class TabMyChannelFragment extends android.support.v4.app.Fragment {
         });
     }
 
-    private void insertDB() {
-        String query = String.format( "INSERT INTO chat_info (channel_id, package_name, channel_title, channel_password, master_id, check_onoff, fixed_number) VALUES ('%s', '%s', '%s', '%s')",
-                UserInfo.getInstance().token, UserInfo.getInstance().deviceId, UserInfo.getInstance().email, UserInfo.getInstance().gcmKey);
+    private void insertDB(int position) {
 
 
     }
