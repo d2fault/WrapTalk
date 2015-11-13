@@ -26,7 +26,6 @@ import android.widget.Toast;
 import com.wraptalk.wraptalk.R;
 import com.wraptalk.wraptalk.adapter.ChannelAdapter;
 import com.wraptalk.wraptalk.models.ChannelData;
-import com.wraptalk.wraptalk.models.CreateChannelData;
 import com.wraptalk.wraptalk.models.UserInfo;
 import com.wraptalk.wraptalk.utils.DBManager;
 import com.wraptalk.wraptalk.utils.OnRequest;
@@ -53,10 +52,10 @@ public class ChannelActivity extends AppCompatActivity {
     String categoryName;
     String searchKeyword;
 
-    CreateChannelData channelData;
+    ChannelData channelData  = new ChannelData();
     String url;
 
-    String app_id, channel_title, master_id, user_color, nickname;
+    String app_id, app_name, nickname;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +69,8 @@ public class ChannelActivity extends AppCompatActivity {
         initModel();
         getChannelList();
         initController();
+
+        getSupportActionBar().setTitle("채널 가입");
 
         button_search.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,11 +112,12 @@ public class ChannelActivity extends AppCompatActivity {
         button_search = (Button) findViewById(R.id.button_search);
         if(categoryName != null && categoryName.startsWith(TabCategoryFragment.PRE_CHANNEL_PREFIX)) {
             app_id = categoryName;
+            app_name = categoryName.replace(TabCategoryFragment.PRE_CHANNEL_PREFIX, "");
         }
         else {
             app_id = packageInfo.packageName;
+            app_name = getPackageManager().getApplicationLabel(packageInfo.applicationInfo).toString();
         }
-
         getNickname();
     }
 
@@ -133,12 +135,13 @@ public class ChannelActivity extends AppCompatActivity {
         final EditText editText_nickname = (EditText) dialogView.findViewById(R.id.editText_nickname);
 
         builder.setView(dialogView);
-        builder.setTitle(app_id);
+        builder.setTitle(app_name);
 
         url = "http://133.130.113.101:7010/user/registNick?token=" + UserInfo.getInstance().token + "&app_id=" + app_id;
 
-        if(categoryName != null) {
+        if(packageInfo != null) {
             builder.setIcon(packageManager.getApplicationIcon(packageInfo.applicationInfo));
+            builder.setTitle(app_id);
         }
 
         builder.setPositiveButton("SET", new DialogInterface.OnClickListener() {
@@ -228,8 +231,8 @@ public class ChannelActivity extends AppCompatActivity {
         spinner_userCount.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                channelData = new CreateChannelData();
-                channelData.setChannelLimit(String.valueOf(position + 1));
+                channelData = new ChannelData();
+                channelData.setChannel_limit(position + 1);
             }
 
             @Override
@@ -247,45 +250,29 @@ public class ChannelActivity extends AppCompatActivity {
                 RequestUtil.asyncHttp(url, new OnRequest() {
                     @Override
                     public void onSuccess(String url, byte[] receiveData) {
-
                         String jsonStr = new String(receiveData);
                         String query;
                         try {
-
-                            final ChannelData data = new ChannelData();
                             JSONObject json = new JSONObject(jsonStr);
-
-                            data.setChannel_id(json.optString("channel_id"));
-                            data.setPublic_onoff(json.optString("public_onoff"));
-                            data.setChannel_limit(json.optInt("channel_limit"));
-                            data.setChannel_cate(json.optString("channel_cate"));
-                            data.setApp_id(json.optString("app_id"));
-                            data.setChannel_name(json.optString("channel_name"));
-                            // userNick은 app_info에서 갖다가 써야 함
-                            data.setUser_color(json.optString("user_color"));
-                            data.setChief_id(json.optString("chief_id"));
-                            data.setFlag(1);
+                            channelData.setChannel_id(json.optString("channel_id"));
 
                             query = String.format( "INSERT INTO chat_info " +
-                                            "(channel_id, public_onoff, channel_limit, channel_cate, app_id, " +
-                                            "channel_name, chief_id, user_color) " +
+                                            "(channel_id, public_onoff, channel_limit, channel_cate, " +
+                                            "app_id, channel_name, chief_id, user_color) " +
                                             "VALUES ('%s', '%s', '%d', '%s', '%s', '%s', '%s', '%s')",
-                                    json.optString("channel_id"), json.optString("public_onoff"), json.optInt("channel_limit"),
-                                    json.optString("channel_cate"), json.optString("app_id"), json.optString("channel_name"),
-                                    UserInfo.getInstance().email, "#FFFFFF");
+                                    channelData.getChannel_id(), channelData.getPublic_onoff(), channelData.getChannel_limit(), channelData.getChannel_cate(),
+                                    channelData.getApp_id(), channelData.getChannel_name(), channelData.getChief_id(), channelData.getUser_color());
 
                             DBManager.getInstance().write(query);
-                            source.add(data);
-                            customAdapter.notifyDataSetChanged();
+
+                            source.add(channelData);
 
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
 
-                        Toast.makeText(ChannelActivity.this, "채널 생성에 성공하셨습니다.", Toast.LENGTH_SHORT).show();
-
-                        getChannelList();
                         customAdapter.notifyDataSetChanged();
+                        Toast.makeText(ChannelActivity.this, "채널 생성에 성공하셨습니다.", Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
@@ -319,29 +306,32 @@ public class ChannelActivity extends AppCompatActivity {
         final CheckBox checkBox_channelOnoff = (CheckBox) v.findViewById(R.id.checkBox_channelOnoff);
 
 
-        channelData.setChannelName(editText_channelName.getText().toString());
+        channelData.setChannel_name(editText_channelName.getText().toString());
         /* url 생성 */
 
         url = "http://133.130.113.101:7010/user/makeChannel?token=" + UserInfo.getInstance().token + "&app_id=" + app_id;
 
         try {
-            url += "&channel_name=" + URLEncoder.encode(channelData.getChannelName(), "utf-8") + "&public_onoff=";
-            channel_title = channelData.getChannelName();
+            url += "&channel_name=" + URLEncoder.encode(channelData.getChannel_name(), "utf-8") + "&public_onoff=";
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
 
         if(checkBox_channelOnoff.isChecked()) {
             url += "on";
+            channelData.setPublic_onoff("on");
         }
         else {
             url += "off&channel_pw=" + editText_setPassword.getText().toString();
+            channelData.setPublic_onoff("off");
         }
 
-        master_id = UserInfo.getInstance().email;
-        user_color = "#000000";
-        url += "&channel_limit=" + channelData.getChannelLimit() + "&user_nick=" + nickname;
+        channelData.setChief_id(UserInfo.getInstance().email);
+        channelData.setUser_color("#000000");
+        channelData.setFlag(1);
+        channelData.setUser_nick(nickname);
 
+        url += "&channel_limit=" + channelData.getChannel_limit() + "&user_nick=" + nickname;
     }
 
     private void getChannelList() {

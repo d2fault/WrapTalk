@@ -26,7 +26,7 @@ public class ChannelData {
     private String channel_id;
     private String app_id;
     private String chief_id;
-
+    private String user_nick;
     private String user_color;
 
     private int flag = 0;
@@ -93,6 +93,14 @@ public class ChannelData {
 
     public void setChief_id(String chief_id) {
         this.chief_id = chief_id;
+    }
+
+    public String getUser_nick() {
+        return user_nick;
+    }
+
+    public void setUser_nick(String user_nick) {
+        this.user_nick = user_nick;
     }
 
     public String getUser_color() {
