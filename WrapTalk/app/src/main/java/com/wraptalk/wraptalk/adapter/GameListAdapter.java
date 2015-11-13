@@ -151,7 +151,7 @@ public class GameListAdapter extends BaseAdapter {
                     }
                 });
 
-                String query = "SELECT * FROM app_info WHERE check_registration=1;";
+                String query = "SELECT * FROM app_info WHERE check_registration=1";
                 DBManager.getInstance().select(query, new DBManager.OnSelect() {
                     @Override
                     public void onSelect(Cursor cursor) {
@@ -210,7 +210,7 @@ public class GameListAdapter extends BaseAdapter {
                     @Override
                     public void onSuccess(String url, byte[] receiveData) {
                         String query;
-                        query = "UPDATE app_info SET check_registration=0 WHERE app_name=\'" + data.packageInfo.packageName + "\';";
+                        query = "UPDATE app_info SET check_registration=0 WHERE app_id='" + data.packageInfo.packageName + "';";
                         DBManager.getInstance().write(query);
 
                         data.setFlag(0);
