@@ -174,10 +174,6 @@ public class SplashActivity extends AppCompatActivity {
     private void sendRegistrationIdToBackend() {
     }
 
-    private void saveAppInfo() {
-
-    }
-
     private void getInstalledApplication() {
         PackageManager packageManager;
 
@@ -189,7 +185,7 @@ public class SplashActivity extends AppCompatActivity {
         for(PackageInfo pi : tempPackageList) {
             boolean flag = isSystemPackage(pi);
             if(!flag) {
-                query = String.format("INSERT INTO app_info (package_name, app_name, nickname, check_registration) VALUES ('%s', '%s', '%s', %d)",
+                query = String.format("INSERT INTO app_info (app_id, app_name, nickname, check_registration) VALUES ('%s', '%s', '%s', %d)",
                         pi.packageName, packageManager.getApplicationLabel(pi.applicationInfo).toString(), "temp", 0);
 
                 try {

@@ -84,7 +84,7 @@ public class TabGameListFragment extends android.support.v4.app.Fragment {
                 while(!cursor.isLast()) {
                     GameListData data = new GameListData();
                     try {
-                        data.setPackageInfo(packageManager.getPackageInfo(cursor.getString(cursor.getColumnIndex("package_name")), PackageManager.GET_PERMISSIONS));
+                        data.setPackageInfo(packageManager.getPackageInfo(cursor.getString(cursor.getColumnIndex("app_id")), PackageManager.GET_PERMISSIONS));
                         data.setAppIcon(packageManager.getApplicationIcon(data.getPackageInfo().applicationInfo));
                         data.setAppName(cursor.getString(cursor.getColumnIndex("app_name")));
                         data.setFlag(cursor.getInt(cursor.getColumnIndex("check_registration")));
