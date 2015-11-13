@@ -75,24 +75,20 @@ public class TabGameListFragment extends android.support.v4.app.Fragment {
 
     private void getAppInfoByDB() {
         final PackageManager packageManager;
-
         packageManager = getActivity().getPackageManager();
         DBManager.getInstance().select("SELECT * FROM app_info", new DBManager.OnSelect() {
             @Override
             public void onSelect(Cursor cursor) {
-                cursor.moveToFirst(); // 꼭 처음으로 돌려주고 시작해야함.
-                while(!cursor.isLast()) {
-                    GameListData data = new GameListData();
-                    try {
-                        data.setPackageInfo(packageManager.getPackageInfo(cursor.getString(cursor.getColumnIndex("app_id")), PackageManager.GET_PERMISSIONS));
-                        data.setAppIcon(packageManager.getApplicationIcon(data.getPackageInfo().applicationInfo));
-                        data.setAppName(cursor.getString(cursor.getColumnIndex("app_name")));
-                        data.setFlag(cursor.getInt(cursor.getColumnIndex("check_registration")));
-                        source.add(data);
-                    } catch (PackageManager.NameNotFoundException e) {
-                        e.printStackTrace();
-                    }
-                    cursor.moveToNext();
+                GameListData data = new GameListData();
+                try {
+                    data.setPackageInfo(packageManager.getPackageInfo(cursor.getString(cursor.getColumnIndex("app_id")), PackageManager.GET_PERMISSIONS));
+                    data.setAppIcon(packageManager.getApplicationIcon(data.getPackageInfo().applicationInfo));
+                    data.setAppName(cursor.getString(cursor.getColumnIndex("app_name")));
+                    data.setFlag(cursor.getInt(cursor.getColumnIndex("check_registration")));
+                    Log.e("flag", String.valueOf(cursor.getInt(cursor.getColumnIndex("check_registration"))));
+                    source.add(data);
+                } catch (PackageManager.NameNotFoundException e) {
+                    e.printStackTrace();
                 }
             }
 

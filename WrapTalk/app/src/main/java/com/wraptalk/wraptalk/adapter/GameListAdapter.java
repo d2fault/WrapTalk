@@ -142,38 +142,33 @@ public class GameListAdapter extends BaseAdapter {
                 RequestUtil.asyncHttp(url, new OnRequest() {
                     @Override
                     public void onSuccess(String url, byte[] receiveData) {
-                        String query;
-                        query = "UPDATE app_info SET check_registration=1 WHERE app_name=\'" + data.packageInfo.packageName + "\';";
+                        String query = "UPDATE app_info SET check_registration=1 WHERE app_id='" + data.packageInfo.packageName + "'";
                         DBManager.getInstance().write(query);
-
-                        DBManager.getInstance().select("SELECT * FROM app_info WHERE check_registration == 1", new DBManager.OnSelect() {
-                            @Override
-                            public void onSelect(Cursor cursor) {
-                                cursor.moveToFirst(); // 꼭 처음으로 돌려주고 시작해야함.
-                                while(!cursor.isLast()) {
-                                    Log.e("app_name", cursor.getString(cursor.getColumnIndex("app_name")));
-                                    cursor.moveToNext();
-                                }
-                            }
-                            @Override
-                            public void onComplete() {
-
-                            }
-
-                            @Override
-                            public void onErrorHandler(Exception e) {
-
-                            }
-                        });
-
-                        data.setFlag(1);
-                        viewHolder.imageButton_regist.setBackgroundResource(R.mipmap.ic_minus);
                     }
 
                     @Override
                     public void onFail(String url, String error) {
                     }
                 });
+
+                String query = "SELECT * FROM app_info WHERE check_registration=1;";
+                DBManager.getInstance().select(query, new DBManager.OnSelect() {
+                    @Override
+                    public void onSelect(Cursor cursor) {
+                        Log.e("GameListAdapter", "registered app_name : " + cursor.getString(cursor.getColumnIndex("app_name")));
+                    }
+                    @Override
+                    public void onComplete() {
+                        Log.e("onComplete", "");
+                    }
+
+                    @Override
+                    public void onErrorHandler(Exception e) {
+                        Log.e("onErrorHandler", "");
+                    }
+                });
+                data.setFlag(1);
+                viewHolder.imageButton_regist.setBackgroundResource(R.mipmap.ic_minus);
             }
         });
 

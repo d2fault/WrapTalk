@@ -3,6 +3,8 @@ package com.wraptalk.wraptalk.adapter;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.database.Cursor;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,8 +16,13 @@ import com.wraptalk.wraptalk.R;
 import com.wraptalk.wraptalk.models.ChannelData;
 import com.wraptalk.wraptalk.models.UserInfo;
 import com.wraptalk.wraptalk.utils.ChannelHolder;
+import com.wraptalk.wraptalk.utils.DBManager;
 import com.wraptalk.wraptalk.utils.OnRequest;
 import com.wraptalk.wraptalk.utils.RequestUtil;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -29,6 +36,8 @@ public class ChannelAdapter extends BaseAdapter{
     Context context;
     private ArrayList<ChannelData> source;
     private LayoutInflater layoutInflater;
+    String query = "";
+    String nickname;
 
     public ChannelAdapter(Context context, ArrayList<ChannelData> source){
 
@@ -73,6 +82,8 @@ public class ChannelAdapter extends BaseAdapter{
             viewHolder.textView_channelOnoff = (TextView) convertView.findViewById(R.id.textView_channelOnoff);
 
             viewHolder.button_enter = (ImageButton) convertView.findViewById(R.id.button_enter);
+
+            getNickname(data);
 
             convertView.setTag(viewHolder);
         }
@@ -176,10 +187,10 @@ public class ChannelAdapter extends BaseAdapter{
         dialog.show();
     }
 
-    private void joinChannel(ChannelData data) {
-        String url = "http://133.130.113.101:7010/user/joinChannel?token=" + UserInfo.getInstance().token + "&channel_id=" + data.getChannel_id() +
-                "&user_nick=임시닉네임";
+    private void joinChannel(final ChannelData data) {
 
+        String url = "http://133.130.113.101:7010/user/joinChannel?token=" + UserInfo.getInstance().token + "&channel_id=" + data.getChannel_id() +
+                "&user_nick=" + nickname;
         if (data.getPublic_onoff().equals("off")) {
             url += "&channel_pw=" + "1234"; // 현재는 임시. 나중에는 dialog 띄워서 받아야함
         }
@@ -188,7 +199,27 @@ public class ChannelAdapter extends BaseAdapter{
         RequestUtil.asyncHttp(url, new OnRequest() {
             @Override
             public void onSuccess(String url, byte[] receiveData) {
+                String jsonStr = new String(receiveData);
+                try {
+                    JSONObject json = new JSONObject(jsonStr);
+                    JSONArray list_channel = json.optJSONArray("list_channel");
+                    for (int i = 0; i < list_channel.length(); i++) {
+                        JSONObject channelObj = list_channel.getJSONObject(i);
 
+                        query = String.format("INSERT INTO chat_info " +
+                                        "(channel_id, public_onoff, channel_limit, channel_cate, app_id," +
+                                        "channel_name, user_nick, chief_id, user_color) " +
+                                        "VALUES ('%s', '%s', '%d', '%s', '%s', '%s', '%s', '%s', '%s')",
+                                channelObj.optString("channel_id"), channelObj.optString("public_onoff"), channelObj.optInt("channel_limit"),
+                                channelObj.optString("channel_cate"), channelObj.optString("app_id"), channelObj.optString("channel_name"),
+                                nickname, UserInfo.getInstance().email, "#FFFFFF");
+
+                        DBManager.getInstance().write(query);
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override
@@ -210,6 +241,25 @@ public class ChannelAdapter extends BaseAdapter{
             @Override
             public void onFail(String url, String error) {
 
+            }
+        });
+    }
+
+    private void getNickname(ChannelData data) {
+        DBManager.getInstance().select("SELECT * FROM app_info WHERE app_id='" + data.getApp_id() + "'", new DBManager.OnSelect() {
+            @Override
+            public void onSelect(Cursor cursor) {
+                nickname = cursor.getString(cursor.getColumnIndex("user_nick"));
+                Log.e("nickname", nickname);
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+
+            @Override
+            public void onErrorHandler(Exception e) {
             }
         });
     }

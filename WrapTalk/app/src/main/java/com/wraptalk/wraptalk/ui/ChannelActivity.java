@@ -56,8 +56,7 @@ public class ChannelActivity extends AppCompatActivity {
     CreateChannelData channelData;
     String url;
 
-    String channel_id, channel_title, master_id, user_color;
-    String app_id;
+    String app_id, channel_title, master_id, user_color, nickname;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,6 +116,8 @@ public class ChannelActivity extends AppCompatActivity {
         else {
             app_id = packageInfo.packageName;
         }
+
+        getNickname();
     }
 
     private void initController() {
@@ -144,9 +145,7 @@ public class ChannelActivity extends AppCompatActivity {
         builder.setPositiveButton("SET", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-
                 url += "&user_nick=";
-
                 try {
                     url += URLEncoder.encode(editText_nickname.getText().toString(), "utf-8");
                 } catch (UnsupportedEncodingException e) {
@@ -238,9 +237,6 @@ public class ChannelActivity extends AppCompatActivity {
             }
         });
 
-
-
-
         builder.setPositiveButton("CREATE", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -252,24 +248,38 @@ public class ChannelActivity extends AppCompatActivity {
                     public void onSuccess(String url, byte[] receiveData) {
 
                         String jsonStr = new String(receiveData);
+                        String query;
                         try {
+
+                            final ChannelData data = new ChannelData();
                             JSONObject json = new JSONObject(jsonStr);
-                            channel_id = json.optString("channel_id");
+
+                            data.setChannel_id(json.optString("channel_id"));
+                            data.setPublic_onoff(json.optString("public_onoff"));
+                            data.setChannel_limit(json.optInt("channel_limit"));
+                            data.setChannel_cate(json.optString("channel_cate"));
+                            data.setApp_id(json.optString("app_id"));
+                            data.setChannel_name(json.optString("channel_name"));
+                            // userNick은 app_info에서 갖다가 써야 함
+                            data.setUser_color(json.optString("user_color"));
+                            data.setChief_id(json.optString("chief_id"));
+                            data.setFlag(1);
+
+                            query = String.format( "INSERT INTO chat_info " +
+                                            "(channel_id, public_onoff, channel_limit, channel_cate, app_id," +
+                                            "channel_name, user_nick, chief_id, user_color) " +
+                                            "VALUES ('%s', '%s', '%d', '%s', '%s', '%s', '%s', '%s', '%s')",
+                                    json.optString("channel_id"), json.optString("public_onoff"), json.optInt("channel_limit"),
+                                    json.optString("channel_cate"), json.optString("app_id"), json.optString("channel_name"),
+                                    nickname, UserInfo.getInstance().email, "#FFFFFF");
+
+                            DBManager.getInstance().write(query);
+                            source.add(data);
+                            customAdapter.notifyDataSetChanged();
+
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-
-                        /* 채널 생성 후 DB에 삽입 */
-
-                        /*
-                        String query = String.format( "INSERT INTO chat_info " +
-                                        "(channel_id, app_id, channel_name, chief_id, user_color) " +
-                                        "VALUES ('%s', '%s', '%s', '%s', '%s')",
-                                channel_id, app_id, channel_title, master_id, user_color);
-
-                        DBManager.getInstance().write(query);
-
-                        */
 
                         Toast.makeText(ChannelActivity.this, "채널 생성에 성공하셨습니다.", Toast.LENGTH_SHORT).show();
 
@@ -329,40 +339,13 @@ public class ChannelActivity extends AppCompatActivity {
 
         master_id = UserInfo.getInstance().email;
         user_color = "#000000";
-        url += "&channel_limit=" + channelData.getChannelLimit() + "&user_nick=" + "임시닉네임";
+        url += "&channel_limit=" + channelData.getChannelLimit() + "&user_nick=" + nickname;
 
-        DBManager.getInstance().select("SELECT * FROM app_info WHERE app_id=='" + app_id + "'", new DBManager.OnSelect() {
-            @Override
-            public void onSelect(Cursor cursor) {
-                try {
-                    url += URLEncoder.encode(cursor.getString(cursor.getColumnIndex("nickname")), "utf-8");
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onComplete() {
-
-            }
-
-            @Override
-            public void onErrorHandler(Exception e) {
-
-            }
-        });
     }
 
     private void getChannelList() {
 
-        url = "http://133.130.113.101:7010/user/appChannel?" + "token=" + UserInfo.getInstance().token + "&app_id=";
-
-        if(categoryName != null && categoryName.startsWith(TabCategoryFragment.PRE_CHANNEL_PREFIX)) {
-            url += categoryName;//RegisterCategoryInfo.getInstance().categoryName;
-        }
-        else {
-            url += packageInfo.packageName;
-        }
+        url = "http://133.130.113.101:7010/user/appChannel?" + "token=" + UserInfo.getInstance().token + "&app_id=" + app_id;
 
         RequestUtil.asyncHttp(url, new OnRequest() {
             @Override
@@ -392,7 +375,7 @@ public class ChannelActivity extends AppCompatActivity {
                         data.setApp_id(channelObj.optString("app_id"));
                         data.setChannel_name(channelObj.optString("channel_name"));
                         // userNick은 app_info에서 갖다가 써야 함
-                        // user_color는 chat에서
+                        data.setUser_color(channelObj.optString("user_color"));
                         data.setChief_id(channelObj.optString("chief_id"));
 
                         String query = "SELECT * FROM chat_info WHERE app_id='" + app_id + "'";
@@ -403,12 +386,14 @@ public class ChannelActivity extends AppCompatActivity {
                                 String id1 = data.getChannel_id();
                                 String id2 = cursor.getString(cursor.getColumnIndex("channel_id"));
                                 Log.e("onSelect", id1 + "," + id2);
+
                                 if (id1.equals(id2)) {
                                     data.setFlag(1);
-                                } else if(data.getFlag() != 1) {
+                                } else if (data.getFlag() != 1) {
                                     data.setFlag(0);
                                 }
                             }
+
                             @Override
                             public void onComplete() {
                                 Log.e("onComplete", "o");
@@ -475,7 +460,7 @@ public class ChannelActivity extends AppCompatActivity {
                         // user_color는 chat에서
                         data.setChief_id(channelObj.optString("chief_id"));
 
-                        DBManager.getInstance().select("SELECT * FROM chat_info WHER app_id=='" + app_id + "'", new DBManager.OnSelect() {
+                        DBManager.getInstance().select("SELECT * FROM chat_info WHERE app_id='" + app_id + "'", new DBManager.OnSelect() {
                             @Override
                             public void onSelect(Cursor cursor) {
                                 cursor.moveToFirst();
@@ -516,24 +501,13 @@ public class ChannelActivity extends AppCompatActivity {
         });
     }
 
-    private void setIconRegisteredChannel() {
-        DBManager.getInstance().select("SELECT * FROM chat_info WHERE app_id='" + app_id + "'" , new DBManager.OnSelect() {
+    private void getNickname() {
+        DBManager.getInstance().select("SELECT * FROM app_info WHERE app_id='" + app_id + "'", new DBManager.OnSelect() {
             @Override
             public void onSelect(Cursor cursor) {
-                for (int i = 0; i < source.size(); i++) {
-                    cursor.moveToFirst();
-                    try {
-                        while (cursor.isLast()) {
-                            if (source.get(i).getChannel_id().equals(cursor.getString(cursor.getColumnIndex("channel_id")))) {
-                                source.get(i).setFlag(1);
-                            }
-                        }
-                    }
-                    catch (Exception e) {
-
-                    }
-
-                }
+                cursor.moveToFirst();
+                nickname = cursor.getString(cursor.getColumnIndex("user_nick"));
+                Log.e("nickname", nickname);
             }
 
             @Override
@@ -543,7 +517,6 @@ public class ChannelActivity extends AppCompatActivity {
 
             @Override
             public void onErrorHandler(Exception e) {
-
             }
         });
     }

@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -187,34 +186,12 @@ public class SplashActivity extends AppCompatActivity {
             if(!flag) {
                 query = String.format("INSERT INTO app_info (app_id, app_name, nickname, check_registration) VALUES ('%s', '%s', '%s', %d)",
                         pi.packageName, packageManager.getApplicationLabel(pi.applicationInfo).toString(), "temp", 0);
-
                 try {
                     DBManager.getInstance().write(query);
                 } catch (RuntimeException e) {
                 }
             }
         }
-
-        DBManager.getInstance().select("SELECT app_name FROM app_info", new DBManager.OnSelect() {
-            @Override
-            public void onSelect(Cursor cursor) {
-                cursor.moveToFirst(); // 꼭 처음으로 돌려주고 시작해야함.
-                while(!cursor.isLast()) {
-                    Log.e("app_name", cursor.getString(cursor.getColumnIndex("app_name")));
-                    cursor.moveToNext();
-                }
-            }
-
-            @Override
-            public void onComplete() {
-
-            }
-
-            @Override
-            public void onErrorHandler(Exception e) {
-
-            }
-        });
     }
 
     private boolean isSystemPackage(PackageInfo pkgInfo) {
