@@ -58,14 +58,25 @@ public class ChatListAdapter extends BaseAdapter {
         if("normal".equals(data[0])) {
             sp = new SpannableStringBuilder(data[1] + " : " + data[2]);
             sp.setSpan(new ForegroundColorSpan(Color.parseColor("#FF0000")), 0, data[1].length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            textView.setTypeface(null, Typeface.NORMAL);
             textView.setText(sp);
+            textView.append(" ");
         }else if("notice".equals(data[0])){
             sp = new SpannableStringBuilder(data[1] + " : " + data[2]);
             sp.setSpan(new ForegroundColorSpan(Color.parseColor("#FF00FF")), 0, sp.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             textView.setTypeface(null, Typeface.BOLD);
             textView.setText(sp);
+            textView.append(" ");
+        }else if("log".equals(data[0])) {
+            sp = new SpannableStringBuilder(data[1] + data[2]);
+            sp.setSpan(new ForegroundColorSpan(Color.parseColor("#FF00FF")), 0, sp.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            textView.setTypeface(null, Typeface.BOLD);
+            textView.setText(sp);
+            textView.append(" ");
         }else{
+            textView.setTypeface(null, Typeface.NORMAL);
             textView.setText("ERROR");
+            textView.append(" ");
         }
         return row;
     }

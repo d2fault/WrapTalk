@@ -18,7 +18,9 @@ import android.view.View;
 import com.wraptalk.wraptalk.R;
 import com.wraptalk.wraptalk.models.UserInfo;
 import com.wraptalk.wraptalk.services.ChattingService;
+import com.wraptalk.wraptalk.services.TaskWatchService;
 import com.wraptalk.wraptalk.utils.DBManager;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -53,11 +55,18 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.getTabAt(2).setIcon(R.mipmap.ic_mychannel);
         tabLayout.getTabAt(3).setIcon(R.mipmap.ic_setting);
 
-        String query = String.format( "INSERT INTO user_info (token, device_id, user_id, gcm_key) VALUES ('%s', '%s', '%s', '%s')",
+        Intent intent = getIntent();
+        int setTab = intent.getIntExtra("Tab", 0);
+        mViewPager.setCurrentItem(setTab);
+
+        String query = String.format("INSERT INTO user_info (token, device_id, user_id, gcm_key) VALUES ('%s', '%s', '%s', '%s')",
                 UserInfo.getInstance().token, UserInfo.getInstance().deviceId, UserInfo.getInstance().email, UserInfo.getInstance().gcmKey);
 
-        DBManager.getInstance().write(query);
-
+        try {
+            DBManager.getInstance().write(query);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
         DBManager.getInstance().select("SELECT * FROM user_info", new DBManager.OnSelect() {
             @Override
             public void onSelect(Cursor cursor) {
@@ -69,12 +78,18 @@ public class MainActivity extends AppCompatActivity {
             public void onComplete() {
 
             }
+
+            @Override
+            public void onErrorHandler(Exception e) {
+
+            }
         });
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                startService(new Intent(MainActivity.this, TaskWatchService.class));
                 startService(new Intent(MainActivity.this, ChattingService.class));
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();

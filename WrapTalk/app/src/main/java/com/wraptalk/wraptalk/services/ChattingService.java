@@ -2,6 +2,7 @@ package com.wraptalk.wraptalk.services;
 
 import android.app.Service;
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.DataSetObserver;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -27,7 +28,9 @@ import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 
 import com.wraptalk.wraptalk.R;
+import com.wraptalk.wraptalk.ui.MainActivity;
 import com.wraptalk.wraptalk.ui.TabSettingFragment;
+import com.wraptalk.wraptalk.utils.DBManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -38,7 +41,7 @@ import java.util.ArrayList;
 /**
  * Created by lk on 2015. 10. 23..
  */
-public class ChattingService extends Service implements View.OnClickListener {
+public class ChattingService extends Service implements View.OnClickListener, TaskWatchCallback {
 
     /**
      * For ChatHead
@@ -81,6 +84,7 @@ public class ChattingService extends Service implements View.OnClickListener {
     double time1;
     int animationR;
     boolean showButton = false;
+    private float dpiCorrection;
 
 
     private RelativeLayout chatheadView;
@@ -90,6 +94,8 @@ public class ChattingService extends Service implements View.OnClickListener {
     private ArrayList<String> chatdata;
     private ChatListAdapter adapter;
     private SockJSImpl sockJS;
+    private String channelId = "channel_id";
+    private TaskWatchService taskWatchService;
 
     @Override
     public IBinder onBind(Intent arg0) {
@@ -106,15 +112,75 @@ public class ChattingService extends Service implements View.OnClickListener {
         initView();
         initParams();
 
-        mHandler = new Handler();
 
+        taskWatchService = new TaskWatchService(getApplicationContext(), this);
+        taskWatchService.setCallback(this);
+        taskWatchService.start();
+
+
+        initData();
+
+        mHandler = new Handler();
 
         mWindowManager.addView(mImageView, mParams);
 
+        connectSockJS();
+    }
 
+    private void initData() {
+
+        DBManager.getInstance().select("SELECT * FROM chat_info where app_id = " + taskWatchService.getCurrentTask(), new DBManager.OnSelect() {
+            @Override
+            public void onSelect(Cursor cursor) {
+                cursor.moveToPosition(cursor.getCount());
+                Log.e("device_id", String.valueOf(cursor.getColumnIndex("channel_id")));
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+
+            @Override
+            public void onErrorHandler(Exception e) {
+                channelId = "channel_id";
+            }
+        });
+
+
+    }
+
+    private void changeChannel(String task){
+        DBManager.getInstance().select("SELECT * FROM chat_info where app_id = '" + task + "';", new DBManager.OnSelect() {
+            @Override
+            public void onSelect(Cursor cursor) {
+                cursor.moveToFirst();
+                for(int i=0; i < cursor.getCount(); i++){
+                    //cursor.
+                }
+                cursor.moveToPosition(cursor.getCount());
+                Log.e("device_id", String.valueOf(cursor.getColumnIndex("channel_id")));
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+
+            @Override
+            public void onErrorHandler(Exception e) {
+                channelId = "channel_id";
+                Log.e("Error", e.toString());
+            }
+        });
+    }
+
+    private void connectSockJS() {
         try {
-            sockJS = new SockJSImpl("http://133.130.113.101:7030/eventbus", "channel_id") {
-
+            chatdata.clear();
+            adapter.notifyDataSetChanged();
+            sockJS = new SockJSImpl("http://133.130.113.101:7030/eventbus", channelId) {
+//channel_
                 @Override
                 void parseSockJS(String s) {
                     try {
@@ -135,11 +201,10 @@ public class ChattingService extends Service implements View.OnClickListener {
                         String nickname = body.getString("sender_nick");
 
                         final String data =  bodyType + "/&" +nickname + "/&" + msg;
-                        if ("to.channel.channel_id".equals(address))
+                        if (("to.channel."+channelId).equals(address))
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-
                                     chatdata.add(data);
                                     adapter.notifyDataSetChanged();
                                 }
@@ -163,37 +228,49 @@ public class ChattingService extends Service implements View.OnClickListener {
     private void initParams() {
         mWindowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
 
+        DisplayMetrics matrix = new DisplayMetrics();
+        mWindowManager.getDefaultDisplay().getMetrics(matrix);
+
+        int dpi = matrix.densityDpi;
+        int buttonSize;
+        if(dpi > 350) {
+            buttonSize = 150;
+            dpiCorrection = 1;
+        }else {
+            buttonSize = 100;
+            dpiCorrection = (float)0.75;
+        }
         mParamsbt1 = new WindowManager.LayoutParams(
-                150, 150,
+                (int)(buttonSize*0.9), (int)(buttonSize*0.9),
                 WindowManager.LayoutParams.TYPE_PHONE,
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                 PixelFormat.TRANSLUCENT);
         mParamsbt1.gravity = Gravity.TOP | Gravity.LEFT;
 
         mParamsbt2 = new WindowManager.LayoutParams(
-                150, 150,
+                (int)(buttonSize*0.9), (int)(buttonSize*0.9),
                 WindowManager.LayoutParams.TYPE_PHONE,
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                 PixelFormat.TRANSLUCENT);
         mParamsbt2.gravity = Gravity.TOP | Gravity.LEFT;
 
         mParamsbt3 = new WindowManager.LayoutParams(
-                150, 150,
+                (int)(buttonSize*0.9), (int)(buttonSize*0.9),
                 WindowManager.LayoutParams.TYPE_PHONE,
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                 PixelFormat.TRANSLUCENT);
         mParamsbt3.gravity = Gravity.TOP | Gravity.LEFT;
 
         mParams = new WindowManager.LayoutParams(
-                WindowManager.LayoutParams.WRAP_CONTENT,
-                WindowManager.LayoutParams.WRAP_CONTENT,
+                buttonSize,
+                buttonSize,
                 WindowManager.LayoutParams.TYPE_PHONE,
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                 PixelFormat.TRANSLUCENT);
         mParams.gravity = Gravity.TOP | Gravity.LEFT;
 
         mParamsbt4 = new WindowManager.LayoutParams(
-                150, 150,
+                (int)(buttonSize*0.9), (int)(buttonSize*0.9),
                 WindowManager.LayoutParams.TYPE_PHONE,
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                 PixelFormat.TRANSLUCENT);
@@ -217,19 +294,22 @@ public class ChattingService extends Service implements View.OnClickListener {
 
     private void initView() {
         mImageView = new ImageView(this);
-        mImageView.setImageBitmap(getMaskedBitmap(R.drawable.chaticon, 30));
+        mImageView.setImageBitmap(getMaskedBitmap(R.drawable.chathead, 30));
         mImageView.setOnTouchListener(mViewTouchListener);
+        mImageView.setMaxHeight(30);
+        mImageView.setMaxWidth(30);
+
 
         bt1 = new ImageButton(this);
         bt1.setBackground(getResources().getDrawable(R.drawable.setting));
         bt1.setOnClickListener(this);
 
         bt2 = new ImageButton(this);
-        bt2.setBackground(getResources().getDrawable(R.drawable.chaticon));
+        bt2.setBackground(getResources().getDrawable(R.drawable.hearticon));
         bt2.setOnClickListener(this);
 
         bt3 = new ImageButton(this);
-        bt3.setBackground(getResources().getDrawable(R.drawable.chaticon));
+        bt3.setBackground(getResources().getDrawable(R.drawable.selecticon));
         bt3.setOnClickListener(this);
 
         bt4 = new ImageButton(this);
@@ -268,8 +348,8 @@ public class ChattingService extends Service implements View.OnClickListener {
                                                    obj.put("type", "publish");
                                                    obj.put("address", "to.server.channel");
                                                    JSONObject body = new JSONObject();
-                                                   body.put("type", "notice");
-                                                   body.put("channel_id", "channel_id");
+                                                   body.put("type", "normal");
+                                                   body.put("channel_id", channelId);
                                                    body.put("sender_id", "aaa");
                                                    body.put("sender_nick", "닉넴");
                                                    body.put("app_id", "com.aaa.aaa");
@@ -421,7 +501,7 @@ public class ChattingService extends Service implements View.OnClickListener {
             n1 = new Runnable() {
                 @Override
                 public void run() {
-                    animationR = (int) (0.264 * Math.pow(time1, 4) - 7.277 * Math.pow(time1, 3) + 64.646 * Math.pow(time1, 2) - 167.18 * time1 + 116.33);
+                    animationR = (int) ((0.264 * Math.pow(time1, 4) - 7.277 * Math.pow(time1, 3) + 64.646 * Math.pow(time1, 2) - 167.18 * time1 + 116.33) * dpiCorrection);
                     mParamsbt1.x = (int) (mParams.x + (mImageView.getWidth() / 2) + animationR * Math.cos(Math.toRadians(80)));
                     mParamsbt1.y = (int) (mParams.y + animationR * Math.sin(Math.toRadians(80)));
                     mParamsbt2.x = (int) (mParams.x + (mImageView.getWidth() / 2) + animationR * Math.cos(Math.toRadians(27)));
@@ -466,9 +546,11 @@ public class ChattingService extends Service implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         if (v.getBackground() == bt1.getBackground()) {
-            Intent i = new Intent(this, TabSettingFragment.class);
+            Intent i = new Intent(this, MainActivity.class);
+            i.putExtra("Tab", 3);
             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(i);
+
             buttonClick();
         } else if (v.getBackground() == bt2.getBackground()) {
 
@@ -506,6 +588,38 @@ public class ChattingService extends Service implements View.OnClickListener {
                 showchat = 0;
             }
         }
+    }
+
+    @Override
+    public boolean TaskCallback(String task) {
+        Log.i("task", task);
+        sockJS.closeSession();
+        ExitMessage();
+        changeChannel(task);
+        //channelId = "96da751edc63634c4c5958ce90e6a889ee1cdda247d92a978f340336791d5fb3";
+        connectSockJS();
+
+        return true;
+    }
+
+    public void ExitMessage(){
+        JSONObject log = new JSONObject();
+
+        try {
+            log.put("type", "publish");
+            log.put("address", "to.server.channel");
+            JSONObject body = new JSONObject();
+            body.put("type", "log");
+            body.put("channel_id", channelId);
+            body.put("sender_id", "aaa");
+            body.put("sender_nick", "닉넴");
+            body.put("msg", "님이 퇴장하셨습니다.");
+            log.put("body", body);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            Log.e("ExitMessage", e.toString());
+        }
+        sockJS.send(log);
     }
 
     private class LongPressClass implements Runnable {

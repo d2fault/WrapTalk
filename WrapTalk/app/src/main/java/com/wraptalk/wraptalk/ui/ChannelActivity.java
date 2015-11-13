@@ -345,6 +345,11 @@ public class ChannelActivity extends AppCompatActivity {
             public void onComplete() {
 
             }
+
+            @Override
+            public void onErrorHandler(Exception e) {
+
+            }
         });
     }
 
@@ -408,6 +413,11 @@ public class ChannelActivity extends AppCompatActivity {
                             public void onComplete() {
                                 Log.e("onComplete", "o");
                             }
+
+                            @Override
+                            public void onErrorHandler(Exception e) {
+
+                            }
                         });
                         Log.e("Flag", String.valueOf(data.getFlag()));
                         source.add(data);
@@ -469,11 +479,10 @@ public class ChannelActivity extends AppCompatActivity {
                             @Override
                             public void onSelect(Cursor cursor) {
                                 cursor.moveToFirst();
-                                while(!cursor.isLast()) {
-                                    if(cursor.getString(cursor.getColumnIndex("channel_id")).equals(data.getChannel_id())) {
+                                while (!cursor.isLast()) {
+                                    if (cursor.getString(cursor.getColumnIndex("channel_id")).equals(data.getChannel_id())) {
                                         data.setFlag(1);
-                                    }
-                                    else {
+                                    } else {
                                         data.setFlag(0);
                                     }
                                 }
@@ -481,6 +490,11 @@ public class ChannelActivity extends AppCompatActivity {
 
                             @Override
                             public void onComplete() {
+
+                            }
+
+                            @Override
+                            public void onErrorHandler(Exception e) {
 
                             }
                         });
@@ -493,7 +507,7 @@ public class ChannelActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
-           }
+            }
 
             @Override
             public void onFail(String url, String error) {
@@ -524,6 +538,11 @@ public class ChannelActivity extends AppCompatActivity {
 
             @Override
             public void onComplete() {
+
+            }
+
+            @Override
+            public void onErrorHandler(Exception e) {
 
             }
         });

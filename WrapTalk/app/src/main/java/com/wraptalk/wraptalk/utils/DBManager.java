@@ -71,20 +71,21 @@ public class DBManager extends SQLiteOpenHelper {
     public void select(String query, OnSelect cb) {
         SQLiteDatabase db = getReadableDatabase();
 
-        Cursor cursor = db.rawQuery(query, null);
-        while (cursor.moveToNext()) {
-            /*
-            String cols[] = cursor.getColumnNames();
-            for(String col : cols) {
-                Log.e("SQL", col+":"+cursor.getString( cursor.getColumnIndex(col) ));
-            }*/
-            cb.onSelect(cursor);
+
+        try {
+            Cursor cursor = db.rawQuery(query, null);
+            while (cursor.moveToNext()) {
+                cb.onSelect(cursor);
+            }
+            cb.onComplete();
+        }catch (Exception e){
+            cb.onErrorHandler(e);
         }
-        cb.onComplete();
     }
 
     public static interface OnSelect {
         public void onSelect(Cursor cursor);
         public void onComplete();
+        public void onErrorHandler(Exception e);
     }
 }

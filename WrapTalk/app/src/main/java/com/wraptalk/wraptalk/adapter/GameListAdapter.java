@@ -143,7 +143,7 @@ public class GameListAdapter extends BaseAdapter {
                     @Override
                     public void onSuccess(String url, byte[] receiveData) {
                         String query;
-                        query = "UPDATE app_info SET check_registration=1 WHERE package_name=\'" + data.packageInfo.packageName + "\';";
+                        query = "UPDATE app_info SET check_registration=1 WHERE app_name=\'" + data.packageInfo.packageName + "\';";
                         DBManager.getInstance().write(query);
 
                         DBManager.getInstance().select("SELECT * FROM app_info WHERE check_registration == 1", new DBManager.OnSelect() {
@@ -157,6 +157,11 @@ public class GameListAdapter extends BaseAdapter {
                             }
                             @Override
                             public void onComplete() {
+
+                            }
+
+                            @Override
+                            public void onErrorHandler(Exception e) {
 
                             }
                         });
@@ -210,7 +215,7 @@ public class GameListAdapter extends BaseAdapter {
                     @Override
                     public void onSuccess(String url, byte[] receiveData) {
                         String query;
-                        query = "UPDATE app_info SET check_registration=0 WHERE package_name=\'" + data.packageInfo.packageName + "\';";
+                        query = "UPDATE app_info SET check_registration=0 WHERE app_name=\'" + data.packageInfo.packageName + "\';";
                         DBManager.getInstance().write(query);
 
                         data.setFlag(0);

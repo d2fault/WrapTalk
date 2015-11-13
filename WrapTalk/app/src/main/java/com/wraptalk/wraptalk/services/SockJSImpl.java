@@ -25,6 +25,7 @@ public class SockJSImpl extends WebSocketClient {
     private Map<String, String> openHandShakeFields;
     private final static String dictionary = "abcdefghijklmnopqrstuvwxyz0123456789_";
     private String roomname;
+    private Timer timer;
 
     public SockJSImpl(String serverURI, String roomname) throws URISyntaxException{
         super(new URI(generatePrimusUrl(serverURI)), new Draft_17());
@@ -44,7 +45,6 @@ public class SockJSImpl extends WebSocketClient {
 
         scheduleHeartbeat();
         registAddress("to.channel."+roomname);
-
     }
 
     @Override
@@ -105,8 +105,27 @@ public class SockJSImpl extends WebSocketClient {
         try {
             obj.put("type", "register");
             obj.put("address", address);
-
+            Log.d("RegistAddress", address);
             send(obj);
+            joinLogSend();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void joinLogSend() {
+        JSONObject log = new JSONObject();
+        try {
+            log.put("type", "publish");
+            log.put("address", "to.server.channel");
+            JSONObject body = new JSONObject();
+            body.put("type", "log");
+            body.put("channel_id", roomname);
+            body.put("sender_id", "aaa");
+            body.put("sender_nick", "닉넴");
+            body.put("msg", "님이 입장하셨습니다.");
+            log.put("body", body);
+            send(log);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -116,7 +135,7 @@ public class SockJSImpl extends WebSocketClient {
      * 9초마다 Heartbeat. 10초 이내로 보내야 하기 때문에 9초 설정.
      */
     void scheduleHeartbeat() {
-        Timer timer = new Timer();
+        timer = new Timer();
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
@@ -126,6 +145,7 @@ public class SockJSImpl extends WebSocketClient {
                 scheduleHeartbeat();
             }
         }, 9000);
+
     }
 
     private static char randomCharacterFromDictionary() {
@@ -147,5 +167,9 @@ public class SockJSImpl extends WebSocketClient {
         int server = r.nextInt(1000);
         String connId = randomStringOfLength(8);
         return baseUrl + "/" + server + "/" + connId + "/websocket";
+    }
+
+    public void closeSession(){
+        timer.cancel();
     }
 }

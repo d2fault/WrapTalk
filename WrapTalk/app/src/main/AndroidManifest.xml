@@ -17,6 +17,9 @@
     <uses-permission android:name="com.icelancer.androidgcmclient.permission.C2D_MESSAGE" />
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.GET_TASKS" />
+    <uses-permission android:name="android.permission.PACKAGE_USAGE_STATS"/>
+
 
     <application
         android:allowBackup="true"
@@ -38,7 +41,6 @@
         <service
             android:name=".services.ChattingService"
             android:exported="false" />
-
         <activity
             android:name=".ui.SplashActivity"
             android:theme="@style/AppTheme.NoActionBar">
