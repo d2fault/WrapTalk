@@ -390,26 +390,26 @@ public class ChannelActivity extends AppCompatActivity {
                         // user_color는 chat에서
                         data.setChief_id(channelObj.optString("chief_id"));
 
-                        DBManager.getInstance().select("SELECT * FROM chat_info WHERE app_id='" + app_id + "'", new DBManager.OnSelect() {
+                        String query = "SELECT * FROM chat_info WHERE app_id='" + app_id + "'";
+
+                        DBManager.getInstance().select(query, new DBManager.OnSelect() {
                             @Override
                             public void onSelect(Cursor cursor) {
-                                Log.e("onSelect", "s");
-                                cursor.moveToFirst();
-                                while (!cursor.isLast()) {
-                                    Log.e("onSelect", "while");
-                                    if (cursor.getString(cursor.getColumnIndex("channel_id")).equals(data.getChannel_id())) {
-                                        data.setFlag(1);
-                                    } else {
-                                        data.setFlag(0);
-                                    }
+                                String id1 = data.getChannel_id();
+                                String id2 = cursor.getString(cursor.getColumnIndex("channel_id"));
+                                Log.e("onSelect", id1 + "," + id2);
+                                if (id1.equals(id2)) {
+                                    data.setFlag(1);
+                                } else if(data.getFlag() != 1) {
+                                    data.setFlag(0);
                                 }
                             }
-
                             @Override
                             public void onComplete() {
                                 Log.e("onComplete", "o");
                             }
                         });
+                        Log.e("Flag", String.valueOf(data.getFlag()));
                         source.add(data);
                     }
 

@@ -98,7 +98,7 @@ public class TabMyChannelFragment extends android.support.v4.app.Fragment {
                         source.add(data);
 
                         String query = String.format( "INSERT INTO chat_info (" +
-                                        "channel_id, app_id, channel_name, user_nick, chief_id, user_color) VALUES ('%s', '%s', '%s', '%s', '%s', %s)",
+                                        "channel_id, app_id, channel_name, user_nick, chief_id, user_color) VALUES ('%s', '%s', '%s', '%s', '%s', '%s')",
                                 source.get(i).getChannel_id(), source.get(i).getApp_id(), source.get(i).getChannel_name(),
                                 source.get(i).getUser_nick(), source.get(i).getChief_id(), source.get(i).getUser_color());
 

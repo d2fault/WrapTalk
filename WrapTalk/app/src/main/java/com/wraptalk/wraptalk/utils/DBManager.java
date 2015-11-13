@@ -73,6 +73,11 @@ public class DBManager extends SQLiteOpenHelper {
 
         Cursor cursor = db.rawQuery(query, null);
         while (cursor.moveToNext()) {
+            /*
+            String cols[] = cursor.getColumnNames();
+            for(String col : cols) {
+                Log.e("SQL", col+":"+cursor.getString( cursor.getColumnIndex(col) ));
+            }*/
             cb.onSelect(cursor);
         }
         cb.onComplete();

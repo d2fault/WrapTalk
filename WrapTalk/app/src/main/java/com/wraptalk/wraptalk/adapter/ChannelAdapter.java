@@ -3,7 +3,6 @@ package com.wraptalk.wraptalk.adapter;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,12 +10,12 @@ import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.wraptalk.wraptalk.utils.OnRequest;
 import com.wraptalk.wraptalk.R;
-import com.wraptalk.wraptalk.utils.RequestUtil;
 import com.wraptalk.wraptalk.models.ChannelData;
 import com.wraptalk.wraptalk.models.UserInfo;
 import com.wraptalk.wraptalk.utils.ChannelHolder;
+import com.wraptalk.wraptalk.utils.OnRequest;
+import com.wraptalk.wraptalk.utils.RequestUtil;
 
 import java.util.ArrayList;
 
@@ -82,6 +81,13 @@ public class ChannelAdapter extends BaseAdapter{
             viewHolder = (ChannelHolder) convertView.getTag();
         }
 
+        if(data.getFlag() == 0) {
+            viewHolder.button_enter.setBackgroundResource(R.mipmap.ic_plus);
+        }
+        else {
+            viewHolder.button_enter.setBackgroundResource(R.mipmap.ic_minus);
+        }
+
         viewHolder.textView_channelTitle.setText(data.getChannel_name());
         viewHolder.textView_channelOnoff.setText(data.getPublic_onoff());
 
@@ -94,7 +100,6 @@ public class ChannelAdapter extends BaseAdapter{
                 } else {
                     onClickQuitButton(viewHolder, data);
                 }
-                Log.e("listener", String.valueOf(position));
             }
         });
 
