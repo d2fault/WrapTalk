@@ -135,13 +135,12 @@ public class ChannelActivity extends AppCompatActivity {
         final EditText editText_nickname = (EditText) dialogView.findViewById(R.id.editText_nickname);
 
         builder.setView(dialogView);
-        builder.setTitle(app_name);
 
         url = "http://133.130.113.101:7010/user/registNick?token=" + UserInfo.getInstance().token + "&app_id=" + app_id;
 
         if(packageInfo != null) {
             builder.setIcon(packageManager.getApplicationIcon(packageInfo.applicationInfo));
-            builder.setTitle(app_id);
+            builder.setTitle(app_name);
         }
 
         builder.setPositiveButton("SET", new DialogInterface.OnClickListener() {
