@@ -12,6 +12,7 @@ import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -81,6 +82,7 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
     double time1;
     int animationR;
     boolean showButton = false;
+    private float dpiCorrection;
 
 
     private RelativeLayout chatheadView;
@@ -90,6 +92,7 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
     private ArrayList<String> chatdata;
     private ChatListAdapter adapter;
     private SockJSImpl sockJS;
+    private String channelId = "channel_id";
 
     @Override
     public IBinder onBind(Intent arg0) {
@@ -121,7 +124,7 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
         try {
             chatdata.clear();
             adapter.notifyDataSetChanged();
-            sockJS = new SockJSImpl("http://133.130.113.101:7030/eventbus", "channel_id") {
+            sockJS = new SockJSImpl("http://133.130.113.101:7030/eventbus", channelId) {
 
                 @Override
                 void parseSockJS(String s) {
@@ -143,7 +146,7 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
                         String nickname = body.getString("sender_nick");
 
                         final String data =  bodyType + "/&" +nickname + "/&" + msg;
-                        if ("to.channel.channel_id".equals(address))
+                        if (("to.channel."+channelId).equals(address))
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -170,37 +173,49 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
     private void initParams() {
         mWindowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
 
+        DisplayMetrics matrix = new DisplayMetrics();
+        mWindowManager.getDefaultDisplay().getMetrics(matrix);
+
+        int dpi = matrix.densityDpi;
+        int buttonSize;
+        if(dpi > 350) {
+            buttonSize = 150;
+            dpiCorrection = 1;
+        }else {
+            buttonSize = 100;
+            dpiCorrection = (float)0.75;
+        }
         mParamsbt1 = new WindowManager.LayoutParams(
-                150, 150,
+                (int)(buttonSize*0.9), (int)(buttonSize*0.9),
                 WindowManager.LayoutParams.TYPE_PHONE,
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                 PixelFormat.TRANSLUCENT);
         mParamsbt1.gravity = Gravity.TOP | Gravity.LEFT;
 
         mParamsbt2 = new WindowManager.LayoutParams(
-                150, 150,
+                (int)(buttonSize*0.9), (int)(buttonSize*0.9)1,
                 WindowManager.LayoutParams.TYPE_PHONE,
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                 PixelFormat.TRANSLUCENT);
         mParamsbt2.gravity = Gravity.TOP | Gravity.LEFT;
 
         mParamsbt3 = new WindowManager.LayoutParams(
-                150, 150,
+                (int)(buttonSize*0.9), (int)(buttonSize*0.9),
                 WindowManager.LayoutParams.TYPE_PHONE,
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                 PixelFormat.TRANSLUCENT);
         mParamsbt3.gravity = Gravity.TOP | Gravity.LEFT;
 
         mParams = new WindowManager.LayoutParams(
-                WindowManager.LayoutParams.WRAP_CONTENT,
-                WindowManager.LayoutParams.WRAP_CONTENT,
+                buttonSize,
+                buttonSize,
                 WindowManager.LayoutParams.TYPE_PHONE,
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                 PixelFormat.TRANSLUCENT);
         mParams.gravity = Gravity.TOP | Gravity.LEFT;
 
         mParamsbt4 = new WindowManager.LayoutParams(
-                150, 150,
+                (int)(buttonSize*0.9), (int)(buttonSize*0.9),
                 WindowManager.LayoutParams.TYPE_PHONE,
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                 PixelFormat.TRANSLUCENT);
@@ -226,6 +241,9 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
         mImageView = new ImageView(this);
         mImageView.setImageBitmap(getMaskedBitmap(R.drawable.chaticon, 30));
         mImageView.setOnTouchListener(mViewTouchListener);
+        mImageView.setMaxHeight(30);
+        mImageView.setMaxWidth(30);
+
 
         bt1 = new ImageButton(this);
         bt1.setBackground(getResources().getDrawable(R.drawable.setting));
@@ -428,7 +446,7 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
             n1 = new Runnable() {
                 @Override
                 public void run() {
-                    animationR = (int) (0.264 * Math.pow(time1, 4) - 7.277 * Math.pow(time1, 3) + 64.646 * Math.pow(time1, 2) - 167.18 * time1 + 116.33);
+                    animationR = (int) ((0.264 * Math.pow(time1, 4) - 7.277 * Math.pow(time1, 3) + 64.646 * Math.pow(time1, 2) - 167.18 * time1 + 116.33) * dpiCorrection);
                     mParamsbt1.x = (int) (mParams.x + (mImageView.getWidth() / 2) + animationR * Math.cos(Math.toRadians(80)));
                     mParamsbt1.y = (int) (mParams.y + animationR * Math.sin(Math.toRadians(80)));
                     mParamsbt2.x = (int) (mParams.x + (mImageView.getWidth() / 2) + animationR * Math.cos(Math.toRadians(27)));
@@ -519,6 +537,7 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
     public boolean TaskCallback(String task) {
         Log.i("task", task);
         sockJS.closeSession();
+        channelId = "327f9234876e7f619903f7231f7651b7e874d537003348cc87ba40f5359232fc";
         connectSockJS();
 
         return true;
