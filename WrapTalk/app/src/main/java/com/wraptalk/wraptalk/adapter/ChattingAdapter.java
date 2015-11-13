@@ -59,8 +59,10 @@ public class ChattingAdapter extends BaseAdapter {
         String[] data = chatData.get(position).split("/&");
         SpannableStringBuilder sp = null;
         if("normal".equals(data[0])) {
-            sp = new SpannableStringBuilder(data[1]);
-            sp.setSpan(new ForegroundColorSpan(Color.parseColor("#FF0000")), 0, data[1].length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            String [] nick = data[1].split("&&");
+            int color = Integer.parseInt(nick[1]);
+            sp = new SpannableStringBuilder(nick[0]);
+            sp.setSpan(new ForegroundColorSpan(Color.rgb(Color.red(color), Color.green(color), Color.blue(color))), 0, nick[0].length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             nickname.setTypeface(null, Typeface.NORMAL);
             nickname.setText(sp);
             nickname.append("   ");

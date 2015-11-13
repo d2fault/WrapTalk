@@ -1,6 +1,7 @@
 package com.wraptalk.wraptalk.ui;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +11,8 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -38,6 +41,9 @@ public class ChattingActivity extends AppCompatActivity {
     private EditText mEditText;
     private String channel_id;
     private SockJSImpl sockJS;
+    private int nickColor;
+    private ColorPicker cp;
+    private Button colorButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,12 +87,14 @@ public class ChattingActivity extends AppCompatActivity {
         adapter = new ChattingAdapter(getApplicationContext(), chatdata);
         list.setAdapter(adapter);
 
+        cp = new ColorPicker(getApplication(), 255,255,255);
+
         mEditText = (EditText) findViewById(R.id.et_chatting_chat);
         mEditText.setOnKeyListener(new View.OnKeyListener() {
                                        @Override
                                        public boolean onKey(View v, int keyCode, KeyEvent event) {
 
-                                           Log.i("keycode", keyCode+"");
+                                           Log.i("keycode", keyCode + "");
                                            if (event.getAction() != KeyEvent.ACTION_DOWN)
                                                return true;
 
@@ -100,7 +108,7 @@ public class ChattingActivity extends AppCompatActivity {
                                                Log.i("fff", "send event");
                                                mEditText.setText("");
                                                return true;
-                                           }else if(mEditText.getText().toString().contains("\n")) {
+                                           } else if (mEditText.getText().toString().contains("\n")) {
                                                JSONObject obj = send();
                                                if ("".equals(mEditText.getText().toString()))
                                                    return true;
@@ -122,8 +130,8 @@ public class ChattingActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                Log.i("text", s+"");
-                if(s.toString().contains("\n")){
+                Log.i("text", s + "");
+                if (s.toString().contains("\n")) {
                     mEditText.setText(mEditText.getText().toString().replace("\n", ""));
                     JSONObject obj = send();
                     if ("".equals(mEditText.getText().toString()))
@@ -132,12 +140,33 @@ public class ChattingActivity extends AppCompatActivity {
                     sockJS.send(obj);
                     mEditText.setText("");
                 }
-                    Log.i("Enter ", s.toString());
+                Log.i("Enter ", s.toString());
             }
 
             @Override
             public void afterTextChanged(Editable s) {
 
+            }
+        });
+
+        colorButton = (Button) findViewById(R.id.bt_chatting_color);
+        colorButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                cp.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
+                //cp.show();
+                cp.show();
+
+                Button okButton = (Button) cp.findViewById(R.id.okColorButton);
+                okButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        nickColor = Color.rgb(cp.getRed(), cp.getGreen(), cp.getBlue());
+                        colorButton.setBackgroundColor(nickColor);
+                        cp.dismiss();
+                    }
+                });
             }
         });
 
@@ -155,7 +184,7 @@ public class ChattingActivity extends AppCompatActivity {
             body.put("type", "normal");
             body.put("channel_id", channel_id);
             body.put("sender_id", "aaa");
-            body.put("sender_nick", "닉넴");
+            body.put("sender_nick", "닉넴"+"&&" + nickColor);
             body.put("app_id", "com.aaa.aaa");
             body.put("msg", mEditText.getText().toString());
             obj.put("body", body);
