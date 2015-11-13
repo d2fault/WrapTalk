@@ -91,7 +91,7 @@ public class RequestUtil extends AsyncTask<Void, Void, byte[]> {
 
     @Override
     protected void onPostExecute(byte[] data) {
-        if(data != null)
+        if (data != null)
             on.onSuccess(url, data);
         else
             on.onFail(url, null);
