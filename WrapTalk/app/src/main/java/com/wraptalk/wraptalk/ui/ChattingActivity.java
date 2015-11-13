@@ -4,15 +4,25 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.wraptalk.wraptalk.R;
 import com.wraptalk.wraptalk.adapter.ChattingAdapter;
+import com.wraptalk.wraptalk.services.SockJSImpl;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.net.URISyntaxException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class ChattingActivity extends AppCompatActivity {
 
@@ -22,6 +32,9 @@ public class ChattingActivity extends AppCompatActivity {
     private ListView list;
     private ChattingAdapter adapter;
     private ArrayList<String> chatdata;
+    private EditText mEditText;
+    private String channel_id;
+    private SockJSImpl sockJS;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +42,7 @@ public class ChattingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_chatting);
         Intent intent = getIntent();
         String title = intent.getStringExtra("channelName"); // bell on off 유무도 받아야 한다.
-        String channelId = intent.getStringExtra("channel_id");
+        channel_id = intent.getStringExtra("channel_id");
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -61,10 +74,102 @@ public class ChattingActivity extends AppCompatActivity {
         });
 
         list = (ListView) findViewById(R.id.lv_chatting_list);
+        chatdata = new ArrayList<>();
         adapter = new ChattingAdapter(getApplicationContext(), chatdata);
         list.setAdapter(adapter);
 
+        mEditText = (EditText) findViewById(R.id.et_chatting_chat);
+        mEditText.setOnKeyListener(new View.OnKeyListener() {
+                                       @Override
+                                       public boolean onKey(View v, int keyCode, KeyEvent event) {
+
+                                           if (event.getAction() != KeyEvent.ACTION_DOWN)
+                                               return true;
 
 
+                                           if (keyCode == KeyEvent.KEYCODE_ENTER) {
+                                               Log.d("Send", "KeyEvent.KEYCODE_ENTER");
+                                               JSONObject obj = new JSONObject();
+                                               try {
+                                                   obj.put("type", "publish");
+                                                   obj.put("address", "to.server.channel");
+                                                   JSONObject body = new JSONObject();
+                                                   body.put("type", "normal");
+                                                   body.put("channel_id", channel_id);
+                                                   body.put("sender_id", "aaa");
+                                                   body.put("sender_nick", "닉넴");
+                                                   body.put("app_id", "com.aaa.aaa");
+                                                   body.put("msg", mEditText.getText().toString());
+                                                   obj.put("body", body);
+                                               } catch (JSONException e) {
+                                                   e.printStackTrace();
+                                                   Log.e("onClick", e.toString());
+                                               }
+                                               if ("".equals(mEditText.getText().toString()))
+                                                   return true;
+                                               sockJS.send(obj);
+                                               Log.i("fff", "send event");
+                                               mEditText.setText("");
+                                               return true;
+                                           }
+
+                                           return false;
+                                       }
+                                   }
+
+        );
+
+        connectSockJS();
+
+    }
+
+    private void connectSockJS() {
+        try {
+            sockJS = new SockJSImpl("http://133.130.113.101:7030/eventbus", channel_id) {
+                //channel_
+                @Override
+                public void parseSockJS(String s) {
+                    try {
+                        //System.out.println(s);
+                        s = s.replace("\\\"", "\"");
+                        s = s.replace("\\\\", "\\");
+//                        s = s.replace("\\\\\"", "\"");
+                        s = s.substring(3, s.length() - 2); // a[" ~ "] 없애기
+                        Log.i("Reci", s);
+
+                        JSONObject json = new JSONObject(s);
+                        String type = json.getString("type");
+                        String address = json.getString("address");
+//                        final JSONObject body = json.getJSONObject("body");
+                        final JSONObject body = new JSONObject(json.getString("body"));
+                        String bodyType = body.getString("type");
+                        String msg = body.getString("msg");
+                        String nickname = body.getString("sender_nick");
+                        Date myDate = new Date();
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd. HH:mm");
+                        String date = sdf.format(myDate);
+                        final String data =  bodyType + "/&" +nickname + "/&" + msg + "/&" + date;
+                        if (("to.channel."+channel_id).equals(address))
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    chatdata.add(data);
+                                    adapter.notifyDataSetChanged();
+                                }
+                            });
+
+                        System.out.println("body = " + body);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            };
+            boolean b = sockJS.connectBlocking();
+
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }

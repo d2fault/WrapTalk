@@ -184,7 +184,7 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
             sockJS = new SockJSImpl("http://133.130.113.101:7030/eventbus", channelId) {
 //channel_
                 @Override
-                void parseSockJS(String s) {
+                public void parseSockJS(String s) {
                     try {
                         //System.out.println(s);
                         s = s.replace("\\\"", "\"");
@@ -203,7 +203,7 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
                         String nickname = body.getString("sender_nick");
 
                         final String data =  bodyType + "/&" +nickname + "/&" + msg;
-                        if (("to.channel."+channelId).equals(address))
+                        if (("to.chann   el."+channelId).equals(address))
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {

@@ -70,7 +70,7 @@ public class SockJSImpl extends WebSocketClient {
         Log.e("SockJS", ex.toString());
     }
 
-    void parseSockJS(String s) {
+    public void parseSockJS(String s) {
         try {
 
             s = s.replace("\\\"", "\"");
@@ -93,7 +93,7 @@ public class SockJSImpl extends WebSocketClient {
      * JSON을 websocket 전송용 문자열로 변환하여 전
      * @param json
      */
-    void send(JSONObject json) {
+    public void send(JSONObject json) {
         String str = json.toString();
         str = str.replaceAll("\"", "\\\\\"");
         str = "[\"" + str + "\"]";
