@@ -209,6 +209,11 @@ public class SplashActivity extends AppCompatActivity {
             public void onComplete() {
 
             }
+
+            @Override
+            public void onErrorHandler() {
+
+            }
         });
     }
 

@@ -2,6 +2,7 @@ package com.wraptalk.wraptalk.services;
 
 import android.app.Service;
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.DataSetObserver;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -29,6 +30,7 @@ import android.widget.SeekBar;
 
 import com.wraptalk.wraptalk.R;
 import com.wraptalk.wraptalk.ui.TabSettingFragment;
+import com.wraptalk.wraptalk.utils.DBManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -93,6 +95,7 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
     private ChatListAdapter adapter;
     private SockJSImpl sockJS;
     private String channelId = "channel_id";
+    private TaskWatchService taskWatchService;
 
     @Override
     public IBinder onBind(Intent arg0) {
@@ -109,15 +112,42 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
         initView();
         initParams();
 
-        TaskWatchService taskWatchService = new TaskWatchService(getApplicationContext(), this);
+
+        taskWatchService = new TaskWatchService(getApplicationContext(), this);
         taskWatchService.setCallback(this);
         taskWatchService.start();
+
+
+        initData();
 
         mHandler = new Handler();
 
         mWindowManager.addView(mImageView, mParams);
 
         connectSockJS();
+    }
+
+    private void initData() {
+
+        DBManager.getInstance().select("SELECT * FROM chat_info where app_id = " + taskWatchService.getCurrentTask(), new DBManager.OnSelect() {
+            @Override
+            public void onSelect(Cursor cursor) {
+                cursor.moveToPosition(cursor.getCount());
+                Log.e("device_id", String.valueOf(cursor.getColumnIndex("channel_id")));
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+
+            @Override
+            public void onErrorHandler() {
+
+            }
+        });
+
+
     }
 
     private void connectSockJS() {

@@ -41,6 +41,10 @@ public class TaskWatchService{
         }
     }
 
+    public String getCurrentTask(){
+        return currentTask;
+    }
+
     public void setCallback(TaskWatchCallback callback){
         this.callback = callback;
     }

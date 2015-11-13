@@ -159,6 +159,11 @@ public class GameListAdapter extends BaseAdapter {
                             public void onComplete() {
 
                             }
+
+                            @Override
+                            public void onErrorHandler() {
+
+                            }
                         });
 
                         data.setFlag(1);
