@@ -193,7 +193,7 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
         mParamsbt1.gravity = Gravity.TOP | Gravity.LEFT;
 
         mParamsbt2 = new WindowManager.LayoutParams(
-                (int)(buttonSize*0.9), (int)(buttonSize*0.9)1,
+                (int)(buttonSize*0.9), (int)(buttonSize*0.9),
                 WindowManager.LayoutParams.TYPE_PHONE,
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                 PixelFormat.TRANSLUCENT);
