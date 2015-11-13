@@ -2,6 +2,7 @@ package com.wraptalk.wraptalk.services;
 
 import android.app.Service;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.DataSetObserver;
 import android.graphics.Bitmap;
@@ -96,6 +97,7 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
     private SockJSImpl sockJS;
     private String channelId = "channel_id";
     private TaskWatchService taskWatchService;
+    private  SharedPreferences pref;
 
     @Override
     public IBinder onBind(Intent arg0) {
@@ -108,10 +110,10 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
         Log.i("ChatService", "Start Service");
         LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
         chatheadView = (RelativeLayout) inflater.inflate(R.layout.chathead, null);
+        pref = getSharedPreferences("chathead", MODE_PRIVATE);
 
         initView();
         initParams();
-
 
         taskWatchService = new TaskWatchService(getApplicationContext(), this);
         taskWatchService.setCallback(this);
@@ -283,7 +285,8 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
                         | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                 PixelFormat.TRANSLUCENT);
-        mParams2.alpha = 90;
+        mParams2.alpha = Integer.parseInt(pref.getString("chathead_alpha", "80"));
+        Log.i("alpha", mParams2.alpha+"");
         mParams3 = new WindowManager.LayoutParams(
                 WindowManager.LayoutParams.MATCH_PARENT,
                 WindowManager.LayoutParams.MATCH_PARENT,
@@ -558,7 +561,9 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
 
         } else if (v.getBackground() == bt4.getBackground()) {
             buttonClick();
+            SharedPreferences pref = getSharedPreferences("chathead", MODE_PRIVATE);
             if (showchat == 0) {
+                mParams2.alpha = Integer.parseInt(pref.getString("chathead_alpha", "80"));
                 mWindowManager.addView(chatheadView, mParams2);
                 mWindowManager.removeView(mImageView);
                 mWindowManager.addView(mImageView, mParams);
@@ -570,8 +575,9 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
                         WindowManager.LayoutParams.TYPE_PHONE,
                         WindowManager.LayoutParams.FLAG_SPLIT_TOUCH,
                         PixelFormat.TRANSLUCENT);
-                mParams2.alpha = 90;
+                mParams2.alpha = Integer.parseInt(pref.getString("chathead_alpha", "80"));
                 mWindowManager.updateViewLayout(chatheadView, mParams2);
+                Log.i("alpha", mParams2.alpha + "");
                 mWindowManager.removeView(mImageView);
                 mWindowManager.addView(mImageView, mParams);
                 showchat++;
@@ -584,7 +590,9 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
                         WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
                                 | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                         PixelFormat.TRANSLUCENT);
-                mParams2.alpha = 90;
+
+                mParams2.alpha = Integer.parseInt(pref.getString("chathead_alpha", "80"));
+                Log.i("alpha", mParams2.alpha+"");
                 showchat = 0;
             }
         }
