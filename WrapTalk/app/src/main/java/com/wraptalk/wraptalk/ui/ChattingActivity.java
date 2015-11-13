@@ -6,15 +6,22 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.wraptalk.wraptalk.R;
+import com.wraptalk.wraptalk.adapter.ChattingAdapter;
+
+import java.util.ArrayList;
 
 public class ChattingActivity extends AppCompatActivity {
 
-    ImageButton imageButton_ring;
-    ImageButton imageButton_setting;
-    Boolean flag = true;
+    private ImageButton imageButton_ring;
+    private ImageButton imageButton_setting;
+    private Boolean flag = true;
+    private ListView list;
+    private ChattingAdapter adapter;
+    private ArrayList<String> chatdata;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +29,7 @@ public class ChattingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_chatting);
         Intent intent = getIntent();
         String title = intent.getStringExtra("channelName"); // bell on off 유무도 받아야 한다.
+        String channelId = intent.getStringExtra("channel_id");
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -51,5 +59,12 @@ public class ChattingActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Set", Toast.LENGTH_SHORT).show();
             }
         });
+
+        list = (ListView) findViewById(R.id.lv_chatting_list);
+        adapter = new ChattingAdapter(getApplicationContext(), chatdata);
+        list.setAdapter(adapter);
+
+
+
     }
 }
