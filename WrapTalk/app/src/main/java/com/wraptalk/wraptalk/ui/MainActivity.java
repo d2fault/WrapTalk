@@ -55,11 +55,18 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.getTabAt(2).setIcon(R.mipmap.ic_mychannel);
         tabLayout.getTabAt(3).setIcon(R.mipmap.ic_setting);
 
+        Intent intent = getIntent();
+        int setTab = intent.getIntExtra("Tab", 0);
+        mViewPager.setCurrentItem(setTab);
+
         String query = String.format("INSERT INTO user_info (token, device_id, user_id, gcm_key) VALUES ('%s', '%s', '%s', '%s')",
                 UserInfo.getInstance().token, UserInfo.getInstance().deviceId, UserInfo.getInstance().email, UserInfo.getInstance().gcmKey);
 
-        DBManager.getInstance().write(query);
-
+        try {
+            DBManager.getInstance().write(query);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
         DBManager.getInstance().select("SELECT * FROM user_info", new DBManager.OnSelect() {
             @Override
             public void onSelect(Cursor cursor) {

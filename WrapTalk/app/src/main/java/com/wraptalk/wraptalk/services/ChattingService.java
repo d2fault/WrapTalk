@@ -28,6 +28,7 @@ import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 
 import com.wraptalk.wraptalk.R;
+import com.wraptalk.wraptalk.ui.MainActivity;
 import com.wraptalk.wraptalk.ui.TabSettingFragment;
 import com.wraptalk.wraptalk.utils.DBManager;
 
@@ -545,9 +546,11 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
     @Override
     public void onClick(View v) {
         if (v.getBackground() == bt1.getBackground()) {
-            Intent i = new Intent(this, TabSettingFragment.class);
+            Intent i = new Intent(this, MainActivity.class);
+            i.putExtra("Tab", 3);
             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(i);
+
             buttonClick();
         } else if (v.getBackground() == bt2.getBackground()) {
 

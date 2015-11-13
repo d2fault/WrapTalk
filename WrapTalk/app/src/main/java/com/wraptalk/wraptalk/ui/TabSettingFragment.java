@@ -2,8 +2,10 @@ package com.wraptalk.wraptalk.ui;
 
 
 import android.app.Fragment;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
@@ -11,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.SeekBar;
 
 import com.wraptalk.wraptalk.R;
 import com.wraptalk.wraptalk.adapter.SettingAdapter;
@@ -116,14 +119,18 @@ public class TabSettingFragment extends android.support.v4.app.Fragment {
         //Dialog의 listener에서 사용하기 위해 final로 참조변수 선언
 
         final View dialogView = getActivity().getLayoutInflater().inflate(R.layout.dialog_channel_window_opacity, null);
-
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
         builder.setView(dialogView);
 
+
         builder.setPositiveButton("설정하기", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                SeekBar seekBar = (SeekBar) dialogView.findViewById(R.id.seekBar_opacity);
+                seekBar.setMax(100);
+                int progress = seekBar.getProgress();
+                commitSharedPreference("chathead_alpha", progress+"");
             }
         });
 
@@ -141,6 +148,13 @@ public class TabSettingFragment extends android.support.v4.app.Fragment {
 
         //Dialog 보이기
         dialog.show();
+    }
+
+    private void commitSharedPreference(String key, String value) {
+        SharedPreferences pref = getActivity().getSharedPreferences("chathead", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putString(key, value);
+        editor.commit();
     }
 
     public void onClickLogout() {
