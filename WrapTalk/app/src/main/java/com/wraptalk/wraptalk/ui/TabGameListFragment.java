@@ -102,8 +102,8 @@ public class TabGameListFragment extends android.support.v4.app.Fragment {
             }
 
             @Override
-            public void onErrorHandler() {
-                
+            public void onErrorHandler(Exception e) {
+
             }
         });
 

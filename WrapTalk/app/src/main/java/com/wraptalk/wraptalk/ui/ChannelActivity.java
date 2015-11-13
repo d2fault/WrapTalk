@@ -347,7 +347,7 @@ public class ChannelActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onErrorHandler() {
+            public void onErrorHandler(Exception e) {
 
             }
         });
@@ -416,7 +416,7 @@ public class ChannelActivity extends AppCompatActivity {
                             }
 
                             @Override
-                            public void onErrorHandler() {
+                            public void onErrorHandler(Exception e) {
 
                             }
                         });
@@ -494,7 +494,7 @@ public class ChannelActivity extends AppCompatActivity {
                             }
 
                             @Override
-                            public void onErrorHandler() {
+                            public void onErrorHandler(Exception e) {
 
                             }
                         });
@@ -542,7 +542,7 @@ public class ChannelActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onErrorHandler() {
+            public void onErrorHandler(Exception e) {
 
             }
         });

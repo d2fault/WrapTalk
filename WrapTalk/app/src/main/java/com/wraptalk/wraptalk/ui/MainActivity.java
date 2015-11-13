@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onErrorHandler() {
+            public void onErrorHandler(Exception e) {
 
             }
         });

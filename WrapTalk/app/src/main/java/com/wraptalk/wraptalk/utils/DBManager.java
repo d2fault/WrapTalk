@@ -78,13 +78,13 @@ public class DBManager extends SQLiteOpenHelper {
             }
             cb.onComplete();
         }catch (Exception e){
-            cb.onErrorHandler();
+            cb.onErrorHandler(e);
         }
     }
 
     public static interface OnSelect {
         public void onSelect(Cursor cursor);
         public void onComplete();
-        public void onErrorHandler();
+        public void onErrorHandler(Exception e);
     }
 }

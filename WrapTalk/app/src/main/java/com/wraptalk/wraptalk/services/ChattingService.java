@@ -142,12 +142,37 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
             }
 
             @Override
-            public void onErrorHandler() {
-
+            public void onErrorHandler(Exception e) {
+                channelId = "channel_id";
             }
         });
 
 
+    }
+
+    private void changeChannel(String task){
+        DBManager.getInstance().select("SELECT * FROM chat_info where app_id = '" + task + "';", new DBManager.OnSelect() {
+            @Override
+            public void onSelect(Cursor cursor) {
+                cursor.moveToFirst();
+                for(int i=0; i < cursor.getCount(); i++){
+                    //cursor.
+                }
+                cursor.moveToPosition(cursor.getCount());
+                Log.e("device_id", String.valueOf(cursor.getColumnIndex("channel_id")));
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+
+            @Override
+            public void onErrorHandler(Exception e) {
+                channelId = "channel_id";
+                Log.e("Error", e.toString());
+            }
+        });
     }
 
     private void connectSockJS() {
@@ -568,7 +593,8 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
         Log.i("task", task);
         sockJS.closeSession();
         ExitMessage();
-        channelId = "96da751edc63634c4c5958ce90e6a889ee1cdda247d92a978f340336791d5fb3";
+        changeChannel(task);
+        //channelId = "96da751edc63634c4c5958ce90e6a889ee1cdda247d92a978f340336791d5fb3";
         connectSockJS();
 
         return true;
@@ -576,6 +602,7 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
 
     public void ExitMessage(){
         JSONObject log = new JSONObject();
+
         try {
             log.put("type", "publish");
             log.put("address", "to.server.channel");
