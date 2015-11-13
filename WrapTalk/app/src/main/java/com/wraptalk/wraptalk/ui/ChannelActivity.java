@@ -93,7 +93,6 @@ public class ChannelActivity extends AppCompatActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
         switch (id) {
             case R.id.action_changeNickname :
                 showChangeNickDialog();
@@ -505,7 +504,6 @@ public class ChannelActivity extends AppCompatActivity {
         DBManager.getInstance().select("SELECT * FROM app_info WHERE app_id='" + app_id + "'", new DBManager.OnSelect() {
             @Override
             public void onSelect(Cursor cursor) {
-                cursor.moveToFirst();
                 nickname = cursor.getString(cursor.getColumnIndex("user_nick"));
                 Log.e("nickname", nickname);
             }

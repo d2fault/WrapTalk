@@ -184,7 +184,7 @@ public class SplashActivity extends AppCompatActivity {
         for(PackageInfo pi : tempPackageList) {
             boolean flag = isSystemPackage(pi);
             if(!flag) {
-                query = String.format("INSERT INTO app_info (app_id, app_name, nickname, check_registration) VALUES ('%s', '%s', '%s', %d)",
+                query = String.format("INSERT INTO app_info (app_id, app_name, user_nick, check_registration) VALUES ('%s', '%s', '%s', %d)",
                         pi.packageName, packageManager.getApplicationLabel(pi.applicationInfo).toString(), "temp", 0);
                 try {
                     DBManager.getInstance().write(query);

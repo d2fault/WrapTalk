@@ -8,16 +8,14 @@
 
     <TextView
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:text="SET YOUR NICKNAME"
-        android:textSize="16dp"
-        android:layout_gravity="center"
-        android:gravity="center"/>
+        android:textSize="16dp"/>
 
     <EditText
         android:id="@+id/editText_nickname"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:hint="input nickname"
         android:textSize="18dp"
         android:gravity="center"/>

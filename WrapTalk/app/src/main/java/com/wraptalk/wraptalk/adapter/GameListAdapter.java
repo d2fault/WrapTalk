@@ -3,9 +3,7 @@ package com.wraptalk.wraptalk.adapter;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -90,7 +88,7 @@ public class GameListAdapter extends BaseAdapter {
             viewHolder = (GameListHolder) convertView.getTag();
         }
 
-        viewHolder.imageView_gameAppIcon.setImageDrawable(data.appIcon);
+        viewHolder.imageView_gameAppIcon.setImageDrawable(data.getAppIcon());
         viewHolder.textView_gameAppName.setText(data.getAppName());
 
         if(data.getFlag() == 0) {
@@ -134,7 +132,8 @@ public class GameListAdapter extends BaseAdapter {
                         "token=" + UserInfo.getInstance().token + "&app_id=" + data.getPackageInfo().applicationInfo.packageName +
                         "&user_nick=";
                 try {
-                    url += URLEncoder.encode(editText.getText().toString(), "utf-8");
+                    data.setUser_nick(editText.getText().toString());
+                    url += URLEncoder.encode(data.getUser_nick(), "utf-8");
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }
@@ -142,7 +141,7 @@ public class GameListAdapter extends BaseAdapter {
                 RequestUtil.asyncHttp(url, new OnRequest() {
                     @Override
                     public void onSuccess(String url, byte[] receiveData) {
-                        String query = "UPDATE app_info SET check_registration=1 WHERE app_id='" + data.packageInfo.packageName + "'";
+                        String query = "UPDATE app_info SET check_registration=1,user_nick='" + data.getUser_nick() + "' WHERE app_id='" + data.getPackageInfo().packageName + "'";
                         DBManager.getInstance().write(query);
                     }
 
@@ -151,22 +150,6 @@ public class GameListAdapter extends BaseAdapter {
                     }
                 });
 
-                String query = "SELECT * FROM app_info WHERE check_registration=1";
-                DBManager.getInstance().select(query, new DBManager.OnSelect() {
-                    @Override
-                    public void onSelect(Cursor cursor) {
-                        Log.e("GameListAdapter", "registered app_name : " + cursor.getString(cursor.getColumnIndex("app_name")));
-                    }
-                    @Override
-                    public void onComplete() {
-                        Log.e("onComplete", "");
-                    }
-
-                    @Override
-                    public void onErrorHandler(Exception e) {
-                        Log.e("onErrorHandler", "");
-                    }
-                });
                 data.setFlag(1);
                 viewHolder.imageButton_regist.setBackgroundResource(R.mipmap.ic_minus);
             }
@@ -189,8 +172,6 @@ public class GameListAdapter extends BaseAdapter {
     }
 
     public void onClickSubButton(final GameListHolder viewHolder, final GameListData data) {
-        //res폴더>>layout폴더>>dialog_addmember.xml 레이아웃 리소스 파일로 View 객체 생성
-        //Dialog의 listener에서 사용하기 위해 final로 참조변수 선언
 
         final View dialogView = layoutInflater.inflate(R.layout.dialog_sub_application, null);
 
@@ -209,10 +190,8 @@ public class GameListAdapter extends BaseAdapter {
                 RequestUtil.asyncHttp(url, new OnRequest() {
                     @Override
                     public void onSuccess(String url, byte[] receiveData) {
-                        String query;
-                        query = "UPDATE app_info SET check_registration=0 WHERE app_id='" + data.packageInfo.packageName + "';";
+                        String query = "UPDATE app_info SET check_registration=0 WHERE app_id='" + data.getPackageInfo().packageName + "';";
                         DBManager.getInstance().write(query);
-
                         data.setFlag(0);
                         viewHolder.imageButton_regist.setBackgroundResource(R.mipmap.ic_plus);
                     }

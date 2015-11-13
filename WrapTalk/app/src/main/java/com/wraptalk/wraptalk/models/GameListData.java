@@ -8,11 +8,14 @@ import android.graphics.drawable.Drawable;
  */
 public class GameListData {
 
-    public PackageInfo packageInfo;
-    public String appName;
-    public Drawable appIcon;
+    private PackageInfo packageInfo;
+    private String appName;
 
-    public Integer flag = 0;
+    private String user_nick;
+
+    private Drawable appIcon;
+
+    private int flag = 0;
 
     public PackageInfo getPackageInfo() {
         return packageInfo;
@@ -28,6 +31,14 @@ public class GameListData {
 
     public void setAppName(String appName) {
         this.appName = appName;
+    }
+
+    public String getUser_nick() {
+        return user_nick;
+    }
+
+    public void setUser_nick(String user_nick) {
+        this.user_nick = user_nick;
     }
 
     public Drawable getAppIcon() {

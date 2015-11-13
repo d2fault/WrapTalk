@@ -36,7 +36,7 @@ public class DBManager extends SQLiteOpenHelper {
         sql = "CREATE TABLE IF NOT EXISTS app_info(" +
                 "app_id TEXT PRIMARY KEY UNIQUE, " +
                 "app_name TEXT, " +
-                "nickname TEXT, " +
+                "user_nick TEXT, " +
                 "check_registration INTEGER);"; // boolean처럼 사용할 것. 앱 등록 여부.
         db.execSQL(sql);
 
@@ -47,7 +47,6 @@ public class DBManager extends SQLiteOpenHelper {
                 "channel_cate TEXT, " +
                 "app_id TEXT, " +
                 "channel_name TEXT, " +
-                "user_nick TEXT, " +
                 "chief_id TEXT, " +
                 "user_color TEXT);";
 
@@ -70,18 +69,15 @@ public class DBManager extends SQLiteOpenHelper {
 
     public void select(String query, OnSelect cb) {
         SQLiteDatabase db = getReadableDatabase();
-        Log.e("select", "");
+        Log.e("select query", query);
         try {
             Cursor cursor = db.rawQuery(query, null);
-            Log.e("try", "");
             cursor.moveToFirst();
             while (cursor.moveToNext()) {
                 cb.onSelect(cursor);
-                Log.e("try while", "");
             }
             cb.onComplete();
         }catch (Exception e){
-            Log.e("catch", "");
             cb.onErrorHandler(e);
         }
     }
