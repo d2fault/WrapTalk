@@ -10,8 +10,11 @@ import android.graphics.BitmapFactory;
 import android.graphics.PixelFormat;
 import android.os.Handler;
 import android.os.IBinder;
+import android.support.annotation.NonNull;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
@@ -97,7 +100,7 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
     private SockJSImpl sockJS;
     private String channelId = "channel_id";
     private TaskWatchService taskWatchService;
-    private  SharedPreferences pref;
+    private SharedPreferences pref;
 
     @Override
     public IBinder onBind(Intent arg0) {
@@ -152,12 +155,12 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
 
     }
 
-    private void changeChannel(String task){
+    private void changeChannel(String task) {
         DBManager.getInstance().select("SELECT * FROM chat_info where app_id = '" + task + "';", new DBManager.OnSelect() {
             @Override
             public void onSelect(Cursor cursor) {
                 cursor.moveToFirst();
-                for(int i=0; i < cursor.getCount(); i++){
+                for (int i = 0; i < cursor.getCount(); i++) {
                     //cursor.
                 }
                 cursor.moveToPosition(cursor.getCount());
@@ -182,7 +185,7 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
             chatdata.clear();
             adapter.notifyDataSetChanged();
             sockJS = new SockJSImpl("http://133.130.113.101:7030/eventbus", channelId) {
-//channel_
+                //channel_
                 @Override
                 public void parseSockJS(String s) {
                     try {
@@ -202,8 +205,8 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
                         String msg = body.getString("msg");
                         String nickname = body.getString("sender_nick");
 
-                        final String data =  bodyType + "/&" +nickname + "/&" + msg;
-                        if (("to.chann   el."+channelId).equals(address))
+                        final String data = bodyType + "/&" + nickname + "/&" + msg;
+                        if (("to.chann   el." + channelId).equals(address))
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -235,29 +238,29 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
 
         int dpi = matrix.densityDpi;
         int buttonSize;
-        if(dpi > 350) {
+        if (dpi > 350) {
             buttonSize = 150;
             dpiCorrection = 1;
-        }else {
+        } else {
             buttonSize = 100;
-            dpiCorrection = (float)0.75;
+            dpiCorrection = (float) 0.75;
         }
         mParamsbt1 = new WindowManager.LayoutParams(
-                (int)(buttonSize*0.9), (int)(buttonSize*0.9),
+                (int) (buttonSize * 0.9), (int) (buttonSize * 0.9),
                 WindowManager.LayoutParams.TYPE_PHONE,
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                 PixelFormat.TRANSLUCENT);
         mParamsbt1.gravity = Gravity.TOP | Gravity.LEFT;
 
         mParamsbt2 = new WindowManager.LayoutParams(
-                (int)(buttonSize*0.9), (int)(buttonSize*0.9),
+                (int) (buttonSize * 0.9), (int) (buttonSize * 0.9),
                 WindowManager.LayoutParams.TYPE_PHONE,
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                 PixelFormat.TRANSLUCENT);
         mParamsbt2.gravity = Gravity.TOP | Gravity.LEFT;
 
         mParamsbt3 = new WindowManager.LayoutParams(
-                (int)(buttonSize*0.9), (int)(buttonSize*0.9),
+                (int) (buttonSize * 0.9), (int) (buttonSize * 0.9),
                 WindowManager.LayoutParams.TYPE_PHONE,
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                 PixelFormat.TRANSLUCENT);
@@ -272,7 +275,7 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
         mParams.gravity = Gravity.TOP | Gravity.LEFT;
 
         mParamsbt4 = new WindowManager.LayoutParams(
-                (int)(buttonSize*0.9), (int)(buttonSize*0.9),
+                (int) (buttonSize * 0.9), (int) (buttonSize * 0.9),
                 WindowManager.LayoutParams.TYPE_PHONE,
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                 PixelFormat.TRANSLUCENT);
@@ -286,7 +289,7 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
                         | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                 PixelFormat.TRANSLUCENT);
         mParams2.alpha = Integer.parseInt(pref.getString("chathead_alpha", "80"));
-        Log.i("alpha", mParams2.alpha+"");
+        Log.i("alpha", mParams2.alpha + "");
         mParams3 = new WindowManager.LayoutParams(
                 WindowManager.LayoutParams.MATCH_PARENT,
                 WindowManager.LayoutParams.MATCH_PARENT,
@@ -337,45 +340,75 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
 
         mEditText = (EditText) chatheadView.findViewById(R.id.et_chathead_chat);
         mEditText.setOnKeyListener(new View.OnKeyListener() {
-                                       @Override
-                                       public boolean onKey(View v, int keyCode, KeyEvent event) {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
 
-                                           if (event.getAction()!=KeyEvent.ACTION_DOWN)
-                                               return true;
+                if (event.getAction() != KeyEvent.ACTION_DOWN)
+                    return true;
 
 
-                                           if (keyCode == KeyEvent.KEYCODE_ENTER) {
-                                               Log.d("Send", "KeyEvent.KEYCODE_ENTER");
-                                               JSONObject obj = new JSONObject();
-                                               try {
-                                                   obj.put("type", "publish");
-                                                   obj.put("address", "to.server.channel");
-                                                   JSONObject body = new JSONObject();
-                                                   body.put("type", "normal");
-                                                   body.put("channel_id", channelId);
-                                                   body.put("sender_id", "aaa");
-                                                   body.put("sender_nick", "닉넴");
-                                                   body.put("app_id", "com.aaa.aaa");
-                                                   body.put("msg", mEditText.getText().toString());
-                                                   obj.put("body", body);
-                                               } catch (JSONException e) {
-                                                   e.printStackTrace();
-                                                   Log.e("onClick", e.toString());
-                                               }
-                                               if("".equals(mEditText.getText().toString()))
-                                                   return true;
-                                               sockJS.send(obj);
-                                               Log.i("fff", "send event");
-                                               mEditText.setText("");
-                                               return true;
-                                           }
+                if (keyCode == KeyEvent.KEYCODE_ENTER) {
+                    Log.d("Send", "KeyEvent.KEYCODE_ENTER");
+                    JSONObject obj = send();
+                    if ("".equals(mEditText.getText().toString()))
+                        return true;
+                    sockJS.send(obj);
+                    Log.i("fff", "send event");
+                    mEditText.setText("");
+                    return true;
+                }
 
-                                           return false;
-                                       }
-                                   }
+                return false;
+            }
+        });
+        mEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-        );
+            }
 
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                Log.i("text", s + "");
+                if (s.toString().contains("\n")) {
+                    mEditText.setText(mEditText.getText().toString().replace("\n", ""));
+                    JSONObject obj = send();
+                    if ("".equals(mEditText.getText().toString()))
+                        return;
+                    Log.i("json", obj.toString());
+                    sockJS.send(obj);
+                    mEditText.setText("");
+                }
+                Log.i("Enter ", s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+    }
+
+    @NonNull
+    private JSONObject send() {
+        JSONObject obj = new JSONObject();
+        try {
+            obj.put("type", "publish");
+            obj.put("address", "to.server.channel");
+            JSONObject body = new JSONObject();
+            body.put("type", "normal");
+            body.put("channel_id", channelId);
+            body.put("sender_id", "aaa");
+            body.put("sender_nick", "닉넴");
+            body.put("app_id", "com.aaa.aaa");
+            body.put("msg", mEditText.getText().toString());
+            obj.put("body", body);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            Log.e("onClick", e.toString());
+        }
+        return obj;
     }
 
     private Bitmap getMaskedBitmap(int _srcResId, float _roundInPixel) {
@@ -592,7 +625,7 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
                         PixelFormat.TRANSLUCENT);
 
                 mParams2.alpha = Integer.parseInt(pref.getString("chathead_alpha", "80"));
-                Log.i("alpha", mParams2.alpha+"");
+                Log.i("alpha", mParams2.alpha + "");
                 showchat = 0;
             }
         }
@@ -610,7 +643,7 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
         return true;
     }
 
-    public void ExitMessage(){
+    public void ExitMessage() {
         JSONObject log = new JSONObject();
 
         try {
