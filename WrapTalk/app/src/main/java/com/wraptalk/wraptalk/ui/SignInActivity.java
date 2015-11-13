@@ -175,7 +175,7 @@ public class SignInActivity extends AppCompatActivity implements LoaderCallbacks
                             String result_msg = json.optString("result_msg", "fail");
                             Toast.makeText(getApplicationContext(), result_msg, Toast.LENGTH_SHORT).show();
                         }
-                        String query = String.format("INSERT INTO user_info (token, device_id, user_id, gcm_key) VALUES ('%s', '%s', '%s', '%s')",
+                        String query = String.format("UPDATE user_info SET token='%s', device_id='%s', user_id='%s', gcm_key='%s'",
                                 UserInfo.getInstance().token, UserInfo.getInstance().deviceId, UserInfo.getInstance().email, UserInfo.getInstance().gcmKey);
                         try {
                             DBManager.getInstance().write(query);

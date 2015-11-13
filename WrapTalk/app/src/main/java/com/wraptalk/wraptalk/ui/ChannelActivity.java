@@ -154,6 +154,8 @@ public class ChannelActivity extends AppCompatActivity {
                 RequestUtil.asyncHttp(url, new OnRequest() {
                     @Override
                     public void onSuccess(String url, byte[] receiveData) {
+                        String query = "UPDATE app_info SET user_nick='" + editText_nickname.getText().toString() + "' WHERE app_id='" + app_id + "'";
+                        DBManager.getInstance().write(query);
                         Toast.makeText(ChannelActivity.this, "닉네임 변경에 성공하셨습니다.", Toast.LENGTH_SHORT).show();
                     }
 
@@ -265,12 +267,12 @@ public class ChannelActivity extends AppCompatActivity {
                             data.setFlag(1);
 
                             query = String.format( "INSERT INTO chat_info " +
-                                            "(channel_id, public_onoff, channel_limit, channel_cate, app_id," +
-                                            "channel_name, user_nick, chief_id, user_color) " +
-                                            "VALUES ('%s', '%s', '%d', '%s', '%s', '%s', '%s', '%s', '%s')",
+                                            "(channel_id, public_onoff, channel_limit, channel_cate, app_id, " +
+                                            "channel_name, chief_id, user_color) " +
+                                            "VALUES ('%s', '%s', '%d', '%s', '%s', '%s', '%s', '%s')",
                                     json.optString("channel_id"), json.optString("public_onoff"), json.optInt("channel_limit"),
                                     json.optString("channel_cate"), json.optString("app_id"), json.optString("channel_name"),
-                                    nickname, UserInfo.getInstance().email, "#FFFFFF");
+                                    UserInfo.getInstance().email, "#FFFFFF");
 
                             DBManager.getInstance().write(query);
                             source.add(data);
@@ -357,7 +359,6 @@ public class ChannelActivity extends AppCompatActivity {
                     if (result_code != 0) {
                         String result_msg = json.optString("result_msg", "fail");
                         Toast.makeText(getApplicationContext(), result_msg, Toast.LENGTH_SHORT).show();
-
                         return;
                     }
 
@@ -388,14 +389,13 @@ public class ChannelActivity extends AppCompatActivity {
 
                                 if (id1.equals(id2)) {
                                     data.setFlag(1);
-                                } else if (data.getFlag() != 1) {
+                                } else if (!id1.equals(id2) && data.getFlag() != 1) {
                                     data.setFlag(0);
                                 }
                             }
 
                             @Override
                             public void onComplete() {
-                                Log.e("onComplete", "o");
                             }
 
                             @Override

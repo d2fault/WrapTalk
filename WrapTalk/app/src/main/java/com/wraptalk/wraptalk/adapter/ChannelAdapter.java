@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -210,7 +211,7 @@ public class ChannelAdapter extends BaseAdapter{
                                 channelObj.optString("channel_id"), channelObj.optString("public_onoff"), channelObj.optInt("channel_limit"),
                                 channelObj.optString("channel_cate"), channelObj.optString("app_id"), channelObj.optString("channel_name"),
                                 UserInfo.getInstance().email, "#FFFFFF");
-
+                        Log.e("query", query);
                         DBManager.getInstance().write(query);
                     }
 
