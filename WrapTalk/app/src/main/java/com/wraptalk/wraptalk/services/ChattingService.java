@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.database.DataSetObserver;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.os.Handler;
 import android.os.IBinder;
@@ -31,6 +32,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 
+import com.pes.androidmaterialcolorpickerdialog.ColorPicker;
 import com.wraptalk.wraptalk.R;
 import com.wraptalk.wraptalk.ui.MainActivity;
 import com.wraptalk.wraptalk.ui.TabSettingFragment;
@@ -63,9 +65,8 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
     private WindowManager.LayoutParams mParamsbt5;
 
     private WindowManager mWindowManager;
-    private SeekBar mSeekBar;
     private ListView mChatList;
-    private Button mChatSend;
+    private Button mColorButton;
     private EditText mEditText;
 
     private ImageButton bt1;
@@ -103,6 +104,8 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
     private String channelId = "channel_id";
     private TaskWatchService taskWatchService;
     private SharedPreferences pref;
+    private com.wraptalk.wraptalk.ui.ColorPicker cp;
+    private int nickColor = -1;
 
     @Override
     public IBinder onBind(Intent arg0) {
@@ -314,6 +317,9 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
         mImageView.setMaxHeight(30);
         mImageView.setMaxWidth(30);
 
+        mColorButton = (Button)chatheadView.findViewById(R.id.bt_chathead_color);
+        mColorButton.setOnClickListener(this);
+
 
         bt1 = new ImageButton(this);
         bt1.setBackground(getResources().getDrawable(R.drawable.setting));
@@ -402,6 +408,7 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
             }
         });
 
+        cp = new com.wraptalk.wraptalk.ui.ColorPicker(getApplication(), 255,255,255);
     }
 
     @NonNull
@@ -414,7 +421,7 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
             body.put("type", "normal");
             body.put("channel_id", channelId);
             body.put("sender_id", "aaa");
-            body.put("sender_nick", "닉넴");
+            body.put("sender_nick", "닉넴"+"&&"+nickColor);
             body.put("app_id", "com.aaa.aaa");
             body.put("msg", mEditText.getText().toString());
             obj.put("body", body);
@@ -660,6 +667,21 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
             }
         } else if(v.getBackground() == bt5.getBackground()){
             stopSelf();
+        } else if(v.getBackground() == mColorButton.getBackground()){
+            Log.i("color", "color");
+            cp.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
+            //cp.show();
+            cp.show();
+
+            Button okButton = (Button) cp.findViewById(R.id.okColorButton);
+            okButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    nickColor = Color.rgb(cp.getRed(), cp.getGreen(), cp.getBlue());
+                    mColorButton.setBackgroundColor(nickColor);
+                    cp.dismiss();
+                }
+            });
         }
     }
 

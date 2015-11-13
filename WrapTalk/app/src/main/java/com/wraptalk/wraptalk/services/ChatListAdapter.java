@@ -54,10 +54,13 @@ public class ChatListAdapter extends BaseAdapter {
         }
         TextView textView = (TextView)row.findViewById(R.id.chatdata);
         String[] data = chatData.get(position).split("/&");
+
         SpannableStringBuilder sp = null;
         if("normal".equals(data[0])) {
-            sp = new SpannableStringBuilder(data[1] + " : " + data[2]);
-            sp.setSpan(new ForegroundColorSpan(Color.parseColor("#FF0000")), 0, data[1].length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            String [] nick = data[1].split("&&");
+            int color = Integer.parseInt(nick[1]);
+            sp = new SpannableStringBuilder(nick[0] + " : " + data[2]);
+            sp.setSpan(new ForegroundColorSpan(Color.rgb(Color.red(color), Color.green(color), Color.blue(color))), 0, nick[0].length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             textView.setTypeface(null, Typeface.NORMAL);
             textView.setText(sp);
             textView.append(" ");
