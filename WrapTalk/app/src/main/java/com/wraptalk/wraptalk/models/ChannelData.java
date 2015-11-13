@@ -18,77 +18,96 @@ public class ChannelData {
     chief_id
     */
 
-    private String channelName;
-    private String channelOnoff;
-    private String channelLimit;
-    private String channelId;
-    private String appId;
-    private String userColor;
-    private String masterId;
+    private String channel_name;
+    private String public_onoff;
+    private int channel_limit;
+    private String channel_cate;
+    private String default_channel;
+    private String channel_id;
+    private String app_id;
+    private String chief_id;
 
-    Integer flag = 0;
+    private String user_color;
 
-    public String getChannelName() {
-        return channelName;
+    private int flag = 0;
+
+    public String getChannel_name() {
+        return channel_name;
     }
 
-    public void setChannelName(String channelName) {
-        this.channelName = channelName;
+    public void setChannel_name(String channel_name) {
+        this.channel_name = channel_name;
     }
 
-    public String getChannelOnoff() {
-        return channelOnoff;
+    public String getPublic_onoff() {
+        return public_onoff;
     }
 
-    public void setChannelOnoff(String channelOnoff) {
-        this.channelOnoff = channelOnoff;
+    public void setPublic_onoff(String public_onoff) {
+        this.public_onoff = public_onoff;
     }
 
-    public String getChannelLimit() {
-        return channelLimit;
+    public int getChannel_limit() {
+        return channel_limit;
     }
 
-    public void setChannelLimit(String channelLimit) {
-        this.channelLimit = channelLimit;
+    public void setChannel_limit(int channel_limit) {
+        this.channel_limit = channel_limit;
     }
 
-    public String getChannelId() {
-        return channelId;
+    public String getChannel_cate() {
+        return channel_cate;
     }
 
-    public void setChannelId(String channelId) {
-        this.channelId = channelId;
+    public void setChannel_cate(String channel_cate) {
+        this.channel_cate = channel_cate;
     }
 
-    public String getAppId() {
-        return appId;
+    public String getDefault_channel() {
+        return default_channel;
     }
 
-    public void setAppId(String appId) {
-        this.appId = appId;
+    public void setDefault_channel(String default_channel) {
+        this.default_channel = default_channel;
     }
 
-    public String getUserColor() {
-        return userColor;
+    public String getChannel_id() {
+        return channel_id;
     }
 
-    public void setUserColor(String userColor) {
-        this.userColor = userColor;
+    public void setChannel_id(String channel_id) {
+        this.channel_id = channel_id;
     }
 
-    public String getMasterId() {
-        return masterId;
+    public String getApp_id() {
+        return app_id;
     }
 
-    public void setMasterId(String masterId) {
-        this.masterId = masterId;
+    public void setApp_id(String app_id) {
+        this.app_id = app_id;
     }
 
-    public Integer getFlag() {
+    public String getChief_id() {
+        return chief_id;
+    }
+
+    public void setChief_id(String chief_id) {
+        this.chief_id = chief_id;
+    }
+
+    public String getUser_color() {
+        return user_color;
+    }
+
+    public void setUser_color(String user_color) {
+        this.user_color = user_color;
+    }
+
+    public int getFlag() {
         return flag;
     }
 
-    public void setFlag(Integer flag) {
+    public void setFlag(int flag) {
         this.flag = flag;
     }
 }

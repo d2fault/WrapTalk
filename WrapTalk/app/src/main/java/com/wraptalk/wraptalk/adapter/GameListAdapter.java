@@ -116,9 +116,6 @@ public class GameListAdapter extends BaseAdapter {
     }
 
     public void onClickAddButton(final GameListHolder viewHolder, final GameListData data) {
-        //res폴더>>layout폴더>>dialog_addmember.xml 레이아웃 리소스 파일로 View 객체 생성
-        //Dialog의 listener에서 사용하기 위해 final로 참조변수 선언
-
         final View dialogView = layoutInflater.inflate(R.layout.dialog_set_nickname, null);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -158,7 +155,6 @@ public class GameListAdapter extends BaseAdapter {
                                     cursor.moveToNext();
                                 }
                             }
-
                             @Override
                             public void onComplete() {
 

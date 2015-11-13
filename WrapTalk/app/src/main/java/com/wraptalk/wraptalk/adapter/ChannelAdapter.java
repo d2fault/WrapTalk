@@ -82,8 +82,8 @@ public class ChannelAdapter extends BaseAdapter{
             viewHolder = (ChannelHolder) convertView.getTag();
         }
 
-        viewHolder.textView_channelTitle.setText(data.getChannelName());
-        viewHolder.textView_channelOnoff.setText(data.getChannelOnoff());
+        viewHolder.textView_channelTitle.setText(data.getChannel_name());
+        viewHolder.textView_channelOnoff.setText(data.getPublic_onoff());
 
         viewHolder.button_enter.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -172,14 +172,13 @@ public class ChannelAdapter extends BaseAdapter{
     }
 
     private void joinChannel(ChannelData data) {
-        String url = "http://133.130.113.101:7010/user/joinChannel?token=" + UserInfo.getInstance().token + "&channel_id=" + data.getChannelId() +
+        String url = "http://133.130.113.101:7010/user/joinChannel?token=" + UserInfo.getInstance().token + "&channel_id=" + data.getChannel_id() +
                 "&user_nick=임시닉네임";
 
-        if (data.getChannelOnoff().equals("off")) {
+        if (data.getPublic_onoff().equals("off")) {
             url += "&channel_pw=" + "1234"; // 현재는 임시. 나중에는 dialog 띄워서 받아야함
         }
-
-        url += "&app_id=" + data.getAppId();
+        url += "&app_id=" + data.getApp_id();
 
         RequestUtil.asyncHttp(url, new OnRequest() {
             @Override
@@ -195,7 +194,7 @@ public class ChannelAdapter extends BaseAdapter{
     }
 
     private void quitChannel(ChannelData data) {
-        String url = "http://133.130.113.101:7010/user/withdrawChannel?token=" + UserInfo.getInstance().token + "&channel_id=" + data.getChannelId();
+        String url = "http://133.130.113.101:7010/user/withdrawChannel?token=" + UserInfo.getInstance().token + "&channel_id=" + data.getChannel_id();
 
         RequestUtil.asyncHttp(url, new OnRequest() {
             @Override
