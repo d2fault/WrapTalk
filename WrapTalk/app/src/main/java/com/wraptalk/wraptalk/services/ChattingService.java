@@ -13,7 +13,6 @@ import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Display;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -294,7 +293,7 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
 
     private void initView() {
         mImageView = new ImageView(this);
-        mImageView.setImageBitmap(getMaskedBitmap(R.drawable.chaticon, 30));
+        mImageView.setImageBitmap(getMaskedBitmap(R.drawable.chathead, 30));
         mImageView.setOnTouchListener(mViewTouchListener);
         mImageView.setMaxHeight(30);
         mImageView.setMaxWidth(30);
@@ -305,11 +304,11 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
         bt1.setOnClickListener(this);
 
         bt2 = new ImageButton(this);
-        bt2.setBackground(getResources().getDrawable(R.drawable.chaticon));
+        bt2.setBackground(getResources().getDrawable(R.drawable.hearticon));
         bt2.setOnClickListener(this);
 
         bt3 = new ImageButton(this);
-        bt3.setBackground(getResources().getDrawable(R.drawable.chaticon));
+        bt3.setBackground(getResources().getDrawable(R.drawable.selecticon));
         bt3.setOnClickListener(this);
 
         bt4 = new ImageButton(this);
