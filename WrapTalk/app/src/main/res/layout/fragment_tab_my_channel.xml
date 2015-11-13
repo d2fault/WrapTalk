@@ -5,6 +5,7 @@
     <ListView
         android:id="@+id/listView_myChannel"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></ListView>
+        android:layout_height="match_parent"
+        android:paddingBottom="28dp"></ListView>
 
 </FrameLayout>

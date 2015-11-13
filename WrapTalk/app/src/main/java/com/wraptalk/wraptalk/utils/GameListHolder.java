@@ -11,5 +11,5 @@ public class GameListHolder {
 
     public ImageView imageView_gameAppIcon;
     public TextView textView_gameAppName;
-    public ImageButton button_regist;
+    public ImageButton imageButton_regist;
 }

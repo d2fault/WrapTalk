@@ -16,10 +16,11 @@ import android.util.Log;
 import android.view.View;
 
 import com.wraptalk.wraptalk.R;
-import com.wraptalk.wraptalk.db.SQLiteUserHandler;
 import com.wraptalk.wraptalk.models.UserInfo;
 import com.wraptalk.wraptalk.services.ChattingService;
 import com.wraptalk.wraptalk.services.TaskWatchService;
+import com.wraptalk.wraptalk.utils.DBManager;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -54,20 +55,23 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.getTabAt(2).setIcon(R.mipmap.ic_mychannel);
         tabLayout.getTabAt(3).setIcon(R.mipmap.ic_setting);
 
-        SQLiteUserHandler sqLiteUserHandler = SQLiteUserHandler.open(getApplicationContext());
-        sqLiteUserHandler.insert(UserInfo.getInstance().token, UserInfo.getInstance().deviceId, UserInfo.getInstance().email, UserInfo.getInstance().gcmKey);
+        String query = String.format("INSERT INTO user_info (token, device_id, user_id, gcm_key) VALUES ('%s', '%s', '%s', '%s')",
+                UserInfo.getInstance().token, UserInfo.getInstance().deviceId, UserInfo.getInstance().email, UserInfo.getInstance().gcmKey);
 
-        Cursor c = sqLiteUserHandler.select();
+        DBManager.getInstance().write(query);
 
-        while(c.moveToNext()) {
-            String token = c.getString(c.getColumnIndex("token"));
-            String device_id = c.getString(c.getColumnIndex("device_id"));
-            String user_id = c.getString(c.getColumnIndex("user_id"));
-            String gcm_key = c.getString(c.getColumnIndex("gcm_key"));
+        DBManager.getInstance().select("SELECT * FROM user_info", new DBManager.OnSelect() {
+            @Override
+            public void onSelect(Cursor cursor) {
+                cursor.moveToPosition(cursor.getCount());
+                Log.e("device_id", String.valueOf(cursor.getColumnIndex("device_id")));
+            }
 
-            Log.e("DATA", "token:" + token + " / device_id:" + device_id + " / user_id:" + user_id + " / gcm_key:" + gcm_key);
-        }
-        sqLiteUserHandler.close();
+            @Override
+            public void onComplete() {
+
+            }
+        });
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {

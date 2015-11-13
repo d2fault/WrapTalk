@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -24,7 +23,6 @@ public class ChattingActivity extends AppCompatActivity {
         Intent intent = getIntent();
         String title = intent.getStringExtra("channelName"); // bell on off 유무도 받아야 한다.
 
-        Log.e("title", title);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(title);

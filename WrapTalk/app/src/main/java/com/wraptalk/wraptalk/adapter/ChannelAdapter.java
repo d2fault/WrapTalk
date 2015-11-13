@@ -89,7 +89,7 @@ public class ChannelAdapter extends BaseAdapter{
             @Override
             public void onClick(View v) {
 
-                if (!data.getFlag()) {
+                if (data.getFlag() == 0) {
                     onClickJoinButton(viewHolder, data);
                 } else {
                     onClickQuitButton(viewHolder, data);
@@ -115,7 +115,7 @@ public class ChannelAdapter extends BaseAdapter{
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 joinChannel(data);
-                data.setFlag(true);
+                data.setFlag(1);
                 viewHolder.button_enter.setBackgroundResource(R.mipmap.ic_minus);
             }
         });
@@ -150,7 +150,7 @@ public class ChannelAdapter extends BaseAdapter{
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 quitChannel(data);
-                data.setFlag(false);
+                data.setFlag(0);
                 viewHolder.button_enter.setBackgroundResource(R.mipmap.ic_plus);
             }
         });

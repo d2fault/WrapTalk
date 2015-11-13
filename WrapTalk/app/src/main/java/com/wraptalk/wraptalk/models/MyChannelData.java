@@ -5,31 +5,58 @@ package com.wraptalk.wraptalk.models;
  */
 public class MyChannelData {
 
-    private String myChannelTitle;
-    private String myNickname;
-    private int countUnreadMessage;
+    private String channel_id;
+    private String app_id;
+    private String channel_name;
+    private String user_nick;
+    private String chief_id;
+    private String user_color;
 
-    public String getMyChannelTitle() {
-        return myChannelTitle;
+    public String getChannel_id() {
+        return channel_id;
     }
 
-    public void setMyChannelTitle(String myChannelTitle) {
-        this.myChannelTitle = myChannelTitle;
+    public void setChannel_id(String channel_id) {
+        this.channel_id = channel_id;
     }
 
-    public String getMyNickname() {
-        return myNickname;
+    public String getApp_id() {
+        return app_id;
     }
 
-    public void setMyNickname(String myNickname) {
-        this.myNickname = myNickname;
+    public void setApp_id(String app_id) {
+        this.app_id = app_id;
     }
 
-    public int getCountUnreadMessage() {
-        return countUnreadMessage;
+    public String getChannel_name() {
+        return channel_name;
     }
 
-    public void setCountUnreadMessage(int countUnreadMessage) {
-        this.countUnreadMessage = countUnreadMessage;
+    public void setChannel_name(String channel_name) {
+        this.channel_name = channel_name;
+    }
+
+    public String getUser_nick() {
+        return user_nick;
+    }
+
+    public void setUser_nick(String user_nick) {
+        this.user_nick = user_nick;
+    }
+
+    public String getChief_id() {
+        return chief_id;
+    }
+
+    public void setChief_id(String chief_id) {
+        this.chief_id = chief_id;
+    }
+
+    public String getUser_color() {
+        return user_color;
+    }
+
+    public void setUser_color(String user_color) {
+        this.user_color = user_color;
     }
 }

@@ -3,6 +3,7 @@ package com.wraptalk.wraptalk.adapter;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,12 +15,13 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.wraptalk.wraptalk.R;
 import com.wraptalk.wraptalk.models.GameListData;
+import com.wraptalk.wraptalk.models.UserInfo;
+import com.wraptalk.wraptalk.utils.DBManager;
 import com.wraptalk.wraptalk.utils.GameListHolder;
 import com.wraptalk.wraptalk.utils.OnRequest;
-import com.wraptalk.wraptalk.R;
 import com.wraptalk.wraptalk.utils.RequestUtil;
-import com.wraptalk.wraptalk.models.UserInfo;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -79,7 +81,7 @@ public class GameListAdapter extends BaseAdapter {
             viewHolder.imageView_gameAppIcon = (ImageView) convertView.findViewById(R.id.imageView_gameIcon);
             viewHolder.textView_gameAppName = (TextView) convertView.findViewById(R.id.textView_gameTitle);
 
-            viewHolder.button_regist = (ImageButton) convertView.findViewById(R.id.button_regist);
+            viewHolder.imageButton_regist = (ImageButton) convertView.findViewById(R.id.imageButton_regist);
 
             convertView.setTag(viewHolder);
         }
@@ -91,19 +93,24 @@ public class GameListAdapter extends BaseAdapter {
         viewHolder.imageView_gameAppIcon.setImageDrawable(data.appIcon);
         viewHolder.textView_gameAppName.setText(data.getAppName());
 
-        viewHolder.button_regist.setOnClickListener(new View.OnClickListener() {
+        if(data.getFlag() == 0) {
+            viewHolder.imageButton_regist.setBackgroundResource(R.mipmap.ic_plus);
+        }
+        else {
+            viewHolder.imageButton_regist.setBackgroundResource(R.mipmap.ic_minus);
+        }
+
+        viewHolder.imageButton_regist.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                if (!data.flag) {
+                if (data.getFlag() == 0) {
                     onClickAddButton(viewHolder, data);
                 } else {
                     onClickSubButton(viewHolder, data);
                 }
-                Log.e("listener", String.valueOf(position));
             }
         });
-
 
         return convertView;
     }
@@ -138,8 +145,28 @@ public class GameListAdapter extends BaseAdapter {
                 RequestUtil.asyncHttp(url, new OnRequest() {
                     @Override
                     public void onSuccess(String url, byte[] receiveData) {
-                        data.setFlag(true);
-                        viewHolder.button_regist.setBackgroundResource(R.mipmap.ic_minus);
+                        String query;
+                        query = "UPDATE app_info SET check_registration=1 WHERE package_name=\'" + data.packageInfo.packageName + "\';";
+                        DBManager.getInstance().write(query);
+
+                        DBManager.getInstance().select("SELECT * FROM app_info WHERE check_registration == 1", new DBManager.OnSelect() {
+                            @Override
+                            public void onSelect(Cursor cursor) {
+                                cursor.moveToFirst(); // 꼭 처음으로 돌려주고 시작해야함.
+                                while(!cursor.isLast()) {
+                                    Log.e("app_name", cursor.getString(cursor.getColumnIndex("app_name")));
+                                    cursor.moveToNext();
+                                }
+                            }
+
+                            @Override
+                            public void onComplete() {
+
+                            }
+                        });
+
+                        data.setFlag(1);
+                        viewHolder.imageButton_regist.setBackgroundResource(R.mipmap.ic_minus);
                     }
 
                     @Override
@@ -180,8 +207,25 @@ public class GameListAdapter extends BaseAdapter {
         builder.setPositiveButton("SUB", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                data.setFlag(false);
-                viewHolder.button_regist.setBackgroundResource(R.mipmap.ic_plus);
+                String url = "http://133.130.113.101:7010/user/removeApp?" +
+                        "token=" + UserInfo.getInstance().token + "&app_id=" + data.getPackageInfo().applicationInfo.packageName;
+
+                RequestUtil.asyncHttp(url, new OnRequest() {
+                    @Override
+                    public void onSuccess(String url, byte[] receiveData) {
+                        String query;
+                        query = "UPDATE app_info SET check_registration=0 WHERE package_name=\'" + data.packageInfo.packageName + "\';";
+                        DBManager.getInstance().write(query);
+
+                        data.setFlag(0);
+                        viewHolder.imageButton_regist.setBackgroundResource(R.mipmap.ic_plus);
+                    }
+
+                    @Override
+                    public void onFail(String url, String error) {
+
+                    }
+                });
             }
         });
 

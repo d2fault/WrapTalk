@@ -12,7 +12,7 @@ public class GameListData {
     public String appName;
     public Drawable appIcon;
 
-    public boolean flag = false;
+    public Integer flag = 0;
 
     public PackageInfo getPackageInfo() {
         return packageInfo;
@@ -37,10 +37,10 @@ public class GameListData {
     public void setAppIcon(Drawable appIcon) {
         this.appIcon = appIcon;
     }
-    public boolean isFlag() {
+    public int getFlag() {
         return flag;
     }
-    public void setFlag(boolean flag) {
+    public void setFlag(int flag) {
         this.flag = flag;
     }
 }

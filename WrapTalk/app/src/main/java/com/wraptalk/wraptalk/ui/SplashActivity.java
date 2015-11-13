@@ -3,8 +3,10 @@ package com.wraptalk.wraptalk.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -15,8 +17,10 @@ import android.util.Log;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.wraptalk.wraptalk.R;
 import com.wraptalk.wraptalk.models.UserInfo;
+import com.wraptalk.wraptalk.utils.DBManager;
 
 import java.io.IOException;
+import java.util.List;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -28,6 +32,8 @@ public class SplashActivity extends AppCompatActivity {
     // SharedPreferences에 저장할 때 key 값으로 사용됨.
     private static final String PROPERTY_APP_VERSION = "appVersion";
     private static final String TAG = "ICELANCER";
+
+    DBManager dbManager;
 
     String SENDER_ID = "100866488970";
 
@@ -60,6 +66,8 @@ public class SplashActivity extends AppCompatActivity {
 
         Handler hd = new Handler();
 
+        getInstalledApplication();
+
         hd.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -67,12 +75,13 @@ public class SplashActivity extends AppCompatActivity {
                 startActivity(intent);
                 finish();
             }
-        }, 3000);
+        }, 1000);
     }
 
 
     private void Init() {
         context = getApplicationContext();
+        dbManager = new DBManager(context, "wraptalkdb.sqlite", null, 1);
 
         gcm = GoogleCloudMessaging.getInstance(this);
         regid = getRegistrationId(context);
@@ -163,6 +172,52 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     private void sendRegistrationIdToBackend() {
+    }
 
+    private void saveAppInfo() {
+
+    }
+
+    private void getInstalledApplication() {
+        PackageManager packageManager;
+
+        packageManager = getPackageManager();
+        List<PackageInfo> tempPackageList = packageManager.getInstalledPackages(PackageManager.GET_PERMISSIONS);
+        String query;
+
+        /*To filter out System apps*/
+        for(PackageInfo pi : tempPackageList) {
+            boolean flag = isSystemPackage(pi);
+            if(!flag) {
+                query = String.format("INSERT INTO app_info (package_name, app_name, nickname, check_registration) VALUES ('%s', '%s', '%s', %d)",
+                        pi.packageName, packageManager.getApplicationLabel(pi.applicationInfo).toString(), "temp", 0);
+
+                try {
+                    DBManager.getInstance().write(query);
+                } catch (RuntimeException e) {
+                }
+            }
+        }
+
+        DBManager.getInstance().select("SELECT app_name FROM app_info", new DBManager.OnSelect() {
+            @Override
+            public void onSelect(Cursor cursor) {
+                cursor.moveToFirst(); // 꼭 처음으로 돌려주고 시작해야함.
+                while(!cursor.isLast()) {
+                    Log.e("app_name", cursor.getString(cursor.getColumnIndex("app_name")));
+                    cursor.moveToNext();
+                }
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        });
+    }
+
+    private boolean isSystemPackage(PackageInfo pkgInfo) {
+        return ((pkgInfo.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0) ? true
+                : false;
     }
 }

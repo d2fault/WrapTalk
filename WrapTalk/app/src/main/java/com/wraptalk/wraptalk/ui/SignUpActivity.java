@@ -5,11 +5,9 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.LoaderManager;
 import android.content.CursorLoader;
-import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -28,13 +26,9 @@ import android.widget.Toast;
 
 import com.wraptalk.wraptalk.R;
 import com.wraptalk.wraptalk.models.UserInfo;
+import com.wraptalk.wraptalk.utils.OnRequest;
+import com.wraptalk.wraptalk.utils.RequestUtil;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,9 +37,6 @@ public class SignUpActivity extends AppCompatActivity implements LoaderManager.L
     private static final String[] DUMMY_CREDENTIALS = new String[]{
             "foo@example.com:hello", "bar@example.com:world"
     };
-
-    private UserSignUpTask mAuthTask = null;
-    //private SendPostSignIn sendPostSignIn;
 
     // UI references.
     private AutoCompleteTextView editText_email;
@@ -114,9 +105,6 @@ public class SignUpActivity extends AppCompatActivity implements LoaderManager.L
     }
 
     private void attemptSignup() {
-        if (mAuthTask != null) {
-            return;
-        }
 
         // Reset errors.
         editText_email.setError(null);
@@ -162,8 +150,22 @@ public class SignUpActivity extends AppCompatActivity implements LoaderManager.L
             // Show a progress spinner, and kick off a background task to
             // perform the user signup attempt.
             showProgress(true);
-            mAuthTask = new UserSignUpTask(email, password1);
-            mAuthTask.execute((Void) null);
+
+
+            String body = "user_id=" + email + "&user_pw=" + password1 + "&device_id=" + UserInfo.getInstance().deviceId + "&gcm_id=" + UserInfo.getInstance().gcmKey;
+            String url = "http://133.130.113.101:7010/user/join?" + body;
+            RequestUtil.asyncHttp(url, new OnRequest() {
+                @Override
+                public void onSuccess(String url, byte[] receiveData) {
+                    Toast.makeText(getApplicationContext(), "가입에 성공하였습니다.", Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+
+                @Override
+                public void onFail(String url, String error) {
+                    Toast.makeText(getApplicationContext(), "서버와의 접속이 원활하지 않습니다.", Toast.LENGTH_SHORT).show();
+                }
+            });
         }
     }
 
@@ -262,119 +264,5 @@ public class SignUpActivity extends AppCompatActivity implements LoaderManager.L
                         android.R.layout.simple_dropdown_item_1line, emailAddressCollection);
 
         editText_email.setAdapter(adapter);
-    }
-
-    public class UserSignUpTask extends AsyncTask<Void, Void, String> {
-
-        private final String mEmail;
-        private final String mPassword;
-
-        UserSignUpTask(String email, String password) {
-            mEmail = email;
-            mPassword = password;
-        }
-
-        @Override
-        protected String doInBackground(Void... params) {
-            // TODO: attempt authentication against a network service.
-            String content = null;
-
-            try {
-                // Simulate network access.
-                content = executeClient();
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                return content;
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            for (String credential : DUMMY_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-                if (pieces[0].equals(mEmail)) {
-                    // Account exists, return true if the password matches.
-                    return content;
-                }
-            }
-
-            // TODO: register the new account here.
-            return content;
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            mAuthTask = null;
-            showProgress(false);
-
-            if (result.equals("true")) {
-                Intent intent = new Intent(SignUpActivity.this, SignInActivity.class);
-                startActivity(intent);
-                finish();
-            }
-            else if(result.equals("fail")){
-                editText_email.setError("This email is duplicates");
-                editText_email.requestFocus();
-            }
-            else {
-                Toast.makeText(getApplicationContext(), "서버와의 접속이 원활하지 않습니다.", Toast.LENGTH_SHORT).show();
-            }
-        }
-
-        @Override
-        protected void onCancelled() {
-            mAuthTask = null;
-            showProgress(false);
-        }
-
-        public String executeClient() throws IOException {
-
-            String body = null;
-
-            body = "user_id=" + mEmail + "&user_pw=" + mPassword + "&device_id=" + UserInfo.getInstance().deviceId + "&gcm_id=" + UserInfo.getInstance().gcmKey;
-
-            URL url = new URL("http://133.130.113.101:7010/user/join?" + body);
-
-            Log.e("서버에 보내는 내용", url.toString());
-
-
-            // 전송하는 부분
-
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("POST");
-            // OutputStream으로 POST 데이터를 넘겨주겠다는 옵션.
-            conn.setDoOutput(true);
-            // InputStream으로 서버로 부터 응답을 받겠다는 옵션.
-            conn.setDoInput(true);
-
-
-            try (OutputStream os = conn.getOutputStream();) {
-                os.write(body.getBytes());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            try (
-                    InputStream is = conn.getInputStream();
-                    ByteArrayOutputStream baos = new ByteArrayOutputStream(40960);
-            ) {
-                // 데이터 받는 부분
-                byte tmpRead[] = new byte[10240];
-
-                while (true) {
-                    int nRead = is.read(tmpRead);
-                    if (nRead == -1)
-                        break;
-                    baos.write(tmpRead, 0, nRead);
-                }
-
-                byte readData[] = baos.toByteArray();
-                String strData = new String(readData);
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            return "false";
-        }
     }
 }

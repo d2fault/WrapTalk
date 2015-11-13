@@ -70,9 +70,9 @@ public class MyChannelAdapter extends BaseAdapter{
             viewHolder = (MyChannelHolder) convertView.getTag();
         }
 
-        viewHolder.textView_myChannelTtitle.setText(data.getMyChannelTitle());
-        viewHolder.textView_myNickname.setText(data.getMyNickname());
-        viewHolder.textView_countUnreadMessage.setText(String.valueOf(data.getCountUnreadMessage()));
+        viewHolder.textView_myChannelTtitle.setText(data.getChannel_name());
+        viewHolder.textView_myNickname.setText(data.getUser_nick());
+        viewHolder.textView_countUnreadMessage.setText("0");
 
         return convertView;
     }
