@@ -513,10 +513,7 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
     private void shortClickEvent() {
 
         Log.i("XY", mParams.x + "/" + mParams.y + "/" + showView);
-        if (mParams.x < max_X / 2)
-            Log.i("dd", "right");
-        else
-            Log.i("gg:", "left");
+
         if (!showView) {
             mParamsbt1.x = mParams.x;
             mParamsbt2.x = mParams.x;
@@ -537,14 +534,19 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
             n1 = new Runnable() {
                 @Override
                 public void run() {
+                    int side;
+                    if (mParams.x < max_X / 2)
+                        side = 1;
+                    else
+                        side = -1;
                     animationR = (int) ((0.264 * Math.pow(time1, 4) - 7.277 * Math.pow(time1, 3) + 64.646 * Math.pow(time1, 2) - 167.18 * time1 + 116.33) * dpiCorrection);
-                    mParamsbt1.x = (int) (mParams.x + (mImageView.getWidth() / 2) + animationR * Math.cos(Math.toRadians(80)));
+                    mParamsbt1.x = (int) (mParams.x + (mImageView.getWidth() / 2) + side * animationR * Math.cos(Math.toRadians(80)));
                     mParamsbt1.y = (int) (mParams.y + animationR * Math.sin(Math.toRadians(80)));
-                    mParamsbt2.x = (int) (mParams.x + (mImageView.getWidth() / 2) + animationR * Math.cos(Math.toRadians(27)));
+                    mParamsbt2.x = (int) (mParams.x + (mImageView.getWidth() / 2) + side * animationR * Math.cos(Math.toRadians(27)));
                     mParamsbt2.y = (int) (mParams.y + animationR * Math.sin(Math.toRadians(27)));
-                    mParamsbt3.x = (int) (mParams.x + (mImageView.getWidth() / 2) + animationR * Math.cos(Math.toRadians(-26)));
+                    mParamsbt3.x = (int) (mParams.x + (mImageView.getWidth() / 2) + side * animationR * Math.cos(Math.toRadians(-26)));
                     mParamsbt3.y = (int) (mParams.y + animationR * Math.sin(Math.toRadians(-26)));
-                    mParamsbt4.x = (int) (mParams.x + (mImageView.getWidth() / 2) + animationR * Math.cos(Math.toRadians(-80)));
+                    mParamsbt4.x = (int) (mParams.x + (mImageView.getWidth() / 2) + side * animationR * Math.cos(Math.toRadians(-80)));
                     mParamsbt4.y = (int) (mParams.y + animationR * Math.sin(Math.toRadians(-80)));
                     time1 += 1;
                     mWindowManager.updateViewLayout(bt1, mParamsbt1);
