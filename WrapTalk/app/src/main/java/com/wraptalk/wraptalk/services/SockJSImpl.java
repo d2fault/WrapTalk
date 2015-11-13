@@ -105,7 +105,7 @@ public class SockJSImpl extends WebSocketClient {
         try {
             obj.put("type", "register");
             obj.put("address", address);
-
+            Log.d("RegistAddress", address);
             send(obj);
             joinLogSend();
         } catch (JSONException e) {
@@ -120,7 +120,7 @@ public class SockJSImpl extends WebSocketClient {
             log.put("address", "to.server.channel");
             JSONObject body = new JSONObject();
             body.put("type", "log");
-            body.put("channel_id", "channel_id");
+            body.put("channel_id", roomname);
             body.put("sender_id", "aaa");
             body.put("sender_nick", "닉넴");
             body.put("msg", "님이 입장하셨습니다.");
@@ -129,7 +129,6 @@ public class SockJSImpl extends WebSocketClient {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
     }
 
     /**

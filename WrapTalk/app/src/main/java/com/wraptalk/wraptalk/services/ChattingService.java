@@ -125,7 +125,7 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
             chatdata.clear();
             adapter.notifyDataSetChanged();
             sockJS = new SockJSImpl("http://133.130.113.101:7030/eventbus", channelId) {
-
+//channel_
                 @Override
                 void parseSockJS(String s) {
                     try {
@@ -294,7 +294,7 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
                                                    obj.put("address", "to.server.channel");
                                                    JSONObject body = new JSONObject();
                                                    body.put("type", "normal");
-                                                   body.put("channel_id", "channel_id");
+                                                   body.put("channel_id", channelId);
                                                    body.put("sender_id", "aaa");
                                                    body.put("sender_nick", "닉넴");
                                                    body.put("app_id", "com.aaa.aaa");
@@ -537,10 +537,30 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
     public boolean TaskCallback(String task) {
         Log.i("task", task);
         sockJS.closeSession();
-        channelId = "327f9234876e7f619903f7231f7651b7e874d537003348cc87ba40f5359232fc";
+        ExitMessage();
+        channelId = "96da751edc63634c4c5958ce90e6a889ee1cdda247d92a978f340336791d5fb3";
         connectSockJS();
 
         return true;
+    }
+
+    public void ExitMessage(){
+        JSONObject log = new JSONObject();
+        try {
+            log.put("type", "publish");
+            log.put("address", "to.server.channel");
+            JSONObject body = new JSONObject();
+            body.put("type", "log");
+            body.put("channel_id", channelId);
+            body.put("sender_id", "aaa");
+            body.put("sender_nick", "닉넴");
+            body.put("msg", "님이 퇴장하셨습니다.");
+            log.put("body", body);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            Log.e("ExitMessage", e.toString());
+        }
+        sockJS.send(log);
     }
 
     private class LongPressClass implements Runnable {
