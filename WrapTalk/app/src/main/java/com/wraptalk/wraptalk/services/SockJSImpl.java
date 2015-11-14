@@ -26,12 +26,14 @@ public class SockJSImpl extends WebSocketClient {
     private final static String dictionary = "abcdefghijklmnopqrstuvwxyz0123456789_";
     private String roomname;
     private Timer timer;
+    private String nickname;
 
-    public SockJSImpl(String serverURI, String roomname) throws URISyntaxException{
+    public SockJSImpl(String serverURI, String roomname, String nickname) throws URISyntaxException{
         super(new URI(generatePrimusUrl(serverURI)), new Draft_17());
         Log.i("test", "Test");
         this.openHandShakeFields = new HashMap<>();
         this.roomname = roomname;
+        this.nickname = nickname;
     }
 
     @Override
@@ -122,7 +124,7 @@ public class SockJSImpl extends WebSocketClient {
             body.put("type", "log");
             body.put("channel_id", roomname);
             body.put("sender_id", "aaa");
-            body.put("sender_nick", "닉넴");
+            body.put("sender_nick", nickname);
             body.put("msg", "님이 입장하셨습니다.");
             log.put("body", body);
             send(log);

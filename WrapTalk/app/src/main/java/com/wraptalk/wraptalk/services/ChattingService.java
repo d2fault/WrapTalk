@@ -107,6 +107,8 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
     private com.wraptalk.wraptalk.ui.ColorPicker cp;
     private int nickColor = -1;
 
+    private String nickname = "닉넴";
+
     @Override
     public IBinder onBind(Intent arg0) {
         return null;
@@ -189,7 +191,7 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
         try {
             chatdata.clear();
             adapter.notifyDataSetChanged();
-            sockJS = new SockJSImpl("http://133.130.113.101:7030/eventbus", channelId) {
+            sockJS = new SockJSImpl("http://133.130.113.101:7030/eventbus", channelId, nickname) {
                 //channel_
                 @Override
                 public void parseSockJS(String s) {

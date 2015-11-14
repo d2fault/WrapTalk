@@ -44,6 +44,7 @@ public class ChattingActivity extends AppCompatActivity {
     private int nickColor;
     private ColorPicker cp;
     private Button colorButton;
+    private String nickname;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +53,7 @@ public class ChattingActivity extends AppCompatActivity {
         Intent intent = getIntent();
         String title = intent.getStringExtra("channelName"); // bell on off 유무도 받아야 한다.
         channel_id = intent.getStringExtra("channel_id");
+        nickname = intent.getStringExtra("nickname");
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -115,6 +117,8 @@ public class ChattingActivity extends AppCompatActivity {
                                                sockJS.send(obj);
                                                mEditText.setText("");
                                                return true;
+                                           } else if(keyCode == 4){
+                                               finish();
                                            }
 
                                            return false;
@@ -184,7 +188,7 @@ public class ChattingActivity extends AppCompatActivity {
             body.put("type", "normal");
             body.put("channel_id", channel_id);
             body.put("sender_id", "aaa");
-            body.put("sender_nick", "닉넴"+"&&" + nickColor);
+            body.put("sender_nick", nickname+"&&" + nickColor);
             body.put("app_id", "com.aaa.aaa");
             body.put("msg", mEditText.getText().toString());
             obj.put("body", body);
@@ -197,7 +201,7 @@ public class ChattingActivity extends AppCompatActivity {
 
     private void connectSockJS() {
         try {
-            sockJS = new SockJSImpl("http://133.130.113.101:7030/eventbus", channel_id) {
+            sockJS = new SockJSImpl("http://133.130.113.101:7030/eventbus", channel_id, nickname) {
                 //channel_
                 @Override
                 public void parseSockJS(String s) {

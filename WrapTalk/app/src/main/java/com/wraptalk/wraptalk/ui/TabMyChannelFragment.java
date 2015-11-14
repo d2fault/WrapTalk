@@ -53,6 +53,7 @@ public class TabMyChannelFragment extends android.support.v4.app.Fragment {
                 Intent intent = new Intent(getActivity(), ChattingActivity.class);
                 intent.putExtra("channelName", source.get(position).getChannel_name());
                 intent.putExtra("channel_id", source.get(position).getChannel_id());
+                intent.putExtra("nickname", source.get(position).getUser_nick());
                 startActivity(intent);
             }
         });
