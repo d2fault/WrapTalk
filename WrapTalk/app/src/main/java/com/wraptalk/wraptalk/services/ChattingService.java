@@ -162,7 +162,7 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
 
     }
 
-    private void changeChannel(String task) {
+    private void changeChannel(final String task) {
         DBManager.getInstance().select("SELECT * FROM chat_info where app_id = '" + task + "';", new DBManager.OnSelect() {
             @Override
             public void onSelect(Cursor cursor) {
@@ -181,7 +181,7 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
 
             @Override
             public void onErrorHandler(Exception e) {
-                channelId = "channel_id";
+                channelId = task;
                 Log.e("Error", e.toString());
             }
         });
@@ -694,6 +694,7 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
         ExitMessage();
         changeChannel(task);
         //channelId = "96da751edc63634c4c5958ce90e6a889ee1cdda247d92a978f340336791d5fb3";
+        channelId = task+ "_default";
         connectSockJS();
 
         return true;
@@ -709,7 +710,7 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
             body.put("type", "log");
             body.put("channel_id", channelId);
             body.put("sender_id", "aaa");
-            body.put("sender_nick", "닉넴");
+            body.put("sender_nick", nickname);
             body.put("msg", "님이 퇴장하셨습니다.");
             log.put("body", body);
         } catch (JSONException e) {
