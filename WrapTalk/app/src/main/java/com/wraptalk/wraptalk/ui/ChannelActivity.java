@@ -118,7 +118,7 @@ public class ChannelActivity extends AppCompatActivity {
             app_id = packageInfo.packageName;
             app_name = getPackageManager().getApplicationLabel(packageInfo.applicationInfo).toString();
         }
-        Log.e("app_id", app_id);
+        channelData.setApp_id(app_id);
         getNickname();
     }
 
@@ -447,7 +447,7 @@ public class ChannelActivity extends AppCompatActivity {
                         // user_color는 chat에서
                         data.setChief_id(channelObj.optString("chief_id"));
 
-                        DBManager.getInstance().select("SELECT * FROM chat_info WHERE app_id='", new DBManager.OnSelect() {
+                        DBManager.getInstance().select("SELECT * FROM chat_info WHERE app_id='" + app_id + "';", new DBManager.OnSelect() {
                             @Override
                             public void onSelect(Cursor cursor) {
                                 String id1 = data.getChannel_id();
