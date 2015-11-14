@@ -1,4 +1,4 @@
-package com.wraptalk.wraptalk.services;
+package com.wraptalk.wraptalk.adapter;
 
 import android.content.Context;
 import android.graphics.Color;

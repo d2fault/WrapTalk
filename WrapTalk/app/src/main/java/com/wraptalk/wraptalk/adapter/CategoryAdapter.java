@@ -68,7 +68,7 @@ public class CategoryAdapter extends BaseAdapter {
             viewHolder = (CategoryHolder) convertView.getTag();
         }
 
-        viewHolder.textView_category.setText(data.category);
+        viewHolder.textView_category.setText(data.getApp_name());
 
         return convertView;
     }

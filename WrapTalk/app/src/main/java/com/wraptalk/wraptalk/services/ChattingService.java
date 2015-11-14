@@ -19,7 +19,6 @@ import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -30,12 +29,10 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.SeekBar;
 
-import com.pes.androidmaterialcolorpickerdialog.ColorPicker;
 import com.wraptalk.wraptalk.R;
+import com.wraptalk.wraptalk.adapter.ChatListAdapter;
 import com.wraptalk.wraptalk.ui.MainActivity;
-import com.wraptalk.wraptalk.ui.TabSettingFragment;
 import com.wraptalk.wraptalk.utils.DBManager;
 
 import org.json.JSONException;
