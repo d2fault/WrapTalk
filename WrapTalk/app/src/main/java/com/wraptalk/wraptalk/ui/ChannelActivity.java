@@ -118,6 +118,7 @@ public class ChannelActivity extends AppCompatActivity {
             app_id = packageInfo.packageName;
             app_name = getPackageManager().getApplicationLabel(packageInfo.applicationInfo).toString();
         }
+        Log.e("app_id", app_id);
         getNickname();
     }
 
@@ -260,7 +261,7 @@ public class ChannelActivity extends AppCompatActivity {
                                             "app_id, channel_name, chief_id, user_color) " +
                                             "VALUES ('%s', '%s', '%d', '%s', '%s', '%s', '%s', '%s')",
                                     channelData.getChannel_id(), channelData.getPublic_onoff(), channelData.getChannel_limit(), channelData.getChannel_cate(),
-                                    channelData.getApp_id(), channelData.getChannel_name(), channelData.getChief_id(), channelData.getUser_color());
+                                    app_id, channelData.getChannel_name(), channelData.getChief_id(), channelData.getUser_color());
 
                             DBManager.getInstance().write(query);
 

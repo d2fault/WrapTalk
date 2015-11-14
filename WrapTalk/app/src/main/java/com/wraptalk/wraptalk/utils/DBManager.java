@@ -72,7 +72,7 @@ public class DBManager extends SQLiteOpenHelper {
         Log.e("DBManager SELECT query", query);
         try {
             Cursor cursor = db.rawQuery(query, null);
-            //cursor.moveToFirst();
+            cursor.moveToFirst();
             while (cursor.moveToNext()) {
                 cb.onSelect(cursor);
             }

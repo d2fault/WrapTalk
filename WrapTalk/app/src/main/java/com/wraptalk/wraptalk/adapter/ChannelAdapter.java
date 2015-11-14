@@ -210,7 +210,7 @@ public class ChannelAdapter extends BaseAdapter{
             @Override
             public void onSuccess(String url, byte[] receiveData) {
                 query = String.format("INSERT INTO chat_info " +
-                                "(channel_id, public_onoff, channel_limit, channel_cate, app_id," +
+                                "(channel_id, public_onoff, channel_limit, channel_cate, app_id, " +
                                 "channel_name, chief_id, user_color) " +
                                 "VALUES ('%s', '%s', '%d', '%s', '%s', '%s', '%s', '%s')",
                         data.getChannel_id(), data.getPublic_onoff(), data.getChannel_limit(),
