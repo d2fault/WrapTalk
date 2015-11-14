@@ -1,7 +1,6 @@
 package com.wraptalk.wraptalk.ui;
 
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -12,14 +11,11 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 
 import com.wraptalk.wraptalk.R;
-import com.wraptalk.wraptalk.models.UserInfo;
 import com.wraptalk.wraptalk.services.ChattingService;
 import com.wraptalk.wraptalk.services.TaskWatchService;
-import com.wraptalk.wraptalk.utils.DBManager;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -58,32 +54,6 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = getIntent();
         int setTab = intent.getIntExtra("Tab", 0);
         mViewPager.setCurrentItem(setTab);
-
-        String query = String.format("INSERT INTO user_info (token, device_id, user_id, gcm_key) VALUES ('%s', '%s', '%s', '%s')",
-                UserInfo.getInstance().token, UserInfo.getInstance().deviceId, UserInfo.getInstance().email, UserInfo.getInstance().gcmKey);
-
-        try {
-            DBManager.getInstance().write(query);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        DBManager.getInstance().select("SELECT * FROM user_info", new DBManager.OnSelect() {
-            @Override
-            public void onSelect(Cursor cursor) {
-                cursor.moveToPosition(cursor.getCount());
-                Log.e("device_id", String.valueOf(cursor.getColumnIndex("device_id")));
-            }
-
-            @Override
-            public void onComplete() {
-
-            }
-
-            @Override
-            public void onErrorHandler(Exception e) {
-
-            }
-        });
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {

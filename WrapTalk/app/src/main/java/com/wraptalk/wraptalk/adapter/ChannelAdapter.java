@@ -20,10 +20,6 @@ import com.wraptalk.wraptalk.utils.DBManager;
 import com.wraptalk.wraptalk.utils.OnRequest;
 import com.wraptalk.wraptalk.utils.RequestUtil;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 
 //import android.support.v7.app.AlertDialog;
@@ -83,8 +79,6 @@ public class ChannelAdapter extends BaseAdapter{
 
             viewHolder.button_enter = (ImageButton) convertView.findViewById(R.id.button_enter);
 
-            getNickname(data);
-
             convertView.setTag(viewHolder);
         }
 
@@ -98,6 +92,7 @@ public class ChannelAdapter extends BaseAdapter{
         else {
             viewHolder.button_enter.setBackgroundResource(R.mipmap.ic_minus);
         }
+        getNickname(data);
 
         viewHolder.textView_channelTitle.setText(data.getChannel_name());
         viewHolder.textView_channelOnoff.setText(data.getPublic_onoff());
@@ -199,27 +194,15 @@ public class ChannelAdapter extends BaseAdapter{
         RequestUtil.asyncHttp(url, new OnRequest() {
             @Override
             public void onSuccess(String url, byte[] receiveData) {
-                String jsonStr = new String(receiveData);
-                try {
-                    JSONObject json = new JSONObject(jsonStr);
-                    JSONArray list_channel = json.optJSONArray("list_channel");
-                    for (int i = 0; i < list_channel.length(); i++) {
-                        JSONObject channelObj = list_channel.getJSONObject(i);
-
-                        query = String.format("INSERT INTO chat_info " +
-                                        "(channel_id, public_onoff, channel_limit, channel_cate, app_id," +
-                                        "channel_name, user_nick, chief_id, user_color) " +
-                                        "VALUES ('%s', '%s', '%d', '%s', '%s', '%s', '%s', '%s', '%s')",
-                                channelObj.optString("channel_id"), channelObj.optString("public_onoff"), channelObj.optInt("channel_limit"),
-                                channelObj.optString("channel_cate"), channelObj.optString("app_id"), channelObj.optString("channel_name"),
-                                nickname, UserInfo.getInstance().email, "#FFFFFF");
-
-                        DBManager.getInstance().write(query);
-                    }
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                query = String.format("INSERT INTO chat_info " +
+                                "(channel_id, public_onoff, channel_limit, channel_cate, app_id," +
+                                "channel_name, chief_id, user_color) " +
+                                "VALUES ('%s', '%s', '%d', '%s', '%s', '%s', '%s', '%s')",
+                        data.getChannel_id(), data.getPublic_onoff(), data.getChannel_limit(),
+                        data.getChannel_cate(), data.getApp_id(), data.getChannel_name(),
+                        UserInfo.getInstance().email, "#FFFFFF");
+                Log.e("query", query);
+                DBManager.getInstance().write(query);
             }
 
             @Override
@@ -229,13 +212,14 @@ public class ChannelAdapter extends BaseAdapter{
         });
     }
 
-    private void quitChannel(ChannelData data) {
+    private void quitChannel(final ChannelData data) {
         String url = "http://133.130.113.101:7010/user/withdrawChannel?token=" + UserInfo.getInstance().token + "&channel_id=" + data.getChannel_id();
 
         RequestUtil.asyncHttp(url, new OnRequest() {
             @Override
             public void onSuccess(String url, byte[] receiveData) {
-
+                query = "DELETE FROM chat_info WHERE channel_id='" + data.getChannel_id() + "';";
+                DBManager.getInstance().write(query);
             }
 
             @Override
@@ -250,7 +234,6 @@ public class ChannelAdapter extends BaseAdapter{
             @Override
             public void onSelect(Cursor cursor) {
                 nickname = cursor.getString(cursor.getColumnIndex("user_nick"));
-                Log.e("nickname", nickname);
             }
 
             @Override

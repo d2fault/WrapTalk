@@ -25,6 +25,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.wraptalk.wraptalk.utils.DBManager;
 import com.wraptalk.wraptalk.utils.OnRequest;
 import com.wraptalk.wraptalk.R;
 import com.wraptalk.wraptalk.utils.RequestUtil;
@@ -173,6 +174,13 @@ public class SignInActivity extends AppCompatActivity implements LoaderCallbacks
                         } else {
                             String result_msg = json.optString("result_msg", "fail");
                             Toast.makeText(getApplicationContext(), result_msg, Toast.LENGTH_SHORT).show();
+                        }
+                        String query = String.format("UPDATE user_info SET token='%s', device_id='%s', user_id='%s', gcm_key='%s'",
+                                UserInfo.getInstance().token, UserInfo.getInstance().deviceId, UserInfo.getInstance().email, UserInfo.getInstance().gcmKey);
+                        try {
+                            DBManager.getInstance().write(query);
+                        }catch (Exception e){
+                            e.printStackTrace();
                         }
 
                     } catch (JSONException e) {
