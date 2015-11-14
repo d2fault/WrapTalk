@@ -1,6 +1,6 @@
 package com.wraptalk.wraptalk.utils;
 
-import android.widget.Button;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 /**
@@ -8,6 +8,6 @@ import android.widget.TextView;
  */
 public class FavoriteChannelHolder {
 
-    public TextView textView_channelTitle;
-    public Button button_star;
+    public TextView textView_channelName;
+    public RadioButton radioButton_star;
 }

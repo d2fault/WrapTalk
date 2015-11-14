@@ -5,37 +5,31 @@ package com.wraptalk.wraptalk.models;
  */
 public class FavoriteChannelData {
 
-    public String appName;
-    public String category;
-    public String channelTitle;
+    private String app_id;
+    private String channel_id;
+    private String channel_name;
 
-    FavoriteChannelData() {
-
-        this.appName = null;
-        this.category = null;
-        this.channelTitle = null;
-    }
-    public String getAppName() {
-        return appName;
+    public String getApp_id() {
+        return app_id;
     }
 
-    public void setAppName(String appName) {
-        this.appName = appName;
+    public void setApp_id(String app_id) {
+        this.app_id = app_id;
     }
 
-    public String getCategory() {
-        return category;
+    public String getChannel_id() {
+        return channel_id;
     }
 
-    public void setCategory(String category) {
-        this.category = category;
+    public void setChannel_id(String channel_id) {
+        this.channel_id = channel_id;
     }
 
-    public String getChannelTitle() {
-        return channelTitle;
+    public String getChannel_name() {
+        return channel_name;
     }
 
-    public void setChannelTitle(String channelTitle) {
-        this.channelTitle = channelTitle;
+    public void setChannel_name(String channel_name) {
+        this.channel_name = channel_name;
     }
 }

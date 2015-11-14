@@ -55,6 +55,8 @@ public class TabSettingFragment extends android.support.v4.app.Fragment {
                     startActivity(intent);
                     break;
                 case 1:
+                    intent = new Intent(getActivity(), FavoriteChannelActivity.class);
+                    startActivity(intent);
                     break;
                 case 2:
                     onClickOpacity();

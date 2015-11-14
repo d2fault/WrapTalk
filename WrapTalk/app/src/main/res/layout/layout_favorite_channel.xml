@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="42dp"
     android:orientation="horizontal"
     android:padding="6dp" >
 
     <TextView
-        android:id="@+id/content"
+        android:id="@+id/textView_channelName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
@@ -19,8 +19,8 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="channel name" />
 
-    <CheckBox
-        android:id="@+id/btn_star"
+    <RadioButton
+        android:id="@+id/radioButton_star"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
