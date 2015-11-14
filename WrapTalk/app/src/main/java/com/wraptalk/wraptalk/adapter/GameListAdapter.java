@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -137,7 +138,6 @@ public class GameListAdapter extends BaseAdapter {
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }
-
                 RequestUtil.asyncHttp(url, new OnRequest() {
                     @Override
                     public void onSuccess(String url, byte[] receiveData) {
@@ -190,7 +190,7 @@ public class GameListAdapter extends BaseAdapter {
                 RequestUtil.asyncHttp(url, new OnRequest() {
                     @Override
                     public void onSuccess(String url, byte[] receiveData) {
-                        String query = "UPDATE app_info SET check_registration=0, user_nick='' WHERE app_id='" + data.getPackageInfo().packageName + "';";
+                        String query = "UPDATE app_info SET check_registration=0,user_nick='' WHERE app_id='" + data.getPackageInfo().packageName + "';";
                         DBManager.getInstance().write(query);
                         data.setFlag(0);
                         viewHolder.imageButton_regist.setBackgroundResource(R.mipmap.ic_plus);

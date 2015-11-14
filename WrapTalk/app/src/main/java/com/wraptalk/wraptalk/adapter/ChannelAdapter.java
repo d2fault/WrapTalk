@@ -92,10 +92,25 @@ public class ChannelAdapter extends BaseAdapter{
         else {
             viewHolder.button_enter.setBackgroundResource(R.mipmap.ic_minus);
         }
-        getNickname(data);
 
         viewHolder.textView_channelTitle.setText(data.getChannel_name());
         viewHolder.textView_channelOnoff.setText(data.getPublic_onoff());
+
+        DBManager.getInstance().select("SELECT * FROM app_info WHERE app_id='" + data.getApp_id() + "';", new DBManager.OnSelect() {
+            @Override
+            public void onSelect(Cursor cursor) {
+                nickname = cursor.getString(cursor.getColumnIndex("user_nick"));
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+
+            @Override
+            public void onErrorHandler(Exception e) {
+            }
+        });
 
         viewHolder.button_enter.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -225,24 +240,6 @@ public class ChannelAdapter extends BaseAdapter{
             @Override
             public void onFail(String url, String error) {
 
-            }
-        });
-    }
-
-    private void getNickname(ChannelData data) {
-        DBManager.getInstance().select("SELECT * FROM app_info WHERE app_id='" + data.getApp_id() + "'", new DBManager.OnSelect() {
-            @Override
-            public void onSelect(Cursor cursor) {
-                nickname = cursor.getString(cursor.getColumnIndex("user_nick"));
-            }
-
-            @Override
-            public void onComplete() {
-
-            }
-
-            @Override
-            public void onErrorHandler(Exception e) {
             }
         });
     }

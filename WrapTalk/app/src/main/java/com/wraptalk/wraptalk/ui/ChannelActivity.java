@@ -367,8 +367,7 @@ public class ChannelActivity extends AppCompatActivity {
                         data.setUser_color(channelObj.optString("user_color"));
                         data.setChief_id(channelObj.optString("chief_id"));
 
-                        String query = "SELECT * FROM chat_info WHERE app_id='" + app_id + "'";
-
+                        String query = "SELECT * FROM chat_info WHERE app_id='" + app_id + "';";
                         DBManager.getInstance().select(query, new DBManager.OnSelect() {
                             @Override
                             public void onSelect(Cursor cursor) {
@@ -392,7 +391,6 @@ public class ChannelActivity extends AppCompatActivity {
 
                             }
                         });
-                        Log.e("Flag", String.valueOf(data.getFlag()));
                         source.add(data);
                     }
 
@@ -448,22 +446,22 @@ public class ChannelActivity extends AppCompatActivity {
                         // user_color는 chat에서
                         data.setChief_id(channelObj.optString("chief_id"));
 
-                        DBManager.getInstance().select("SELECT * FROM chat_info WHERE app_id='" + app_id + "'", new DBManager.OnSelect() {
+                        DBManager.getInstance().select("SELECT * FROM chat_info WHERE app_id='", new DBManager.OnSelect() {
                             @Override
                             public void onSelect(Cursor cursor) {
-                                cursor.moveToFirst();
-                                while (!cursor.isLast()) {
-                                    if (cursor.getString(cursor.getColumnIndex("channel_id")).equals(data.getChannel_id())) {
-                                        data.setFlag(1);
-                                    } else {
-                                        data.setFlag(0);
-                                    }
+                                String id1 = data.getChannel_id();
+                                String id2 = cursor.getString(cursor.getColumnIndex("channel_id"));
+                                Log.e("onSelect", id1 + "," + id2);
+
+                                if (id1.equals(id2)) {
+                                    data.setFlag(1);
+                                } else if (!id1.equals(id2) && data.getFlag() != 1) {
+                                    data.setFlag(0);
                                 }
                             }
 
                             @Override
                             public void onComplete() {
-
                             }
 
                             @Override
@@ -490,7 +488,7 @@ public class ChannelActivity extends AppCompatActivity {
     }
 
     private void getNickname() {
-        DBManager.getInstance().select("SELECT * FROM app_info WHERE app_id='" + app_id + "'", new DBManager.OnSelect() {
+        DBManager.getInstance().select("SELECT * FROM app_info WHERE app_id='" + app_id + "';", new DBManager.OnSelect() {
             @Override
             public void onSelect(Cursor cursor) {
                 nickname = cursor.getString(cursor.getColumnIndex("user_nick"));
