@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.database.DataSetObserver;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.os.Handler;
 import android.os.IBinder;
@@ -31,6 +32,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 
+import com.pes.androidmaterialcolorpickerdialog.ColorPicker;
 import com.wraptalk.wraptalk.R;
 import com.wraptalk.wraptalk.ui.MainActivity;
 import com.wraptalk.wraptalk.ui.TabSettingFragment;
@@ -63,9 +65,8 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
     private WindowManager.LayoutParams mParamsbt5;
 
     private WindowManager mWindowManager;
-    private SeekBar mSeekBar;
     private ListView mChatList;
-    private Button mChatSend;
+    private Button mColorButton;
     private EditText mEditText;
 
     private ImageButton bt1;
@@ -103,6 +104,10 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
     private String channelId = "channel_id";
     private TaskWatchService taskWatchService;
     private SharedPreferences pref;
+    private com.wraptalk.wraptalk.ui.ColorPicker cp;
+    private int nickColor = -1;
+
+    private String nickname = "닉넴";
 
     @Override
     public IBinder onBind(Intent arg0) {
@@ -157,7 +162,7 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
 
     }
 
-    private void changeChannel(String task) {
+    private void changeChannel(final String task) {
         DBManager.getInstance().select("SELECT * FROM chat_info where app_id = '" + task + "';", new DBManager.OnSelect() {
             @Override
             public void onSelect(Cursor cursor) {
@@ -176,7 +181,7 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
 
             @Override
             public void onErrorHandler(Exception e) {
-                channelId = "channel_id";
+                channelId = task;
                 Log.e("Error", e.toString());
             }
         });
@@ -186,7 +191,7 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
         try {
             chatdata.clear();
             adapter.notifyDataSetChanged();
-            sockJS = new SockJSImpl("http://133.130.113.101:7030/eventbus", channelId) {
+            sockJS = new SockJSImpl("http://133.130.113.101:7030/eventbus", channelId, nickname) {
                 //channel_
                 @Override
                 public void parseSockJS(String s) {
@@ -314,6 +319,9 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
         mImageView.setMaxHeight(30);
         mImageView.setMaxWidth(30);
 
+        mColorButton = (Button)chatheadView.findViewById(R.id.bt_chathead_color);
+        mColorButton.setOnClickListener(this);
+
 
         bt1 = new ImageButton(this);
         bt1.setBackground(getResources().getDrawable(R.drawable.setting));
@@ -402,6 +410,7 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
             }
         });
 
+        cp = new com.wraptalk.wraptalk.ui.ColorPicker(getApplication(), 255,255,255);
     }
 
     @NonNull
@@ -414,7 +423,7 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
             body.put("type", "normal");
             body.put("channel_id", channelId);
             body.put("sender_id", "aaa");
-            body.put("sender_nick", "닉넴");
+            body.put("sender_nick", "닉넴"+"&&"+nickColor);
             body.put("app_id", "com.aaa.aaa");
             body.put("msg", mEditText.getText().toString());
             obj.put("body", body);
@@ -660,6 +669,21 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
             }
         } else if(v.getBackground() == bt5.getBackground()){
             stopSelf();
+        } else if(v.getBackground() == mColorButton.getBackground()){
+            Log.i("color", "color");
+            cp.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
+            //cp.show();
+            cp.show();
+
+            Button okButton = (Button) cp.findViewById(R.id.okColorButton);
+            okButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    nickColor = Color.rgb(cp.getRed(), cp.getGreen(), cp.getBlue());
+                    mColorButton.setBackgroundColor(nickColor);
+                    cp.dismiss();
+                }
+            });
         }
     }
 
@@ -670,6 +694,7 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
         ExitMessage();
         changeChannel(task);
         //channelId = "96da751edc63634c4c5958ce90e6a889ee1cdda247d92a978f340336791d5fb3";
+        channelId = task+ "_default";
         connectSockJS();
 
         return true;
@@ -685,7 +710,7 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
             body.put("type", "log");
             body.put("channel_id", channelId);
             body.put("sender_id", "aaa");
-            body.put("sender_nick", "닉넴");
+            body.put("sender_nick", nickname);
             body.put("msg", "님이 퇴장하셨습니다.");
             log.put("body", body);
         } catch (JSONException e) {

@@ -75,8 +75,7 @@
             <Button
                 android:layout_width="32dp"
                 android:layout_height="32dp"
-                android:text="Color"
-                android:id="@+id/bt_chathead_color" />
+                android:id="@+id/bt_chatting_color" />
 
             <EditText
                 android:layout_width="match_parent"
