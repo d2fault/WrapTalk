@@ -20,10 +20,6 @@ import com.wraptalk.wraptalk.utils.DBManager;
 import com.wraptalk.wraptalk.utils.OnRequest;
 import com.wraptalk.wraptalk.utils.RequestUtil;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 
 //import android.support.v7.app.AlertDialog;
@@ -198,26 +194,15 @@ public class ChannelAdapter extends BaseAdapter{
         RequestUtil.asyncHttp(url, new OnRequest() {
             @Override
             public void onSuccess(String url, byte[] receiveData) {
-                String jsonStr = new String(receiveData);
-                try {
-                    JSONObject json = new JSONObject(jsonStr);
-                    JSONArray list_channel = json.optJSONArray("list_channel");
-                    for (int i = 0; i < list_channel.length(); i++) {
-                        JSONObject channelObj = list_channel.getJSONObject(i);
-                        query = String.format("INSERT INTO chat_info " +
-                                        "(channel_id, public_onoff, channel_limit, channel_cate, app_id," +
-                                        "channel_name, chief_id, user_color) " +
-                                        "VALUES ('%s', '%s', '%d', '%s', '%s', '%s', '%s', '%s')",
-                                channelObj.optString("channel_id"), channelObj.optString("public_onoff"), channelObj.optInt("channel_limit"),
-                                channelObj.optString("channel_cate"), channelObj.optString("app_id"), channelObj.optString("channel_name"),
-                                UserInfo.getInstance().email, "#FFFFFF");
-                        Log.e("query", query);
-                        DBManager.getInstance().write(query);
-                    }
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                query = String.format("INSERT INTO chat_info " +
+                                "(channel_id, public_onoff, channel_limit, channel_cate, app_id," +
+                                "channel_name, chief_id, user_color) " +
+                                "VALUES ('%s', '%s', '%d', '%s', '%s', '%s', '%s', '%s')",
+                        data.getChannel_id(), data.getPublic_onoff(), data.getChannel_limit(),
+                        data.getChannel_cate(), data.getApp_id(), data.getChannel_name(),
+                        UserInfo.getInstance().email, "#FFFFFF");
+                Log.e("query", query);
+                DBManager.getInstance().write(query);
             }
 
             @Override
@@ -233,8 +218,8 @@ public class ChannelAdapter extends BaseAdapter{
         RequestUtil.asyncHttp(url, new OnRequest() {
             @Override
             public void onSuccess(String url, byte[] receiveData) {
-
-                query = "DELETE FROM chat_info WHERE channel_id=" + data.getChannel_id();
+                query = "DELETE FROM chat_info WHERE channel_id='" + data.getChannel_id() + "';";
+                DBManager.getInstance().write(query);
             }
 
             @Override
