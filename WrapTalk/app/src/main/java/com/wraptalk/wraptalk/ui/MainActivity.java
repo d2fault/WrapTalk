@@ -11,6 +11,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 import com.wraptalk.wraptalk.R;
+import com.wraptalk.wraptalk.services.ChattingService;
+import com.wraptalk.wraptalk.services.TaskWatchService;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -90,6 +92,9 @@ public class MainActivity extends AppCompatActivity {
             public void onTabReselected(TabLayout.Tab tab) {
             }
         });
+
+        startService(new Intent(MainActivity.this, TaskWatchService.class));
+        startService(new Intent(MainActivity.this, ChattingService.class));
     }
 
     /**
