@@ -41,7 +41,6 @@ public class FavoriteChannelActivity extends AppCompatActivity {
     }
 
     private void getChannelList() {
-        /* 어떻게 리스트에 넣을지 모르겠음ㅠㅠ */
 
         DBManager.getInstance().select("SELECT * FROM chat_info", new DBManager.OnSelect() {
             @Override

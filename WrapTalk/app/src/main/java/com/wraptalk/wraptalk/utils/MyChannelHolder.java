@@ -1,5 +1,6 @@
 package com.wraptalk.wraptalk.utils;
 
+import android.widget.ImageView;
 import android.widget.TextView;
 
 /**
@@ -10,4 +11,5 @@ public class MyChannelHolder {
     public TextView textView_myChannelTtitle;
     public TextView textView_myNickname;
     public TextView textView_countUnreadMessage;
+    public ImageView imageView_appIcon;
 }

@@ -98,7 +98,6 @@ public class TabMyChannelFragment extends android.support.v4.app.Fragment {
                         data.setUser_color(channelObj.optString("user_color"));
 
                         source.add(data);
-
 /*
                         String query = String.format( "INSERT INTO chat_info (" +
                                         "channel_id, app_id, channel_name, chief_id, user_color) VALUES ('%s', '%s', '%s', '%s', '%s', '%s')",

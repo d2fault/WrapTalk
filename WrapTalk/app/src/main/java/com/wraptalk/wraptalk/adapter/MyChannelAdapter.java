@@ -1,15 +1,17 @@
 package com.wraptalk.wraptalk.adapter;
 
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.wraptalk.wraptalk.R;
 import com.wraptalk.wraptalk.models.MyChannelData;
 import com.wraptalk.wraptalk.utils.MyChannelHolder;
-import com.wraptalk.wraptalk.R;
 
 import java.util.ArrayList;
 
@@ -20,10 +22,13 @@ public class MyChannelAdapter extends BaseAdapter{
 
     private ArrayList<MyChannelData> source;
     private LayoutInflater layoutInflater;
+    private PackageManager packageManager;
 
     public MyChannelAdapter(Context context, ArrayList<MyChannelData> source){
 
         layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        packageManager = context.getPackageManager();
+
         this.source = source;
     }
 
@@ -62,6 +67,7 @@ public class MyChannelAdapter extends BaseAdapter{
             viewHolder.textView_myChannelTtitle = (TextView) convertView.findViewById(R.id.textView_myChannelTitle);
             viewHolder.textView_myNickname = (TextView) convertView.findViewById(R.id.textView_myNickname);
             viewHolder.textView_countUnreadMessage = (TextView) convertView.findViewById(R.id.textView_countUnreadMessage);
+            viewHolder.imageView_appIcon = (ImageView) convertView.findViewById(R.id.imageView_appIcon);
 
             convertView.setTag(viewHolder);
         }
@@ -73,6 +79,12 @@ public class MyChannelAdapter extends BaseAdapter{
         viewHolder.textView_myChannelTtitle.setText(data.getChannel_name());
         viewHolder.textView_myNickname.setText(data.getUser_nick());
         viewHolder.textView_countUnreadMessage.setText("0");
+
+        try {
+            viewHolder.imageView_appIcon.setImageDrawable(packageManager.getApplicationIcon(data.getApp_id()));
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
 
         return convertView;
     }
