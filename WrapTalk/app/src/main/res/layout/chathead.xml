@@ -34,7 +34,7 @@
                 android:textStyle="bold"
                 android:textSize="18sp"
                 android:textColor="#ffff00"
-                android:id="@+id/textView2" />
+                android:id="@+id/chathead_title" />
 
         </LinearLayout>
 

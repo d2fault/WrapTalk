@@ -29,6 +29,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.wraptalk.wraptalk.R;
 import com.wraptalk.wraptalk.adapter.ChatListAdapter;
@@ -65,6 +66,7 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
     private ListView mChatList;
     private Button mColorButton;
     private EditText mEditText;
+    private TextView mChatheadTitle;
 
     private ImageButton bt1;
     private ImageButton bt2;
@@ -180,6 +182,27 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
             public void onErrorHandler(Exception e) {
                 channelId = task;
                 Log.e("Error", e.toString());
+                e.printStackTrace();
+            }
+        });
+        DBManager.getInstance().select("SELECT * FROM app_info where app_id = '" + task + "';", new DBManager.OnSelect() {
+            @Override
+            public void onSelect(Cursor cursor) {
+                String app_name = cursor.getString(1);
+                Log.i("ok", app_name);
+                mChatheadTitle.setText(app_name);
+
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+
+            @Override
+            public void onErrorHandler(Exception e) {
+                Log.e("error", e.getMessage());
+                e.printStackTrace();
             }
         });
     }
@@ -188,7 +211,7 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
         try {
             chatdata.clear();
             adapter.notifyDataSetChanged();
-            sockJS = new SockJSImpl("http://133.130.113.101:7030/eventbus", channelId, nickname) {
+            sockJS = new SockJSImpl("http://192.168.1.19:8080/eventbus", channelId, nickname) {
                 //channel_
                 @Override
                 public void parseSockJS(String s) {
@@ -342,6 +365,7 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
 
 
         mChatList = (ListView) chatheadView.findViewById(R.id.lv_chathead_chatlist);
+        mChatheadTitle = (TextView) chatheadView.findViewById(R.id.chathead_title);
 
         chatdata = new ArrayList<>();
         adapter = new ChatListAdapter(getApplicationContext(), chatdata);
@@ -687,8 +711,12 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
     @Override
     public boolean TaskCallback(String task) {
         Log.i("task", task);
-        sockJS.closeSession();
-        ExitMessage();
+        try {
+            sockJS.closeSession();
+            ExitMessage();
+        }catch (NullPointerException e){
+            e.printStackTrace();
+        }
         changeChannel(task);
         //channelId = "96da751edc63634c4c5958ce90e6a889ee1cdda247d92a978f340336791d5fb3";
         channelId = task+ "_default";
