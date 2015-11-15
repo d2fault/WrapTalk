@@ -86,7 +86,7 @@ public class ChannelAdapter extends BaseAdapter{
             viewHolder = (ChannelHolder) convertView.getTag();
         }
 
-        if(data.getFlag() == 0) {
+        if(data.getCheck_registeration() == 0) {
             viewHolder.button_enter.setBackgroundResource(R.mipmap.ic_plus);
         }
         else {
@@ -115,8 +115,7 @@ public class ChannelAdapter extends BaseAdapter{
         viewHolder.button_enter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                if (data.getFlag() == 0) {
+                if (data.getCheck_registeration() == 0) {
                     onClickJoinButton(viewHolder, data);
                 } else {
                     onClickQuitButton(viewHolder, data);
@@ -141,7 +140,7 @@ public class ChannelAdapter extends BaseAdapter{
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 joinChannel(data);
-                data.setFlag(1);
+                data.setCheck_registeration(1);
                 viewHolder.button_enter.setBackgroundResource(R.mipmap.ic_minus);
             }
         });
@@ -176,7 +175,7 @@ public class ChannelAdapter extends BaseAdapter{
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 quitChannel(data);
-                data.setFlag(0);
+                data.setCheck_registeration(0);
                 viewHolder.button_enter.setBackgroundResource(R.mipmap.ic_plus);
             }
         });
@@ -211,11 +210,11 @@ public class ChannelAdapter extends BaseAdapter{
             public void onSuccess(String url, byte[] receiveData) {
                 query = String.format("INSERT INTO chat_info " +
                                 "(channel_id, public_onoff, channel_limit, channel_cate, app_id, " +
-                                "channel_name, chief_id, user_color) " +
-                                "VALUES ('%s', '%s', '%d', '%s', '%s', '%s', '%s', '%s')",
+                                "channel_name, chief_id, user_color, check_favorite) " +
+                                "VALUES ('%s', '%s', '%d', '%s', '%s', '%s', '%s', '%s', %d)",
                         data.getChannel_id(), data.getPublic_onoff(), data.getChannel_limit(),
                         data.getChannel_cate(), data.getApp_id(), data.getChannel_name(),
-                        UserInfo.getInstance().email, "#FFFFFF");
+                        UserInfo.getInstance().email, "#FFFFFF", 0);
                 Log.e("query", query);
                 DBManager.getInstance().write(query);
             }

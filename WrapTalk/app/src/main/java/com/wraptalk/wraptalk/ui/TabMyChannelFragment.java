@@ -10,13 +10,13 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.wraptalk.wraptalk.R;
+import com.wraptalk.wraptalk.adapter.MyChannelAdapter;
+import com.wraptalk.wraptalk.models.ChannelData;
+import com.wraptalk.wraptalk.models.UserInfo;
 import com.wraptalk.wraptalk.utils.DBManager;
 import com.wraptalk.wraptalk.utils.OnRequest;
-import com.wraptalk.wraptalk.R;
 import com.wraptalk.wraptalk.utils.RequestUtil;
-import com.wraptalk.wraptalk.adapter.MyChannelAdapter;
-import com.wraptalk.wraptalk.models.MyChannelData;
-import com.wraptalk.wraptalk.models.UserInfo;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -31,7 +31,7 @@ import java.util.ArrayList;
 public class TabMyChannelFragment extends android.support.v4.app.Fragment {
 
     View view;
-    ArrayList<MyChannelData> source;
+    ArrayList<ChannelData> source;
     MyChannelAdapter customAdapter = null;
     ListView listView_result = null;
 
@@ -88,23 +88,29 @@ public class TabMyChannelFragment extends android.support.v4.app.Fragment {
                     for (int i = 0; i < list_channel.length(); i++) {
                         JSONObject channelObj = list_channel.getJSONObject(i);
 
-                        MyChannelData data = new MyChannelData();
+                        ChannelData data = new ChannelData();
 
                         data.setChannel_id(channelObj.optString("channel_id"));
+                        data.setPublic_onoff(channelObj.optString("public_onoff"));
+                        data.setChannel_limit(channelObj.optInt("channel_limit"));
+                        data.setChannel_cate(channelObj.optString("channel_cate"));
                         data.setApp_id(channelObj.optString("app_id"));
                         data.setChannel_name(channelObj.optString("channel_name"));
                         data.setUser_nick(channelObj.optString("user_nick"));
-                        data.setChief_id(channelObj.optString("chief_id"));
                         data.setUser_color(channelObj.optString("user_color"));
+                        data.setChief_id(channelObj.optString("chief_id"));
 
                         source.add(data);
 
-                        String query1 = String.format( "INSERT INTO chat_info (" +
-                                        "channel_id, app_id, channel_name, chief_id, user_color) VALUES ('%s', '%s', '%s', '%s', '%s')",
-                                source.get(i).getChannel_id(), source.get(i).getApp_id(), source.get(i).getChannel_name(),
-                                source.get(i).getChief_id(), source.get(i).getUser_color());
+                        String query1 = String.format( "INSERT INTO chat_info " +
+                                        "(channel_id, public_onoff, channel_limit, channel_cate, " +
+                                        "app_id, channel_name, chief_id, user_color, check_favorite) " +
+                                        "VALUES ('%s', '%s', '%d', '%s', '%s', '%s', '%s', '%s', %d)",
+                                source.get(i).getChannel_id(), source.get(i).getPublic_onoff(), source.get(i).getChannel_limit(), source.get(i).getChannel_cate(),
+                                source.get(i).getApp_id(), source.get(i).getChannel_name(), source.get(i).getChief_id(), source.get(i).getUser_color(), 0);
 
-                        String query2 = String.format("UPDATE chat_info SET app_id='%s',channel_name='%s',chief_id='%s',user_color='%s' WHERE channel_id='%s';",
+                        String query2 = String.format("UPDATE chat_info SET app_id='%s',channel_name='%s'," +
+                                        "chief_id='%s',user_color='%s' WHERE channel_id='%s';",
                                 source.get(i).getApp_id(), source.get(i).getChannel_name(), source.get(i).getChief_id(),
                                 source.get(i).getUser_color(), source.get(i).getChannel_id());
 

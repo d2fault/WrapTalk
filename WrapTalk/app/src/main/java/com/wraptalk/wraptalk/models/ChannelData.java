@@ -29,7 +29,8 @@ public class ChannelData {
     private String user_nick;
     private String user_color;
 
-    private int flag = 0;
+    private int check_favorite = 0;
+    private int check_registeration = 0;
 
     public String getChannel_name() {
         return channel_name;
@@ -111,11 +112,19 @@ public class ChannelData {
         this.user_color = user_color;
     }
 
-    public int getFlag() {
-        return flag;
+    public int getCheck_favorite() {
+        return check_favorite;
     }
 
-    public void setFlag(int flag) {
-        this.flag = flag;
+    public void setCheck_favorite(int check_favorite) {
+        this.check_favorite = check_favorite;
+    }
+
+    public int getCheck_registeration() {
+        return check_registeration;
+    }
+
+    public void setCheck_registeration(int check_registeration) {
+        this.check_registeration = check_registeration;
     }
 }

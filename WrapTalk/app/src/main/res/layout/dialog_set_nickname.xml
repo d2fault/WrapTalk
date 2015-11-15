@@ -9,14 +9,14 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="SET YOUR NICKNAME"
+        android:text="닉네임 설정"
         android:textSize="16dp"/>
 
     <EditText
         android:id="@+id/editText_nickname"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="input nickname"
+        android:hint="닉네임을 입력하세요."
         android:textSize="18dp"
         android:gravity="center"/>
 

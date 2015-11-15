@@ -8,7 +8,7 @@ import android.widget.ListView;
 
 import com.wraptalk.wraptalk.R;
 import com.wraptalk.wraptalk.adapter.FavoriteChannelAdapter;
-import com.wraptalk.wraptalk.models.FavoriteChannelData;
+import com.wraptalk.wraptalk.models.ChannelData;
 import com.wraptalk.wraptalk.utils.DBManager;
 
 import java.util.ArrayList;
@@ -16,7 +16,7 @@ import java.util.ArrayList;
 public class FavoriteChannelActivity extends AppCompatActivity {
 
     View view;
-    ArrayList<FavoriteChannelData> source;
+    ArrayList<ChannelData> source;
     FavoriteChannelAdapter customAdapter = null;
     ListView listView_result;
 
@@ -41,11 +41,10 @@ public class FavoriteChannelActivity extends AppCompatActivity {
     }
 
     private void getChannelList() {
-
         DBManager.getInstance().select("SELECT * FROM chat_info", new DBManager.OnSelect() {
             @Override
             public void onSelect(Cursor cursor) {
-                FavoriteChannelData data = new FavoriteChannelData();
+                ChannelData data = new ChannelData();
                 data.setApp_id(cursor.getString(cursor.getColumnIndex("app_id")));
                 data.setChannel_id(cursor.getString(cursor.getColumnIndex("channel_id")));
                 data.setChannel_name(cursor.getString(cursor.getColumnIndex("channel_name")));

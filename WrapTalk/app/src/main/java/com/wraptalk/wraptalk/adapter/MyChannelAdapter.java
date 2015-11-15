@@ -10,7 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.wraptalk.wraptalk.R;
-import com.wraptalk.wraptalk.models.MyChannelData;
+import com.wraptalk.wraptalk.models.ChannelData;
 import com.wraptalk.wraptalk.utils.MyChannelHolder;
 
 import java.util.ArrayList;
@@ -18,13 +18,13 @@ import java.util.ArrayList;
 /**
  * Created by jiyoungpark on 15. 10. 23..
  */
-public class MyChannelAdapter extends BaseAdapter{
+public class MyChannelAdapter extends BaseAdapter {
 
-    private ArrayList<MyChannelData> source;
+    private ArrayList<ChannelData> source;
     private LayoutInflater layoutInflater;
     private PackageManager packageManager;
 
-    public MyChannelAdapter(Context context, ArrayList<MyChannelData> source){
+    public MyChannelAdapter(Context context, ArrayList<ChannelData> source){
 
         layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         packageManager = context.getPackageManager();
@@ -32,7 +32,7 @@ public class MyChannelAdapter extends BaseAdapter{
         this.source = source;
     }
 
-    public void setSource(ArrayList<MyChannelData> source){
+    public void setSource(ArrayList<ChannelData> source){
 
         this.source = source;
         notifyDataSetChanged();
@@ -56,7 +56,7 @@ public class MyChannelAdapter extends BaseAdapter{
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        MyChannelData data = (MyChannelData) getItem(position);
+        ChannelData data = (ChannelData) getItem(position);
         MyChannelHolder viewHolder;
 
         if(convertView == null){

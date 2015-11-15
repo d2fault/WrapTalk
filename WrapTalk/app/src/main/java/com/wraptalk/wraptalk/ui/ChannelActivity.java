@@ -275,10 +275,10 @@ public class ChannelActivity extends AppCompatActivity {
 
                             query = String.format( "INSERT INTO chat_info " +
                                             "(channel_id, public_onoff, channel_limit, channel_cate, " +
-                                            "app_id, channel_name, chief_id, user_color) " +
-                                            "VALUES ('%s', '%s', '%d', '%s', '%s', '%s', '%s', '%s')",
+                                            "app_id, channel_name, chief_id, user_color, check_favorite) " +
+                                            "VALUES ('%s', '%s', '%d', '%s', '%s', '%s', '%s', '%s', %d)",
                                     channelData.getChannel_id(), channelData.getPublic_onoff(), channelData.getChannel_limit(), channelData.getChannel_cate(),
-                                    app_id, channelData.getChannel_name(), channelData.getChief_id(), channelData.getUser_color());
+                                    app_id, channelData.getChannel_name(), channelData.getChief_id(), channelData.getUser_color(), 0);
 
                             DBManager.getInstance().write(query);
 
@@ -345,7 +345,8 @@ public class ChannelActivity extends AppCompatActivity {
 
         channelData.setChief_id(UserInfo.getInstance().email);
         channelData.setUser_color("#000000");
-        channelData.setFlag(1);
+        channelData.setCheck_registeration(1);
+        channelData.setCheck_favorite(0);
         channelData.setUser_nick(nickname);
 
         try {
@@ -398,9 +399,9 @@ public class ChannelActivity extends AppCompatActivity {
                                 Log.e("onSelect", id1 + "," + id2);
 
                                 if (id1.equals(id2)) {
-                                    data.setFlag(1);
-                                } else if (!id1.equals(id2) && data.getFlag() != 1) {
-                                    data.setFlag(0);
+                                    data.setCheck_registeration(1);
+                                } else if (!id1.equals(id2) && data.getCheck_registeration() != 1) {
+                                    data.setCheck_registeration(0);
                                 }
                             }
 
@@ -476,9 +477,9 @@ public class ChannelActivity extends AppCompatActivity {
                                 Log.e("onSelect", id1 + "," + id2);
 
                                 if (id1.equals(id2)) {
-                                    data.setFlag(1);
-                                } else if (!id1.equals(id2) && data.getFlag() != 1) {
-                                    data.setFlag(0);
+                                    data.setCheck_registeration(1);
+                                } else if (!id1.equals(id2) && data.getCheck_registeration() != 1) {
+                                    data.setCheck_registeration(0);
                                 }
                             }
 

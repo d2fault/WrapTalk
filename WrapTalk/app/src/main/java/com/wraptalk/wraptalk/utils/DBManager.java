@@ -25,7 +25,6 @@ public class DBManager extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
 
-
         String sql = "CREATE TABLE IF NOT EXISTS user_info(" +
                         "token TEXT PRIMARY KEY, " +
                         "device_id TEXT, " +
@@ -48,7 +47,8 @@ public class DBManager extends SQLiteOpenHelper {
                 "app_id TEXT, " +
                 "channel_name TEXT, " +
                 "chief_id TEXT, " +
-                "user_color TEXT);";
+                "user_color TEXT," +
+                "check_favorite INTEGER);";
 
         db.execSQL(sql);
 
