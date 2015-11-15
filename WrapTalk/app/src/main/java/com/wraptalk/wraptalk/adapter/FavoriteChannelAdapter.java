@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,9 +23,10 @@ public class FavoriteChannelAdapter extends BaseAdapter {
 
     private ArrayList<FavoriteChannelData> source;
     private LayoutInflater layoutInflater;
+    RadioGroup group;
 
     public FavoriteChannelAdapter(Context context, ArrayList<FavoriteChannelData> source){
-
+        group = new RadioGroup(context);
         layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.source = source;
     }
@@ -63,6 +65,8 @@ public class FavoriteChannelAdapter extends BaseAdapter {
 
             viewHolder.textView_channelName = (TextView) convertView.findViewById(R.id.textView_channelName);
             viewHolder.radioButton_star = (RadioButton) convertView.findViewById(R.id.radioButton_star);
+
+            group.addView(viewHolder.radioButton_star);
 
             convertView.setTag(viewHolder);
         }

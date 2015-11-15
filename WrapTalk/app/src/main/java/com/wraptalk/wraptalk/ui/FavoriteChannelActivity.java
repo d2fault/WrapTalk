@@ -43,18 +43,19 @@ public class FavoriteChannelActivity extends AppCompatActivity {
     private void getChannelList() {
         /* 어떻게 리스트에 넣을지 모르겠음ㅠㅠ */
 
-        final FavoriteChannelData data = new FavoriteChannelData();
         DBManager.getInstance().select("SELECT * FROM chat_info", new DBManager.OnSelect() {
             @Override
             public void onSelect(Cursor cursor) {
+                FavoriteChannelData data = new FavoriteChannelData();
                 data.setApp_id(cursor.getString(cursor.getColumnIndex("app_id")));
                 data.setChannel_id(cursor.getString(cursor.getColumnIndex("channel_id")));
                 data.setChannel_name(cursor.getString(cursor.getColumnIndex("channel_name")));
+                source.add(data);
             }
 
             @Override
             public void onComplete() {
-
+                customAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -62,6 +63,5 @@ public class FavoriteChannelActivity extends AppCompatActivity {
 
             }
         });
-        source.add(data);
     }
 }

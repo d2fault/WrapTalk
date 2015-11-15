@@ -331,7 +331,11 @@ public class ChannelActivity extends AppCompatActivity {
         channelData.setFlag(1);
         channelData.setUser_nick(nickname);
 
-        url += "&channel_limit=" + channelData.getChannel_limit() + "&user_nick=" + nickname;
+        try {
+            url += "&channel_limit=" + channelData.getChannel_limit() + "&user_nick=" + URLEncoder.encode(nickname, "utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
     }
 
     private void getChannelList() {
