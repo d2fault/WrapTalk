@@ -42,9 +42,9 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(mViewPager);
 
         tabLayout.getTabAt(0).setIcon(R.mipmap.ic_applist);
-        tabLayout.getTabAt(1).setIcon(R.mipmap.ic_category);
-        tabLayout.getTabAt(2).setIcon(R.mipmap.ic_mychannel);
-        tabLayout.getTabAt(3).setIcon(R.mipmap.ic_setting);
+        //tabLayout.getTabAt(1).setIcon(R.mipmap.ic_category);
+        tabLayout.getTabAt(1).setIcon(R.mipmap.ic_mychannel);
+        tabLayout.getTabAt(2).setIcon(R.mipmap.ic_setting);
 
         Intent intent = getIntent();
         int setTab = intent.getIntExtra("Tab", 0);
@@ -69,13 +69,13 @@ public class MainActivity extends AppCompatActivity {
                     case 0:
                         getSupportActionBar().setTitle("Game App");
                         break;
-                    case 1:
+                    /*case 1:
                         getSupportActionBar().setTitle("Category");
-                        break;
-                    case 2:
+                        break;*/
+                    case 1:
                         getSupportActionBar().setTitle("My Channels");
                         break;
-                    case 3:
+                    case 2:
                         getSupportActionBar().setTitle("Setting");
                         break;
                 }
@@ -108,11 +108,11 @@ public class MainActivity extends AppCompatActivity {
             switch (position) {
                 case 0:
                     return new TabGameListFragment();
+                //case 1:
+                //    return new TabCategoryFragment();
                 case 1:
-                    return new TabCategoryFragment();
-                case 2:
                     return new TabMyChannelFragment();
-                case 3:
+                case 2:
                     return new TabSettingFragment();
             }
             return null;
@@ -120,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public int getCount() {
-            return 4;
+            return 3;
         }
 
         @Override

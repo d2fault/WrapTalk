@@ -619,7 +619,7 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
     public void onClick(View v) {
         if (v.getBackground() == bt1.getBackground()) {
             Intent i = new Intent(this, MainActivity.class);
-            i.putExtra("Tab", 3);
+            i.putExtra("Tab", 2);
             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(i);
 
