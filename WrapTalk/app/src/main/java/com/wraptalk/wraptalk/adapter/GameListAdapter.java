@@ -4,7 +4,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +26,7 @@ import com.wraptalk.wraptalk.utils.RequestUtil;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.regex.Pattern;
 
 /**
  * Created by jiyoungpark on 15. 10. 21..
@@ -118,17 +120,40 @@ public class GameListAdapter extends BaseAdapter {
         final View dialogView = layoutInflater.inflate(R.layout.dialog_set_nickname, null);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        final EditText editText = (EditText) dialogView.findViewById(R.id.editText_nickname);
 
         builder.setIcon(data.getAppIcon());
         builder.setTitle(data.getAppName());
         builder.setView(dialogView);
         dialogView.getTextAlignment();
 
+        TextWatcher watcher = new TextWatcher() {
+            String text;
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                text = s.toString();
+            }
+            @Override
+            public void afterTextChanged(Editable s) {
+                int length = s.toString().length();
+                if( length > 0 ){
+                    Pattern ps = Pattern.compile("^[a-zA-Z0-9ㄱ-ㅎ가-흐]+$");//영문, 숫자, 한글만 허용
+                    if(!ps.matcher(s).matches()){
+                        editText.setText(text);
+                        editText.setSelection(editText.length());
+                    }
+                }
+            }
+        };
+        editText.addTextChangedListener(watcher);
+
         builder.setPositiveButton("SET", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
-                EditText editText = (EditText) dialogView.findViewById(R.id.editText_nickname);
                 String url = "http://133.130.113.101:7010/user/registApp?" +
                         "token=" + UserInfo.getInstance().token + "&app_id=" + data.getPackageInfo().applicationInfo.packageName +
                         "&user_nick=";
@@ -138,6 +163,7 @@ public class GameListAdapter extends BaseAdapter {
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }
+
                 RequestUtil.asyncHttp(url, new OnRequest() {
                     @Override
                     public void onSuccess(String url, byte[] receiveData) {

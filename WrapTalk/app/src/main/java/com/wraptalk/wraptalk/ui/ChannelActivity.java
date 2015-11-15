@@ -8,6 +8,8 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -38,6 +40,7 @@ import org.json.JSONObject;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.regex.Pattern;
 
 public class ChannelActivity extends AppCompatActivity {
 
@@ -125,7 +128,6 @@ public class ChannelActivity extends AppCompatActivity {
             @Override
             public void onSelect(Cursor cursor) {
                 nickname = cursor.getString(cursor.getColumnIndex("user_nick"));
-                Log.e("nickname", nickname);
             }
 
             @Override
@@ -160,6 +162,29 @@ public class ChannelActivity extends AppCompatActivity {
             builder.setIcon(packageManager.getApplicationIcon(packageInfo.applicationInfo));
             builder.setTitle(app_name);
         }
+
+        TextWatcher watcher = new TextWatcher() {
+            String text;
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                text = s.toString();
+            }
+            @Override
+            public void afterTextChanged(Editable s) {
+                int length = s.toString().length();
+                if( length > 0 ){
+                    Pattern ps = Pattern.compile("^[a-zA-Z0-9ㄱ-ㅎ가-흐]+$");//영문, 숫자, 한글만 허용
+                    if(!ps.matcher(s).matches()){
+                        editText_nickname.setText(text);
+                        editText_nickname.setSelection(editText_nickname.length());
+                    }
+                }
+            }
+        };
+        editText_nickname.addTextChangedListener(watcher);
 
         builder.setPositiveButton("SET", new DialogInterface.OnClickListener() {
             @Override
