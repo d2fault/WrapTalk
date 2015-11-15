@@ -119,7 +119,24 @@ public class ChannelActivity extends AppCompatActivity {
             app_name = getPackageManager().getApplicationLabel(packageInfo.applicationInfo).toString();
         }
         channelData.setApp_id(app_id);
-        getNickname();
+
+        // 닉네임 select해서 가져오기
+        DBManager.getInstance().select("SELECT * FROM app_info WHERE app_id='" + app_id + "';", new DBManager.OnSelect() {
+            @Override
+            public void onSelect(Cursor cursor) {
+                nickname = cursor.getString(cursor.getColumnIndex("user_nick"));
+                Log.e("nickname", nickname);
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+
+            @Override
+            public void onErrorHandler(Exception e) {
+            }
+        });
     }
 
     private void initController() {
@@ -491,35 +508,4 @@ public class ChannelActivity extends AppCompatActivity {
             }
         });
     }
-
-    private void getNickname() {
-        DBManager.getInstance().select("SELECT * FROM app_info WHERE app_id='" + app_id + "';", new DBManager.OnSelect() {
-            @Override
-            public void onSelect(Cursor cursor) {
-                nickname = cursor.getString(cursor.getColumnIndex("user_nick"));
-                Log.e("nickname", nickname);
-            }
-
-            @Override
-            public void onComplete() {
-
-            }
-
-            @Override
-            public void onErrorHandler(Exception e) {
-            }
-        });
-    }
-
-    /* 등록하려고 액티비티 띄울 때
-       채널 리스트를 받아온다.
-       채널 리스트를 받아옴과 동시에
-       DB에 있는 내용 : SELECT * FROM chat_info WHERE app_id == \' " + app_id + "\'" -> 이렇게 선택하고
-       channel list와 비교한다.
-       if(cursor.getColumnIndex("channel_id").equal(data.getChannel_id)) <- 이런 식으로
-       { data.setflag(1) }
-       else {
-        data.setflag(0)
-       }
-     */
 }
