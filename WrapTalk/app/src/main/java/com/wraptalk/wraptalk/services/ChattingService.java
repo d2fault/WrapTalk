@@ -395,8 +395,6 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
                 PixelFormat.TRANSLUCENT);
 
         setMaxPosition();
-        mParamsclsbt.x = (int) (max_X * 0.9);
-        mParamsclsbt.y = 10;
     }
 
     private void initView() {
@@ -548,7 +546,8 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
 
         max_X = matrix.widthPixels - mImageView.getWidth();
         max_Y = matrix.heightPixels - mImageView.getHeight();
-
+        mParamsclsbt.x = (int) (max_X * 0.9);
+        mParamsclsbt.y = 10;
     }
 
     private void optimizePosition() {
