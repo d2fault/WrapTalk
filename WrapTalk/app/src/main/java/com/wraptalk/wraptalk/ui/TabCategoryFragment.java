@@ -107,7 +107,7 @@ public class TabCategoryFragment extends android.support.v4.app.Fragment {
                 }
 
                 @Override
-                public void onComplete() {
+                public void onComplete(int cnt) {
 
                 }
 

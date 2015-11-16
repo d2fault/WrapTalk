@@ -131,7 +131,7 @@ public class ChannelActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onComplete() {
+            public void onComplete(int cnt) {
 
             }
 
@@ -431,7 +431,7 @@ public class ChannelActivity extends AppCompatActivity {
                             }
 
                             @Override
-                            public void onComplete() {
+                            public void onComplete(int cnt) {
                             }
 
                             @Override
@@ -509,7 +509,7 @@ public class ChannelActivity extends AppCompatActivity {
                             }
 
                             @Override
-                            public void onComplete() {
+                            public void onComplete(int cnt) {
                             }
 
                             @Override

@@ -94,8 +94,8 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
 
 
     private RelativeLayout chatheadView;
-    private boolean showView = false;
-    private short showchat = 0;
+    private boolean showView = false;   // 챗해드 작은 버튼들 여부
+    private short showchat = 0;         // 챗해드 버튼 상태. 0 = 챗해드만 있음. 1 = 보기모드. 2 = 수정모드. -1 = 아무것도 없음.
 
     private ArrayList<String> chatdata;
     private ChatListAdapter adapter;
@@ -107,6 +107,7 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
     private int nickColor = -1;
 
     private String nickname = "닉넴";
+    private String title;
 
     @Override
     public IBinder onBind(Intent arg0) {
@@ -143,13 +144,15 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
         DBManager.getInstance().select("SELECT * FROM app_info where app_id = '" + taskWatchService.getCurrentTask()+"';", new DBManager.OnSelect() {
             @Override
             public void onSelect(Cursor cursor) {
-                cursor.moveToFirst();
-                cursor.moveToPosition(cursor.getCount());
-                Log.e("device_id", String.valueOf(cursor.getColumnIndex("channel_id")));
+                //cursor.moveToFirst();
+                //cursor.moveToPosition(cursor.getCount());
+                Log.e("DB", cursor.getInt(3)+"");
+                Log.e("device_id", cursor.getString(1));
+                title = cursor.getString(1);
             }
 
             @Override
-            public void onComplete() {
+            public void onComplete(int cnt) {
                 Log.i("DB", "Complete");
             }
 
@@ -167,46 +170,50 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
         DBManager.getInstance().select("SELECT * FROM app_info where app_id = '" + task + "';", new DBManager.OnSelect() {
             @Override
             public void onSelect(Cursor cursor) {
-                cursor.moveToFirst();
-                for (int i = 0; i < cursor.getCount(); i++) {
-                    //cursor.
+                Log.e("DB", cursor.getInt(3)+"");
+                if(cursor.getInt(3) == 1){
+                    Log.e("DB", cursor.getString(1));
+                    title = cursor.getString(1);
+                    mChatheadTitle.setText(title + "");
+                    if(showchat < 0){   //챗해드가 없음
+                        mWindowManager.addView(mImageView, mParams);
+                        showchat = 0;
+                    }
+                }else{
+                    removeChathead();
                 }
-                cursor.moveToPosition(cursor.getCount());
-                Log.e("device_id", String.valueOf(cursor.getColumnIndex("channel_id")));
             }
 
             @Override
-            public void onComplete() {
-
-            }
-
-            @Override
-            public void onErrorHandler(Exception e) {
-                channelId = task;
-                Log.e("Error", e.toString());
-                e.printStackTrace();
-            }
-        });
-        DBManager.getInstance().select("SELECT * FROM app_info where app_id = '" + task + "';", new DBManager.OnSelect() {
-            @Override
-            public void onSelect(Cursor cursor) {
-                String app_name = cursor.getString(1);
-                Log.i("ok", app_name);
-                mChatheadTitle.setText(app_name);
-
-            }
-
-            @Override
-            public void onComplete() {
-
+            public void onComplete(int cnt) {
+                if(cnt == 0){
+                    removeChathead();
+                }
             }
 
             @Override
             public void onErrorHandler(Exception e) {
                 Log.e("error", e.getMessage());
                 e.printStackTrace();
+                removeChathead();
             }
         });
+    }
+
+    private void removeChathead() {
+        if(showchat > -1){
+            mWindowManager.removeView(mImageView);
+            if(showView){
+                mWindowManager.removeView(bt1);
+                mWindowManager.removeView(bt2);
+                mWindowManager.removeView(bt3);
+                mWindowManager.removeView(bt4);
+                mWindowManager.removeView(bt5);
+            }
+            if(showchat > 0)
+                mWindowManager.removeView(chatheadView);
+        }
+        showchat = -1;
     }
 
     private void connectSockJS() {

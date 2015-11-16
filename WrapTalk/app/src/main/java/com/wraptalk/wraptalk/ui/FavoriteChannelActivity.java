@@ -52,7 +52,7 @@ public class FavoriteChannelActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onComplete() {
+            public void onComplete(int cnt) {
                 customAdapter.notifyDataSetChanged();
             }
 
