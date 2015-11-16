@@ -16,6 +16,8 @@ import android.util.Log;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.wraptalk.wraptalk.R;
 import com.wraptalk.wraptalk.models.UserInfo;
+import com.wraptalk.wraptalk.services.ChattingService;
+import com.wraptalk.wraptalk.services.TaskWatchService;
 import com.wraptalk.wraptalk.utils.DBManager;
 
 import java.io.IOException;
@@ -75,6 +77,7 @@ public class SplashActivity extends AppCompatActivity {
                 finish();
             }
         }, 1000);
+
     }
 
 

@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@drawable/chat"
+        android:background="#e0000000"
         android:gravity="center_horizontal"
         android:orientation="vertical"
         android:layout_marginLeft="16dp"
@@ -34,7 +34,7 @@
                 android:textStyle="bold"
                 android:textSize="18sp"
                 android:textColor="#ffff00"
-                android:id="@+id/textView2" />
+                android:id="@+id/chathead_title" />
 
         </LinearLayout>
 
@@ -75,6 +75,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/et_chathead_chat"
                 android:textColor="#000000"
+                android:hint="[메시지 입력 후 엔터를 넣으세요.] "
                 android:background="@android:drawable/editbox_background_normal" />
 
         </LinearLayout>

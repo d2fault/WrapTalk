@@ -103,7 +103,7 @@ public class ChannelAdapter extends BaseAdapter{
             }
 
             @Override
-            public void onComplete() {
+            public void onComplete(int cnt) {
 
             }
 
