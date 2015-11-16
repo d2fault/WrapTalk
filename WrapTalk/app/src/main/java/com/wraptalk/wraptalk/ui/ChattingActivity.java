@@ -1,6 +1,7 @@
 package com.wraptalk.wraptalk.ui;
 
 import android.content.Intent;
+import android.database.DataSetObserver;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -87,6 +88,14 @@ public class ChattingActivity extends AppCompatActivity {
         list = (ListView) findViewById(R.id.lv_chatting_list);
         chatdata = new ArrayList<>();
         adapter = new ChattingAdapter(getApplicationContext(), chatdata);
+        adapter.registerDataSetObserver(new DataSetObserver() {
+            @Override
+            public void onChanged() {
+                super.onChanged();
+                list.setSelection(adapter.getCount() - 1);
+            }
+        });
+        adapter.notifyDataSetChanged();
         list.setAdapter(adapter);
 
         cp = new ColorPicker(getApplication(), 255,255,255);
@@ -174,6 +183,8 @@ public class ChattingActivity extends AppCompatActivity {
                 });
             }
         });
+
+
 
         connectSockJS();
 
