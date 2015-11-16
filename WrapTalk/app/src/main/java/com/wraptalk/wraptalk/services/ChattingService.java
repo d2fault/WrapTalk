@@ -149,6 +149,7 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
                 Log.e("DB", cursor.getInt(3)+"");
                 Log.e("device_id", cursor.getString(1));
                 title = cursor.getString(1);
+                nickname = cursor.getString(2);
             }
 
             @Override
@@ -174,6 +175,7 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
                 if(cursor.getInt(3) == 1){
                     Log.e("DB", cursor.getString(1));
                     title = cursor.getString(1);
+                    nickname = cursor.getString(2);
                     mChatheadTitle.setText(title + "");
                     if(showchat < 0){   //챗해드가 없음
                         mWindowManager.addView(mImageView, mParams);
