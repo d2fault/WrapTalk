@@ -54,4 +54,9 @@ public class GameListData {
     public void setFlag(int flag) {
         this.flag = flag;
     }
+
+    public int compareTo(Object o) {
+        // String의 compareTo 메소드를 호출(사전순서적( lexicographically)으로 비교)
+        return appName.compareTo(((GameListData) o).appName);
+    }
 }
