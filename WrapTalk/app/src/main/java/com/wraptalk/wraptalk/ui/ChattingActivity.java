@@ -118,6 +118,7 @@ public class ChattingActivity extends AppCompatActivity {
                                                mEditText.setText("");
                                                return true;
                                            } else if(keyCode == 4){
+                                               ExitMessage();
                                                finish();
                                            }
 
@@ -197,6 +198,26 @@ public class ChattingActivity extends AppCompatActivity {
             Log.e("onClick", e.toString());
         }
         return obj;
+    }
+
+    public void ExitMessage() {
+        JSONObject log = new JSONObject();
+
+        try {
+            log.put("type", "publish");
+            log.put("address", "to.server.channel");
+            JSONObject body = new JSONObject();
+            body.put("type", "log");
+            body.put("channel_id", channel_id);
+            body.put("sender_id", "aaa");
+            body.put("sender_nick", nickname);
+            body.put("msg", "님이 퇴장하셨습니다.");
+            log.put("body", body);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            Log.e("ExitMessage", e.toString());
+        }
+        sockJS.send(log);
     }
 
     private void connectSockJS() {
