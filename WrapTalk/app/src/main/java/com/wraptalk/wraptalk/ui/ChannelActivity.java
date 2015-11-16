@@ -179,7 +179,8 @@ public class ChannelActivity extends AppCompatActivity {
                 if( length > 0 ){
                     Pattern ps = Pattern.compile("^[가-힣ㄱ-ㅎㅏ-ㅣ\\u318D\\u119E\\u11A2\\u2025a.-zA-Z]*$");//영문, 숫자, 한글만 허용
                     if(!ps.matcher(s).matches()){
-                        Toast.makeText(getApplicationContext(), "입력이 제한되는 문자입니다.", Toast.LENGTH_SHORT).show();
+                        editText_nickname.setText(text);
+                        editText_nickname.setSelection(editText_nickname.length());
                     }
                 }
             }

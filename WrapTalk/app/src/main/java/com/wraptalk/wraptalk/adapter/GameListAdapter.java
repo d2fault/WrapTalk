@@ -146,7 +146,6 @@ public class GameListAdapter extends BaseAdapter {
                     if(!ps.matcher(s).matches()){
                         editText.setText(text);
                         editText.setSelection(editText.length());
-                        Log.e("editText", editText.getText().toString());
                     }
                 }
             }
