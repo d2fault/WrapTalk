@@ -11,6 +11,7 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.google.android.gms.gcm.GcmListenerService;
+import com.wraptalk.wraptalk.R;
 import com.wraptalk.wraptalk.ui.MainActivity;
 
 /**
@@ -52,7 +53,7 @@ public class MyGcmListenerService extends GcmListenerService {
 
         Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
-                .setSmallIcon(com.google.android.gms.R.drawable.ic_plusone_medium_off_client)
+                .setSmallIcon(R.mipmap.ic_ggamtalk)
                 .setContentTitle(title)
                 .setContentText(message)
                 .setAutoCancel(true)
