@@ -75,7 +75,7 @@ public class DBManager extends SQLiteOpenHelper {
             while (cursor.moveToNext()) {
                 cb.onSelect(cursor);
             }
-            cb.onComplete();
+            cb.onComplete(cursor.getCount());
         }catch (Exception e){
             cb.onErrorHandler(e);
         }
@@ -83,7 +83,7 @@ public class DBManager extends SQLiteOpenHelper {
 
     public static interface OnSelect {
         public void onSelect(Cursor cursor);
-        public void onComplete();
+        public void onComplete(int cnt);
         public void onErrorHandler(Exception e);
     }
 }

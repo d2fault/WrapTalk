@@ -93,7 +93,7 @@ public class TabGameListFragment extends android.support.v4.app.Fragment {
             }
 
             @Override
-            public void onComplete() {
+            public void onComplete(int cnt) {
 
             }
 

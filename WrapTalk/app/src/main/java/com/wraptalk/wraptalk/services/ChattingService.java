@@ -29,6 +29,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.wraptalk.wraptalk.R;
 import com.wraptalk.wraptalk.adapter.ChatListAdapter;
@@ -65,6 +66,7 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
     private ListView mChatList;
     private Button mColorButton;
     private EditText mEditText;
+    private TextView mChatheadTitle;
 
     private ImageButton bt1;
     private ImageButton bt2;
@@ -92,8 +94,8 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
 
 
     private RelativeLayout chatheadView;
-    private boolean showView = false;
-    private short showchat = 0;
+    private boolean showView = false;   // 챗해드 작은 버튼들 여부
+    private short showchat = 0;         // 챗해드 버튼 상태. 0 = 챗해드만 있음. 1 = 보기모드. 2 = 수정모드. -1 = 아무것도 없음.
 
     private ArrayList<String> chatdata;
     private ChatListAdapter adapter;
@@ -105,6 +107,7 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
     private int nickColor = -1;
 
     private String nickname = "닉넴";
+    private String title;
 
     @Override
     public IBinder onBind(Intent arg0) {
@@ -138,21 +141,26 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
 
     private void initData() {
 
-        DBManager.getInstance().select("SELECT * FROM chat_info where app_id = " + taskWatchService.getCurrentTask(), new DBManager.OnSelect() {
+        DBManager.getInstance().select("SELECT * FROM app_info where app_id = '" + taskWatchService.getCurrentTask()+"';", new DBManager.OnSelect() {
             @Override
             public void onSelect(Cursor cursor) {
-                cursor.moveToPosition(cursor.getCount());
-                Log.e("device_id", String.valueOf(cursor.getColumnIndex("channel_id")));
+                //cursor.moveToFirst();
+                //cursor.moveToPosition(cursor.getCount());
+                Log.e("DB", cursor.getInt(3)+"");
+                Log.e("device_id", cursor.getString(1));
+                title = cursor.getString(1);
+                nickname = cursor.getString(2);
             }
 
             @Override
-            public void onComplete() {
-
+            public void onComplete(int cnt) {
+                Log.i("DB", "Complete");
             }
 
             @Override
             public void onErrorHandler(Exception e) {
                 channelId = "channel_id";
+                e.printStackTrace();
             }
         });
 
@@ -160,28 +168,54 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
     }
 
     private void changeChannel(final String task) {
-        DBManager.getInstance().select("SELECT * FROM chat_info where app_id = '" + task + "';", new DBManager.OnSelect() {
+        DBManager.getInstance().select("SELECT * FROM app_info where app_id = '" + task + "';", new DBManager.OnSelect() {
             @Override
             public void onSelect(Cursor cursor) {
-                cursor.moveToFirst();
-                for (int i = 0; i < cursor.getCount(); i++) {
-                    //cursor.
+                Log.e("DB", cursor.getInt(3)+"");
+                if(cursor.getInt(3) == 1){
+                    Log.e("DB", cursor.getString(1));
+                    title = cursor.getString(1);
+                    nickname = cursor.getString(2);
+                    mChatheadTitle.setText(title + "");
+                    if(showchat < 0){   //챗해드가 없음
+                        mWindowManager.addView(mImageView, mParams);
+                        showchat = 0;
+                    }
+                }else{
+                    removeChathead();
                 }
-                cursor.moveToPosition(cursor.getCount());
-                Log.e("device_id", String.valueOf(cursor.getColumnIndex("channel_id")));
             }
 
             @Override
-            public void onComplete() {
-
+            public void onComplete(int cnt) {
+                if(cnt == 0){
+                    removeChathead();
+                }
             }
 
             @Override
             public void onErrorHandler(Exception e) {
-                channelId = task;
-                Log.e("Error", e.toString());
+                Log.e("error", e.getMessage());
+                e.printStackTrace();
+                removeChathead();
             }
         });
+    }
+
+    private void removeChathead() {
+        if(showchat > -1){
+            mWindowManager.removeView(mImageView);
+            if(showView){
+                mWindowManager.removeView(bt1);
+                mWindowManager.removeView(bt2);
+                mWindowManager.removeView(bt3);
+                mWindowManager.removeView(bt4);
+                mWindowManager.removeView(bt5);
+            }
+            if(showchat > 0)
+                mWindowManager.removeView(chatheadView);
+        }
+        showchat = -1;
     }
 
     private void connectSockJS() {
@@ -342,6 +376,7 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
 
 
         mChatList = (ListView) chatheadView.findViewById(R.id.lv_chathead_chatlist);
+        mChatheadTitle = (TextView) chatheadView.findViewById(R.id.chathead_title);
 
         chatdata = new ArrayList<>();
         adapter = new ChatListAdapter(getApplicationContext(), chatdata);
@@ -687,8 +722,12 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
     @Override
     public boolean TaskCallback(String task) {
         Log.i("task", task);
-        sockJS.closeSession();
-        ExitMessage();
+        try {
+            sockJS.closeSession();
+            ExitMessage();
+        }catch (NullPointerException e){
+            e.printStackTrace();
+        }
         changeChannel(task);
         //channelId = "96da751edc63634c4c5958ce90e6a889ee1cdda247d92a978f340336791d5fb3";
         channelId = task+ "_default";
