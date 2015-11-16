@@ -43,6 +43,7 @@ public class TabGameListFragment extends android.support.v4.app.Fragment {
         initController();
         initView();
 
+
         listView_result.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -102,7 +103,6 @@ public class TabGameListFragment extends android.support.v4.app.Fragment {
 
             }
         });
-
     }
 
 
