@@ -38,8 +38,7 @@ import android.widget.TextView;
 import com.wraptalk.wraptalk.R;
 import com.wraptalk.wraptalk.adapter.ChatListAdapter;
 import com.wraptalk.wraptalk.models.ChannelData;
-import com.wraptalk.wraptalk.models.ChatRoom;
-import com.wraptalk.wraptalk.ui.ChatSelectDialog;
+import com.wraptalk.wraptalk.models.UserInfo;
 import com.wraptalk.wraptalk.ui.MainActivity;
 import com.wraptalk.wraptalk.utils.DBManager;
 
@@ -511,8 +510,8 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
             JSONObject body = new JSONObject();
             body.put("type", "normal");
             body.put("channel_id", channelId);
-            body.put("sender_id", "aaa");
-            body.put("sender_nick", "닉넴" + "&&" + nickColor);
+            body.put("sender_id", UserInfo.getInstance().email);
+            body.put("sender_nick", nickname + "&&" + nickColor);
             body.put("app_id", "com.aaa.aaa");
             body.put("msg", mEditText.getText().toString());
             obj.put("body", body);
