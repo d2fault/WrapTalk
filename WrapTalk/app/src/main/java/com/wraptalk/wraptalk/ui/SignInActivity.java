@@ -7,6 +7,7 @@ import android.app.LoaderManager.LoaderCallbacks;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
@@ -170,6 +171,10 @@ public class SignInActivity extends AppCompatActivity implements LoaderCallbacks
 
                         if (result_code == 0) {
                             String token = json.optString("token");
+                            SharedPreferences pref = getSharedPreferences("app", MODE_PRIVATE);
+                            SharedPreferences.Editor editor = pref.edit();
+                            editor.putString("token", token);
+                            editor.commit();
                             UserInfo.getInstance().token = token;
                         } else {
                             String result_msg = json.optString("result_msg", "fail");
