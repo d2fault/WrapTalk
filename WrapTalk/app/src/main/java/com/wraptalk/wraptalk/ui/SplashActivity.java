@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -74,8 +75,15 @@ public class SplashActivity extends AppCompatActivity {
         hd.postDelayed(new Runnable() {
             @Override
             public void run() {
-                Intent intent = new Intent(SplashActivity.this, SignInActivity.class);
-                startActivity(intent);
+                SharedPreferences pref = getSharedPreferences("app", MODE_PRIVATE);
+                String token = pref.getString("token", "");
+                if("".equals(token)) {
+                    Intent intent = new Intent(SplashActivity.this, SignInActivity.class);
+                    startActivity(intent);
+                }else{
+                    Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+                    startActivity(intent);
+                }
                 finish();
             }
         }, 1000);
