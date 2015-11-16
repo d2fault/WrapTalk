@@ -1,8 +1,12 @@
 package com.wraptalk.wraptalk.services;
 
+import android.app.AlertDialog;
+import android.app.DialogFragment;
 import android.app.Service;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.database.DataSetObserver;
 import android.graphics.Bitmap;
@@ -33,6 +37,9 @@ import android.widget.TextView;
 
 import com.wraptalk.wraptalk.R;
 import com.wraptalk.wraptalk.adapter.ChatListAdapter;
+import com.wraptalk.wraptalk.models.ChannelData;
+import com.wraptalk.wraptalk.models.ChatRoom;
+import com.wraptalk.wraptalk.ui.ChatSelectDialog;
 import com.wraptalk.wraptalk.ui.MainActivity;
 import com.wraptalk.wraptalk.utils.DBManager;
 
@@ -108,6 +115,9 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
 
     private String nickname = "닉넴";
     private String title;
+    private ArrayList<ChannelData> chatroomlist = new ArrayList<>();
+
+    private DialogFragment selectChat;
 
     @Override
     public IBinder onBind(Intent arg0) {
@@ -139,14 +149,27 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
         connectSockJS();
     }
 
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        Log.i("화면회전", "=== onConfigurationChanged is called !!! ===");
+
+        if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) { // 세로 전환시 발생
+            Log.i("화면회전", "=== Configuration.ORIENTATION_PORTRAIT !!! ===");
+            setMaxPosition();
+        } else if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) { // 가로 전환시 발생
+            Log.i("화면회전", "=== Configuration.ORIENTATION_LANDSCAPE !!! ===");
+            setMaxPosition();
+        }
+    }
+
     private void initData() {
 
-        DBManager.getInstance().select("SELECT * FROM app_info where app_id = '" + taskWatchService.getCurrentTask()+"';", new DBManager.OnSelect() {
+        DBManager.getInstance().select("SELECT * FROM app_info where app_id = '" + taskWatchService.getCurrentTask() + "';", new DBManager.OnSelect() {
             @Override
             public void onSelect(Cursor cursor) {
                 //cursor.moveToFirst();
                 //cursor.moveToPosition(cursor.getCount());
-                Log.e("DB", cursor.getInt(3)+"");
+                Log.e("DB", cursor.getInt(3) + "");
                 Log.e("device_id", cursor.getString(1));
                 title = cursor.getString(1);
                 nickname = cursor.getString(2);
@@ -164,6 +187,25 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
             }
         });
 
+        DBManager.getInstance().select("SELECT * FROM chat_info", new DBManager.OnSelect() {
+            @Override
+            public void onSelect(Cursor cursor) {
+                ChannelData data = new ChannelData(cursor.getString(0), cursor.getString(5), cursor.getString(4));
+                chatroomlist.add(data);
+            }
+
+            @Override
+            public void onComplete(int cnt) {
+
+            }
+
+            @Override
+            public void onErrorHandler(Exception e) {
+                Log.e("error", e.getMessage() + "");
+                e.printStackTrace();
+            }
+        });
+
 
     }
 
@@ -171,24 +213,24 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
         DBManager.getInstance().select("SELECT * FROM app_info where app_id = '" + task + "';", new DBManager.OnSelect() {
             @Override
             public void onSelect(Cursor cursor) {
-                Log.e("DB", cursor.getInt(3)+"");
-                if(cursor.getInt(3) == 1){
+                Log.e("DB", cursor.getInt(3) + "");
+                if (cursor.getInt(3) == 1) {
                     Log.e("DB", cursor.getString(1));
                     title = cursor.getString(1);
                     nickname = cursor.getString(2);
                     mChatheadTitle.setText(title + "");
-                    if(showchat < 0){   //챗해드가 없음
+                    if (showchat < 0) {   //챗해드가 없음
                         mWindowManager.addView(mImageView, mParams);
                         showchat = 0;
                     }
-                }else{
+                } else {
                     removeChathead();
                 }
             }
 
             @Override
             public void onComplete(int cnt) {
-                if(cnt == 0){
+                if (cnt == 0) {
                     removeChathead();
                 }
             }
@@ -203,16 +245,16 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
     }
 
     private void removeChathead() {
-        if(showchat > -1){
+        if (showchat > -1) {
             mWindowManager.removeView(mImageView);
-            if(showView){
+            if (showView) {
                 mWindowManager.removeView(bt1);
                 mWindowManager.removeView(bt2);
                 mWindowManager.removeView(bt3);
                 mWindowManager.removeView(bt4);
                 mWindowManager.removeView(bt5);
             }
-            if(showchat > 0)
+            if (showchat > 0)
                 mWindowManager.removeView(chatheadView);
         }
         showchat = -1;
@@ -341,6 +383,9 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
                 WindowManager.LayoutParams.TYPE_PHONE,
                 WindowManager.LayoutParams.FLAG_SPLIT_TOUCH,
                 PixelFormat.TRANSLUCENT);
+
+        setMaxPosition();
+
     }
 
     private void initView() {
@@ -350,7 +395,7 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
         mImageView.setMaxHeight(30);
         mImageView.setMaxWidth(30);
 
-        mColorButton = (Button)chatheadView.findViewById(R.id.bt_chathead_color);
+        mColorButton = (Button) chatheadView.findViewById(R.id.bt_chathead_color);
         mColorButton.setOnClickListener(this);
 
 
@@ -442,7 +487,12 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
             }
         });
 
-        cp = new com.wraptalk.wraptalk.ui.ColorPicker(getApplication(), 255,255,255);
+        cp = new com.wraptalk.wraptalk.ui.ColorPicker(getApplication(), 255, 255, 255);
+        ArrayList<String> list = new ArrayList<>();
+        list.add("dsfas");
+        list.add("Sdfads");
+        list.add("sdf");
+        selectChat = new ChatSelectDialog(getApplicationContext(), list);
     }
 
     @NonNull
@@ -455,7 +505,7 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
             body.put("type", "normal");
             body.put("channel_id", channelId);
             body.put("sender_id", "aaa");
-            body.put("sender_nick", "닉넴"+"&&"+nickColor);
+            body.put("sender_nick", "닉넴" + "&&" + nickColor);
             body.put("app_id", "com.aaa.aaa");
             body.put("msg", mEditText.getText().toString());
             obj.put("body", body);
@@ -489,6 +539,9 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
 
         max_X = matrix.widthPixels - mImageView.getWidth();
         max_Y = matrix.heightPixels - mImageView.getHeight();
+
+        mParams.x = (int) (max_X * 0.9);
+        mParams.y = 16;
     }
 
     private void optimizePosition() {
@@ -508,7 +561,7 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
             if (bt4 != null) mWindowManager.removeView(bt4);
             if (bt5 != null) mWindowManager.removeView(bt5);
         }
-        if(showchat != 0){
+        if (showchat != 0) {
             mWindowManager.removeView(chatheadView);
         }
         super.onDestroy();
@@ -661,47 +714,17 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
             buttonClick();
         } else if (v.getBackground() == bt2.getBackground()) {
 
+            AlertDialog dialog = ChatSelectDialog();
+            dialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
+            dialog.show();
+
         } else if (v.getBackground() == bt3.getBackground()) {
 
         } else if (v.getBackground() == bt4.getBackground()) {
-            buttonClick();
-            SharedPreferences pref = getSharedPreferences("chathead", MODE_PRIVATE);
-            if (showchat == 0) {
-                mParams2.alpha = Integer.parseInt(pref.getString("chathead_alpha", "80"));
-                mWindowManager.addView(chatheadView, mParams2);
-                mWindowManager.removeView(mImageView);
-                mWindowManager.addView(mImageView, mParams);
-                showchat++;
-            } else if (showchat == 1) {
-                mParams2 = new WindowManager.LayoutParams(
-                        WindowManager.LayoutParams.MATCH_PARENT,
-                        WindowManager.LayoutParams.MATCH_PARENT,
-                        WindowManager.LayoutParams.TYPE_PHONE,
-                        WindowManager.LayoutParams.FLAG_SPLIT_TOUCH,
-                        PixelFormat.TRANSLUCENT);
-                mParams2.alpha = Integer.parseInt(pref.getString("chathead_alpha", "80"));
-                mWindowManager.updateViewLayout(chatheadView, mParams2);
-                Log.i("alpha", mParams2.alpha + "");
-                mWindowManager.removeView(mImageView);
-                mWindowManager.addView(mImageView, mParams);
-                showchat++;
-            } else {
-                mWindowManager.removeView(chatheadView);
-                mParams2 = new WindowManager.LayoutParams(
-                        WindowManager.LayoutParams.MATCH_PARENT,
-                        WindowManager.LayoutParams.MATCH_PARENT,
-                        WindowManager.LayoutParams.TYPE_PHONE,
-                        WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
-                                | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
-                        PixelFormat.TRANSLUCENT);
-
-                mParams2.alpha = Integer.parseInt(pref.getString("chathead_alpha", "80"));
-                Log.i("alpha", mParams2.alpha + "");
-                showchat = 0;
-            }
-        } else if(v.getBackground() == bt5.getBackground()){
+            controlChatView();
+        } else if (v.getBackground() == bt5.getBackground()) {
             stopSelf();
-        } else if(v.getBackground() == mColorButton.getBackground()){
+        } else if (v.getBackground() == mColorButton.getBackground()) {
             Log.i("color", "color");
             cp.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
             //cp.show();
@@ -719,18 +742,76 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
         }
     }
 
+    private void controlChatView() {
+        buttonClick();
+        SharedPreferences pref = getSharedPreferences("chathead", MODE_PRIVATE);
+        if (showchat == 0) {
+            mParams2.alpha = Integer.parseInt(pref.getString("chathead_alpha", "80"));
+            mEditText.setHint("쓰기모드로 변경해보세요!");
+            mWindowManager.addView(chatheadView, mParams2);
+            mWindowManager.removeView(mImageView);
+            bt4.setBackground(getResources().getDrawable(R.drawable.mic_icon));
+            mWindowManager.addView(mImageView, mParams);
+            showchat++;
+        } else if (showchat == 1) {
+            mEditText.setHint("메시지를 입력 후 엔터를 누르세요!");
+            mParams2 = new WindowManager.LayoutParams(
+                    WindowManager.LayoutParams.MATCH_PARENT,
+                    WindowManager.LayoutParams.MATCH_PARENT,
+                    WindowManager.LayoutParams.TYPE_PHONE,
+                    WindowManager.LayoutParams.FLAG_SPLIT_TOUCH,
+                    PixelFormat.TRANSLUCENT);
+            bt4.setBackground(getResources().getDrawable(R.drawable.music_icon));
+            mParams2.alpha = Integer.parseInt(pref.getString("chathead_alpha", "80"));
+            mWindowManager.updateViewLayout(chatheadView, mParams2);
+            Log.i("alpha", mParams2.alpha + "");
+            mWindowManager.removeView(mImageView);
+            mWindowManager.addView(mImageView, mParams);
+            showchat++;
+        } else if(showchat == 2) {
+            mParams2 = new WindowManager.LayoutParams(
+                    WindowManager.LayoutParams.MATCH_PARENT,
+                    WindowManager.LayoutParams.MATCH_PARENT,
+                    WindowManager.LayoutParams.TYPE_PHONE,
+                    WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+                            | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                    PixelFormat.TRANSLUCENT);
+            mEditText.setHint("쓰기모드로 변경해보세요!");
+            mParams2.alpha = Integer.parseInt(pref.getString("chathead_alpha", "80"));
+            bt4.setBackground(getResources().getDrawable(R.drawable.mic_icon));
+            mWindowManager.updateViewLayout(chatheadView, mParams2);
+            mWindowManager.removeView(mImageView);
+            mWindowManager.addView(mImageView, mParams);
+            showchat--;
+
+        }else{
+            mParams2 = new WindowManager.LayoutParams(
+                    WindowManager.LayoutParams.MATCH_PARENT,
+                    WindowManager.LayoutParams.MATCH_PARENT,
+                    WindowManager.LayoutParams.TYPE_PHONE,
+                    WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+                            | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                    PixelFormat.TRANSLUCENT);
+            mWindowManager.updateViewLayout(chatheadView, mParams2);
+            mParams2.alpha = Integer.parseInt(pref.getString("chathead_alpha", "80"));
+            mWindowManager.removeView(mImageView);
+            mWindowManager.addView(mImageView, mParams);
+            showchat = 1;
+        }
+    }
+
     @Override
     public boolean TaskCallback(String task) {
         Log.i("task", task);
         try {
             sockJS.closeSession();
             ExitMessage();
-        }catch (NullPointerException e){
+        } catch (NullPointerException e) {
             e.printStackTrace();
         }
         changeChannel(task);
         //channelId = "96da751edc63634c4c5958ce90e6a889ee1cdda247d92a978f340336791d5fb3";
-        channelId = task+ "_default";
+        channelId = task + "_default";
         connectSockJS();
 
         return true;
@@ -769,5 +850,67 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
         return true;
     }
 
+    private AlertDialog ChatSelectDialog() {
+
+        String items[] = new String[chatroomlist.size()];
+        for (int i = 0; i < chatroomlist.size(); i++) {
+            items[i] = chatroomlist.get(i).getChannel_name();
+        }
+        final int[] cnt = {0};
+        AlertDialog.Builder ab = new AlertDialog.Builder(getBaseContext());
+        ab.setTitle("입장할 채널 선택");
+        ab.setSingleChoiceItems(items, 0,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        cnt[0] = whichButton;
+                    }
+                }).setPositiveButton("Ok",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        // OK 버튼 클릭시 , 여기서 선택한 값을 메인 Activity 로 넘기면 된다.
+
+                        try {
+                            sockJS.closeSession();
+                            ExitMessage();
+                        } catch (NullPointerException e) {
+                            e.printStackTrace();
+                        }
+
+                        if(showchat > 0){
+                            showchat = -1;
+                        }
+                        controlChatView();
+                        //channelId = "96da751edc63634c4c5958ce90e6a889ee1cdda247d92a978f340336791d5fb3";
+                        channelId = chatroomlist.get(cnt[0]).getChannel_id();
+                        DBManager.getInstance().select("SELECT * FROM app_info where app_id = '" + chatroomlist.get(cnt[0]).getApp_id() + "';", new DBManager.OnSelect() {
+                            @Override
+                            public void onSelect(Cursor cursor) {
+                                Log.d("SelectRoom ", cursor.getString(1));
+                                title = cursor.getString(1);
+                                nickname = cursor.getString(2);
+                                mChatheadTitle.setText(title + "");
+                            }
+
+                            @Override
+                            public void onComplete(int cnt) {
+                                connectSockJS();
+                            }
+
+                            @Override
+                            public void onErrorHandler(Exception e) {
+                                Log.e("error", e.getMessage());
+                                e.printStackTrace();
+                            }
+                        });
+
+                    }
+                }).setNegativeButton("Cancel",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        // Cancel 버튼 클릭시
+                    }
+                });
+        return ab.create();
+    }
 
 }
