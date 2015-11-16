@@ -74,7 +74,7 @@ public class ChannelActivity extends AppCompatActivity {
         initController();
 
 
-        getSupportActionBar().setTitle("채널w 가입");
+        getSupportActionBar().setTitle("채널 가입");
 
         button_search.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -177,10 +177,9 @@ public class ChannelActivity extends AppCompatActivity {
             public void afterTextChanged(Editable s) {
                 int length = s.toString().length();
                 if( length > 0 ){
-                    Pattern ps = Pattern.compile(getString(R.string.pattern_alphanumeric_hangul));//영문, 숫자, 한글만 허용
+                    Pattern ps = Pattern.compile("^[가-힣ㄱ-ㅎㅏ-ㅣ\\u318D\\u119E\\u11A2\\u2025a.-zA-Z]*$");//영문, 숫자, 한글만 허용
                     if(!ps.matcher(s).matches()){
-                        editText_nickname.setText(text);
-                        editText_nickname.setSelection(editText_nickname.length());
+                        Toast.makeText(getApplicationContext(), "입력이 제한되는 문자입니다.", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
