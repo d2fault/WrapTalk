@@ -747,27 +747,28 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
         SharedPreferences pref = getSharedPreferences("chathead", MODE_PRIVATE);
         if (showchat == 0) {
             mParams2.alpha = Integer.parseInt(pref.getString("chathead_alpha", "80"));
+            mEditText.setHint("쓰기모드로 변경해보세요!");
             mWindowManager.addView(chatheadView, mParams2);
             mWindowManager.removeView(mImageView);
-            bt4.setBackground(getResources().getDrawable(R.drawable.penicon));
+            bt4.setBackground(getResources().getDrawable(R.drawable.mic_icon));
             mWindowManager.addView(mImageView, mParams);
             showchat++;
         } else if (showchat == 1) {
+            mEditText.setHint("메시지를 입력 후 엔터를 누르세요!");
             mParams2 = new WindowManager.LayoutParams(
                     WindowManager.LayoutParams.MATCH_PARENT,
                     WindowManager.LayoutParams.MATCH_PARENT,
                     WindowManager.LayoutParams.TYPE_PHONE,
                     WindowManager.LayoutParams.FLAG_SPLIT_TOUCH,
                     PixelFormat.TRANSLUCENT);
-            bt4.setBackground(getResources().getDrawable(R.drawable.seeicon));
+            bt4.setBackground(getResources().getDrawable(R.drawable.music_icon));
             mParams2.alpha = Integer.parseInt(pref.getString("chathead_alpha", "80"));
             mWindowManager.updateViewLayout(chatheadView, mParams2);
             Log.i("alpha", mParams2.alpha + "");
             mWindowManager.removeView(mImageView);
             mWindowManager.addView(mImageView, mParams);
             showchat++;
-        } else {
-            mWindowManager.removeView(chatheadView);
+        } else if(showchat == 2) {
             mParams2 = new WindowManager.LayoutParams(
                     WindowManager.LayoutParams.MATCH_PARENT,
                     WindowManager.LayoutParams.MATCH_PARENT,
@@ -775,10 +776,27 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
                     WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
                             | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                     PixelFormat.TRANSLUCENT);
-
+            mEditText.setHint("쓰기모드로 변경해보세요!");
             mParams2.alpha = Integer.parseInt(pref.getString("chathead_alpha", "80"));
-            Log.i("alpha", mParams2.alpha + "");
-            showchat = 0;
+            bt4.setBackground(getResources().getDrawable(R.drawable.mic_icon));
+            mWindowManager.updateViewLayout(chatheadView, mParams2);
+            mWindowManager.removeView(mImageView);
+            mWindowManager.addView(mImageView, mParams);
+            showchat--;
+
+        }else{
+            mParams2 = new WindowManager.LayoutParams(
+                    WindowManager.LayoutParams.MATCH_PARENT,
+                    WindowManager.LayoutParams.MATCH_PARENT,
+                    WindowManager.LayoutParams.TYPE_PHONE,
+                    WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+                            | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                    PixelFormat.TRANSLUCENT);
+            mWindowManager.updateViewLayout(chatheadView, mParams2);
+            mParams2.alpha = Integer.parseInt(pref.getString("chathead_alpha", "80"));
+            mWindowManager.removeView(mImageView);
+            mWindowManager.addView(mImageView, mParams);
+            showchat = 1;
         }
     }
 
@@ -850,13 +868,18 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         // OK 버튼 클릭시 , 여기서 선택한 값을 메인 Activity 로 넘기면 된다.
-                        controlChatView();
+
                         try {
                             sockJS.closeSession();
                             ExitMessage();
                         } catch (NullPointerException e) {
                             e.printStackTrace();
                         }
+
+                        if(showchat > 0){
+                            showchat = -1;
+                        }
+                        controlChatView();
                         //channelId = "96da751edc63634c4c5958ce90e6a889ee1cdda247d92a978f340336791d5fb3";
                         channelId = chatroomlist.get(cnt[0]).getChannel_id();
                         DBManager.getInstance().select("SELECT * FROM app_info where app_id = '" + chatroomlist.get(cnt[0]).getApp_id() + "';", new DBManager.OnSelect() {
