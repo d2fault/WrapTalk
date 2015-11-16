@@ -66,6 +66,7 @@ public class SplashActivity extends AppCompatActivity {
                     Intent intent = new Intent(SplashActivity.this, SignInActivity.class);
                     startActivity(intent);
                 }else{
+                    UserInfo.getInstance().token = token;
                     Intent intent = new Intent(SplashActivity.this, MainActivity.class);
                     startActivity(intent);
                 }
