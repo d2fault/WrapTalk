@@ -16,7 +16,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -25,6 +24,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.gc.materialdesign.views.ButtonFlat;
 import com.wraptalk.wraptalk.R;
 import com.wraptalk.wraptalk.adapter.ChannelAdapter;
 import com.wraptalk.wraptalk.models.ChannelData;
@@ -49,7 +49,7 @@ public class ChannelActivity extends AppCompatActivity {
     ListView listView_result;
 
     EditText editText_searchChannel;
-    Button button_search;
+    ButtonFlat button_search;
 
     PackageInfo packageInfo;
     String categoryName;
@@ -73,7 +73,8 @@ public class ChannelActivity extends AppCompatActivity {
         getChannelList();
         initController();
 
-        getSupportActionBar().setTitle("채널 가입");
+
+        getSupportActionBar().setTitle("채널w 가입");
 
         button_search.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -112,7 +113,7 @@ public class ChannelActivity extends AppCompatActivity {
         source = new ArrayList<>();
         listView_result  = (ListView) findViewById(R.id.listVeiw_channel);
         editText_searchChannel = (EditText) findViewById(R.id.editText_searchChannel);
-        button_search = (Button) findViewById(R.id.button_search);
+        button_search = (ButtonFlat) findViewById(R.id.button_search);
         if(categoryName != null && categoryName.startsWith(TabCategoryFragment.PRE_CHANNEL_PREFIX)) {
             app_id = categoryName;
             app_name = categoryName.replace(TabCategoryFragment.PRE_CHANNEL_PREFIX, "");
@@ -176,7 +177,7 @@ public class ChannelActivity extends AppCompatActivity {
             public void afterTextChanged(Editable s) {
                 int length = s.toString().length();
                 if( length > 0 ){
-                    Pattern ps = Pattern.compile("^[a-zA-Z0-9ㄱ-ㅎ가-흐]+$");//영문, 숫자, 한글만 허용
+                    Pattern ps = Pattern.compile(getString(R.string.pattern_alphanumeric_hangul));//영문, 숫자, 한글만 허용
                     if(!ps.matcher(s).matches()){
                         editText_nickname.setText(text);
                         editText_nickname.setSelection(editText_nickname.length());

@@ -141,7 +141,7 @@ public class GameListAdapter extends BaseAdapter {
             public void afterTextChanged(Editable s) {
                 int length = s.toString().length();
                 if( length > 0 ){
-                    Pattern ps = Pattern.compile("^[a-zA-Z0-9ㄱ-ㅎ가-흐]+$");//영문, 숫자, 한글만 허용
+                    Pattern ps = Pattern.compile("^[a-zA-Z0-9가-힣ㄱ-ㅎㅏ-ㅣ\\u318D\\u119E\\u11A2\\u2022\\u2025a\\u00B7\\uFE55]+$");//영문, 숫자, 한글만 허용
                     if(!ps.matcher(s).matches()){
                         editText.setText(text);
                         editText.setSelection(editText.length());

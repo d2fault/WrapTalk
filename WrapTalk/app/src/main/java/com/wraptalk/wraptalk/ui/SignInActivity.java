@@ -20,16 +20,16 @@ import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.gc.materialdesign.views.ButtonRectangle;
+import com.wraptalk.wraptalk.R;
+import com.wraptalk.wraptalk.models.UserInfo;
 import com.wraptalk.wraptalk.utils.DBManager;
 import com.wraptalk.wraptalk.utils.OnRequest;
-import com.wraptalk.wraptalk.R;
 import com.wraptalk.wraptalk.utils.RequestUtil;
-import com.wraptalk.wraptalk.models.UserInfo;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -58,8 +58,8 @@ public class SignInActivity extends AppCompatActivity implements LoaderCallbacks
     private View mProgressView;
     private View mLoginFormView;
 
-    Button mButtonSignIn;
-    Button mButtonSignUp;
+    ButtonRectangle mButtonSignIn;
+    ButtonRectangle mButtonSignUp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,8 +106,8 @@ public class SignInActivity extends AppCompatActivity implements LoaderCallbacks
         mEmailView = (AutoCompleteTextView) findViewById(R.id.editText_email);
         mPasswordView = (EditText) findViewById(R.id.editText_password);
 
-        mButtonSignIn = (Button) findViewById(R.id.button_signIn);
-        mButtonSignUp = (Button) findViewById(R.id.button_signUp);
+        mButtonSignIn = (ButtonRectangle) findViewById(R.id.button_signIn);
+        mButtonSignUp = (ButtonRectangle) findViewById(R.id.button_signUp);
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.progress_login);
