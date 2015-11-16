@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.wraptalk.wraptalk.R;
 import com.wraptalk.wraptalk.adapter.ChattingAdapter;
+import com.wraptalk.wraptalk.models.UserInfo;
 import com.wraptalk.wraptalk.services.SockJSImpl;
 
 import org.json.JSONException;
@@ -169,7 +170,6 @@ public class ChattingActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 cp.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
-                //cp.show();
                 cp.show();
 
                 Button okButton = (Button) cp.findViewById(R.id.okColorButton);
@@ -199,7 +199,7 @@ public class ChattingActivity extends AppCompatActivity {
             JSONObject body = new JSONObject();
             body.put("type", "normal");
             body.put("channel_id", channel_id);
-            body.put("sender_id", "aaa");
+            body.put("sender_id", UserInfo.getInstance().email);
             body.put("sender_nick", nickname+"&&" + nickColor);
             body.put("app_id", "com.aaa.aaa");
             body.put("msg", mEditText.getText().toString());

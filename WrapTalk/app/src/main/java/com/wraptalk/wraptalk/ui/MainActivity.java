@@ -53,18 +53,6 @@ public class MainActivity extends AppCompatActivity {
         int setTab = intent.getIntExtra("Tab", 0);
         mViewPager.setCurrentItem(setTab);
 
-        /*
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startService(new Intent(MainActivity.this, TaskWatchService.class));
-                startService(new Intent(MainActivity.this, ChattingService.class));
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });*/
-
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
