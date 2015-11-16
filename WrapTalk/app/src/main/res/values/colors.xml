@@ -7,4 +7,6 @@
     <color name="colorPrimary">#4285F4</color>
     <color name="colorPrimaryDark">#2979FF</color>
     <color name="colorAccent">#F06292</color>
+
+    <item name="android:colorButtonNormal">#2196f3</item>
 </resources>
