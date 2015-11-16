@@ -191,8 +191,7 @@ public class ChannelActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 if (editText_nickname.getText().toString().isEmpty()) {
                     Toast.makeText(getApplicationContext(), "닉네임을 입력해주세요.", Toast.LENGTH_SHORT).show();
-                }
-                else {
+                } else {
                     url += "&user_nick=";
                     try {
                         url += URLEncoder.encode(editText_nickname.getText().toString(), "utf-8");
@@ -293,40 +292,44 @@ public class ChannelActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
 
                 getNewChannelInfo(dialogView);
+                if(channelData.getChannel_name().isEmpty()) {
+                    Toast.makeText(ChannelActivity.this, "채널 이름을 입력해주세요.", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    RequestUtil.asyncHttp(url, new OnRequest() {
+                        @Override
+                        public void onSuccess(String url, byte[] receiveData) {
+                            String jsonStr = new String(receiveData);
+                            String query;
+                            try {
+                                JSONObject json = new JSONObject(jsonStr);
+                                channelData.setChannel_id(json.optString("channel_id"));
 
-                RequestUtil.asyncHttp(url, new OnRequest() {
-                    @Override
-                    public void onSuccess(String url, byte[] receiveData) {
-                        String jsonStr = new String(receiveData);
-                        String query;
-                        try {
-                            JSONObject json = new JSONObject(jsonStr);
-                            channelData.setChannel_id(json.optString("channel_id"));
+                                query = String.format( "INSERT INTO chat_info " +
+                                                "(channel_id, public_onoff, channel_limit, channel_cate, " +
+                                                "app_id, channel_name, chief_id, user_color, check_favorite) " +
+                                                "VALUES ('%s', '%s', '%d', '%s', '%s', '%s', '%s', '%s', %d)",
+                                        channelData.getChannel_id(), channelData.getPublic_onoff(), channelData.getChannel_limit(), channelData.getChannel_cate(),
+                                        app_id, channelData.getChannel_name(), channelData.getChief_id(), channelData.getUser_color(), 0);
 
-                            query = String.format( "INSERT INTO chat_info " +
-                                            "(channel_id, public_onoff, channel_limit, channel_cate, " +
-                                            "app_id, channel_name, chief_id, user_color, check_favorite) " +
-                                            "VALUES ('%s', '%s', '%d', '%s', '%s', '%s', '%s', '%s', %d)",
-                                    channelData.getChannel_id(), channelData.getPublic_onoff(), channelData.getChannel_limit(), channelData.getChannel_cate(),
-                                    app_id, channelData.getChannel_name(), channelData.getChief_id(), channelData.getUser_color(), 0);
+                                DBManager.getInstance().write(query);
 
-                            DBManager.getInstance().write(query);
+                                source.add(channelData);
 
-                            source.add(channelData);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
 
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+                            customAdapter.notifyDataSetChanged();
+                            Toast.makeText(ChannelActivity.this, "채널 생성에 성공하셨습니다.", Toast.LENGTH_SHORT).show();
                         }
 
-                        customAdapter.notifyDataSetChanged();
-                        Toast.makeText(ChannelActivity.this, "채널 생성에 성공하셨습니다.", Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    public void onFail(String url, String error) {
-                        Toast.makeText(ChannelActivity.this, "채널 생성에 실패하셨습니다.", Toast.LENGTH_SHORT).show();
-                    }
-                });
+                        @Override
+                        public void onFail(String url, String error) {
+                            Toast.makeText(ChannelActivity.this, "채널 생성에 실패하셨습니다.", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
             }
         });
 
