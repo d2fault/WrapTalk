@@ -217,6 +217,8 @@ public class ChannelAdapter extends BaseAdapter{
                         UserInfo.getInstance().email, "#FFFFFF", 0);
                 Log.e("query", query);
                 DBManager.getInstance().write(query);
+
+                notifyDataSetChanged();
             }
 
             @Override
@@ -234,6 +236,8 @@ public class ChannelAdapter extends BaseAdapter{
             public void onSuccess(String url, byte[] receiveData) {
                 query = "DELETE FROM chat_info WHERE channel_id='" + data.getChannel_id() + "';";
                 DBManager.getInstance().write(query);
+
+                notifyDataSetChanged();
             }
 
             @Override
