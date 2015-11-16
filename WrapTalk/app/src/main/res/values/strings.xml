@@ -10,4 +10,5 @@
 
     <!-- Strings related to login -->
 
+    <string name="pattern_alphanumeric_hangul">^[a-zA-Z0-9가-힣ㄱ-ㅎㅏ-ㅣ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]+$</string>
 </resources>

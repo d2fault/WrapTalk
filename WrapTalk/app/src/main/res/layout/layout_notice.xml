@@ -1,25 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent"
-    android:orientation="horizontal" android:padding="10dp"
-    android:weightSum="13">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
 
-    <TextView
-        android:id="@+id/textView_noticeNumber"
-        android:layout_width="0dp"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="No.1"
-        android:layout_weight="2"
-        android:textColor="#4f4f4f"/>
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="16dp"
+        android:orientation="horizontal">
 
-    <TextView
-        android:id="@+id/textView_noticeTitle"
-        android:layout_width="5dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="11"
-        android:paddingLeft="10dp"
-        android:textSize="20dp"
-        android:textColor="#000000"
-        android:text="공지사항입니다."/>
+        <TextView
+            android:id="@+id/textView_noticeNumber"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:text="No.1"
+            android:textColor="#4f4f4f"
+            android:textSize="16sp" />
 
+        <TextView
+            android:id="@+id/textView_noticeTitle"
+            android:layout_width="5dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="11"
+            android:paddingLeft="10dp"
+            android:text="공지사항입니다."
+            android:textColor="#000000"
+            android:textSize="16sp" />
+    </LinearLayout>
 </LinearLayout>

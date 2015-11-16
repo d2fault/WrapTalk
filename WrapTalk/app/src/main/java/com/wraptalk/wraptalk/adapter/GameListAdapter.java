@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -140,8 +141,8 @@ public class GameListAdapter extends BaseAdapter {
             @Override
             public void afterTextChanged(Editable s) {
                 int length = s.toString().length();
-                if( length > 0 ){
-                    Pattern ps = Pattern.compile("^[a-zA-Z0-9ㄱ-ㅎ가-흐]+$");//영문, 숫자, 한글만 허용
+                if(length > 0){
+                    Pattern ps = Pattern.compile("^[가-힣ㄱ-ㅎㅏ-ㅣ\\u318D\\u119E\\u11A2\\u2025a.-zA-Z]*$");//영문, 숫자, 한글만 허용
                     if(!ps.matcher(s).matches()){
                         editText.setText(text);
                         editText.setSelection(editText.length());
@@ -149,6 +150,7 @@ public class GameListAdapter extends BaseAdapter {
                 }
             }
         };
+
         editText.addTextChangedListener(watcher);
 
         builder.setPositiveButton("SET", new DialogInterface.OnClickListener() {

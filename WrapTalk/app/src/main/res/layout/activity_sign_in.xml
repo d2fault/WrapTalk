@@ -4,7 +4,8 @@
     android:orientation="vertical" android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin" tools:context=".LoginActivity">
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="#FFFFFF" tools:context=".LoginActivity">
 
     <!-- Login progress -->
     <ProgressBar android:id="@+id/progress_login" style="?android:attr/progressBarStyleLarge"
@@ -41,14 +42,19 @@
 
             </android.support.design.widget.TextInputLayout>
 
-            <Button android:id="@+id/button_signIn" style="?android:textAppearanceSmall"
-                android:layout_width="match_parent" android:layout_height="wrap_content"
-                android:layout_marginTop="16dp" android:text="Sign In"
-                android:textStyle="bold" />
+            <com.gc.materialdesign.views.ButtonRectangle
+                android:id="@+id/button_signIn"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:background="@color/colorPrimaryDark"
+                android:text="Sign In" />
 
-            <Button android:id="@+id/button_signUp" style="?android:textAppearanceSmall"
-                android:layout_width="match_parent" android:layout_height="wrap_content"
-                android:text="Sign Up" android:textStyle="bold" />
+            <com.gc.materialdesign.views.ButtonRectangle
+                android:id="@+id/button_signUp"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:background="@color/colorPrimaryDark"
+                android:text="Sign Up" />
 
         </LinearLayout>
     </ScrollView>
