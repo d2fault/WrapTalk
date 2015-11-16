@@ -256,8 +256,10 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
                 mWindowManager.removeView(bt4);
                 mWindowManager.removeView(bt5);
             }
-            if (showchat > 0)
+            if (showchat > 0) {
                 mWindowManager.removeView(chatheadView);
+                mWindowManager.removeView(clsbt);
+            }
         }
         showchat = -1;
     }
