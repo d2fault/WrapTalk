@@ -396,6 +396,9 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
                 PixelFormat.TRANSLUCENT);
 
         setMaxPosition();
+
+        mParams.x = 34;
+        mParams.y = 858;
     }
 
     private void initView() {
@@ -767,6 +770,8 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
             mWindowManager.addView(mImageView, mParams);
             showchat++;
             mWindowManager.addView(clsbt, mParamsclsbt);
+            mEditText.setVisibility(View.INVISIBLE);
+            mColorButton.setVisibility(View.INVISIBLE);
         } else if (showchat == 1) {
             mEditText.setHint("메시지를 입력 후 엔터를 누르세요!");
             mParams2 = new WindowManager.LayoutParams(
@@ -783,7 +788,8 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
             mWindowManager.addView(mImageView, mParams);
             mWindowManager.removeView(clsbt);
             mWindowManager.addView(clsbt, mParamsclsbt);
-
+            mEditText.setVisibility(View.VISIBLE);
+            mColorButton.setVisibility(View.VISIBLE);
             showchat++;
         } else if(showchat == 2) {
             mParams2 = new WindowManager.LayoutParams(
@@ -801,6 +807,8 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
             mWindowManager.addView(mImageView, mParams);
             mWindowManager.removeView(clsbt);
             mWindowManager.addView(clsbt, mParamsclsbt);
+            mEditText.setVisibility(View.INVISIBLE);
+            mColorButton.setVisibility(View.INVISIBLE);
             showchat--;
 
         }else{
@@ -832,12 +840,24 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
             e.printStackTrace();
         }
         changeChannel(task);
+        if(task.equals("com.supercell.clashofclans")) {
+            //mImageView.setBackground(getResources().getDrawable(R.drawable.cocchat));
+            mImageView.setImageResource(R.drawable.cocchat);
+            mParams.x = 1174;
+            mParams.y = 213;
+            mWindowManager.removeView(mImageView);
+            mWindowManager.addView(mImageView, mParams);
+        }else{
+            mImageView.setImageResource(R.drawable.chathead);
+        }
         //channelId = "96da751edc63634c4c5958ce90e6a889ee1cdda247d92a978f340336791d5fb3";
         channelId = task + "_default";
         connectSockJS();
 
         return true;
     }
+
+
 
     public void ExitMessage() {
         JSONObject log = new JSONObject();
