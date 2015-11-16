@@ -68,6 +68,7 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
     private WindowManager.LayoutParams mParamsbt3;
     private WindowManager.LayoutParams mParamsbt4;
     private WindowManager.LayoutParams mParamsbt5;
+    private WindowManager.LayoutParams mParamsclsbt;
 
     private WindowManager mWindowManager;
     private ListView mChatList;
@@ -80,6 +81,7 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
     private ImageButton bt3;
     private ImageButton bt4;
     private ImageButton bt5;
+    private ImageButton clsbt;
 
     /**
      * For Floating Button
@@ -368,6 +370,14 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
                 PixelFormat.TRANSLUCENT);
         mParamsbt5.gravity = Gravity.TOP | Gravity.LEFT;
 
+        mParamsclsbt = new WindowManager.LayoutParams(
+                (int) (buttonSize * 0.6), (int) (buttonSize * 0.6),
+                WindowManager.LayoutParams.TYPE_PHONE,
+                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+                PixelFormat.TRANSLUCENT);
+        mParamsclsbt.gravity = Gravity.TOP | Gravity.LEFT;
+
+
         mParams2 = new WindowManager.LayoutParams(
                 WindowManager.LayoutParams.MATCH_PARENT,
                 WindowManager.LayoutParams.MATCH_PARENT,
@@ -385,7 +395,8 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
                 PixelFormat.TRANSLUCENT);
 
         setMaxPosition();
-
+        mParamsclsbt.x = (int) (max_X * 0.9);
+        mParamsclsbt.y = 10;
     }
 
     private void initView() {
@@ -419,6 +430,9 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
         bt5.setBackground(getResources().getDrawable(R.drawable.trashicon));
         bt5.setOnClickListener(this);
 
+        clsbt = new ImageButton(this);
+        clsbt.setBackground(getResources().getDrawable(R.drawable.closeicon));
+        clsbt.setOnClickListener(this);
 
         mChatList = (ListView) chatheadView.findViewById(R.id.lv_chathead_chatlist);
         mChatheadTitle = (TextView) chatheadView.findViewById(R.id.chathead_title);
@@ -488,11 +502,6 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
         });
 
         cp = new com.wraptalk.wraptalk.ui.ColorPicker(getApplication(), 255, 255, 255);
-        ArrayList<String> list = new ArrayList<>();
-        list.add("dsfas");
-        list.add("Sdfads");
-        list.add("sdf");
-        selectChat = new ChatSelectDialog(getApplicationContext(), list);
     }
 
     @NonNull
@@ -540,8 +549,6 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
         max_X = matrix.widthPixels - mImageView.getWidth();
         max_Y = matrix.heightPixels - mImageView.getHeight();
 
-        mParams.x = (int) (max_X * 0.9);
-        mParams.y = 16;
     }
 
     private void optimizePosition() {
@@ -739,6 +746,12 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
                     cp.dismiss();
                 }
             });
+        } else if(v.getBackground() == clsbt.getBackground()){
+            mWindowManager.removeView(chatheadView);
+            showchat = 0;
+            showView = false;
+            bt4.setBackground(getResources().getDrawable(R.drawable.chaticon));
+            mWindowManager.removeView(clsbt);
         }
     }
 
@@ -753,6 +766,7 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
             bt4.setBackground(getResources().getDrawable(R.drawable.mic_icon));
             mWindowManager.addView(mImageView, mParams);
             showchat++;
+            mWindowManager.addView(clsbt, mParamsclsbt);
         } else if (showchat == 1) {
             mEditText.setHint("메시지를 입력 후 엔터를 누르세요!");
             mParams2 = new WindowManager.LayoutParams(
@@ -767,6 +781,9 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
             Log.i("alpha", mParams2.alpha + "");
             mWindowManager.removeView(mImageView);
             mWindowManager.addView(mImageView, mParams);
+            mWindowManager.removeView(clsbt);
+            mWindowManager.addView(clsbt, mParamsclsbt);
+
             showchat++;
         } else if(showchat == 2) {
             mParams2 = new WindowManager.LayoutParams(
@@ -782,9 +799,12 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
             mWindowManager.updateViewLayout(chatheadView, mParams2);
             mWindowManager.removeView(mImageView);
             mWindowManager.addView(mImageView, mParams);
+            mWindowManager.removeView(clsbt);
+            mWindowManager.addView(clsbt, mParamsclsbt);
             showchat--;
 
         }else{
+
             mParams2 = new WindowManager.LayoutParams(
                     WindowManager.LayoutParams.MATCH_PARENT,
                     WindowManager.LayoutParams.MATCH_PARENT,
@@ -796,6 +816,8 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
             mParams2.alpha = Integer.parseInt(pref.getString("chathead_alpha", "80"));
             mWindowManager.removeView(mImageView);
             mWindowManager.addView(mImageView, mParams);
+            mWindowManager.removeView(clsbt);
+            mWindowManager.addView(clsbt, mParamsclsbt);
             showchat = 1;
         }
     }
