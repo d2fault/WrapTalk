@@ -189,26 +189,31 @@ public class ChannelActivity extends AppCompatActivity {
         builder.setPositiveButton("SET", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                url += "&user_nick=";
-                try {
-                    url += URLEncoder.encode(editText_nickname.getText().toString(), "utf-8");
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
+                if (editText_nickname.getText().toString().isEmpty()) {
+                    Toast.makeText(getApplicationContext(), "닉네임을 입력해주세요.", Toast.LENGTH_SHORT).show();
                 }
-
-                RequestUtil.asyncHttp(url, new OnRequest() {
-                    @Override
-                    public void onSuccess(String url, byte[] receiveData) {
-                        String query = "UPDATE app_info SET user_nick='" + editText_nickname.getText().toString() + "' WHERE app_id='" + app_id + "'";
-                        DBManager.getInstance().write(query);
-                        Toast.makeText(ChannelActivity.this, "닉네임 변경에 성공하셨습니다.", Toast.LENGTH_SHORT).show();
+                else {
+                    url += "&user_nick=";
+                    try {
+                        url += URLEncoder.encode(editText_nickname.getText().toString(), "utf-8");
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
                     }
 
-                    @Override
-                    public void onFail(String url, String error) {
-                        Toast.makeText(ChannelActivity.this, "변경 실패 : 중복된 닉네임입니다.", Toast.LENGTH_SHORT).show();
-                    }
-                });
+                    RequestUtil.asyncHttp(url, new OnRequest() {
+                        @Override
+                        public void onSuccess(String url, byte[] receiveData) {
+                            String query = "UPDATE app_info SET user_nick='" + editText_nickname.getText().toString() + "' WHERE app_id='" + app_id + "'";
+                            DBManager.getInstance().write(query);
+                            Toast.makeText(ChannelActivity.this, "닉네임 변경에 성공하셨습니다.", Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void onFail(String url, String error) {
+                            Toast.makeText(ChannelActivity.this, "변경 실패 : 중복된 닉네임입니다.", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
             }
         });
 

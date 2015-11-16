@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.wraptalk.wraptalk.R;
 import com.wraptalk.wraptalk.models.GameListData;
@@ -157,27 +158,32 @@ public class GameListAdapter extends BaseAdapter {
                 String url = "http://133.130.113.101:7010/user/registApp?" +
                         "token=" + UserInfo.getInstance().token + "&app_id=" + data.getPackageInfo().applicationInfo.packageName +
                         "&user_nick=";
-                try {
-                    data.setUser_nick(editText.getText().toString());
-                    url += URLEncoder.encode(data.getUser_nick(), "utf-8");
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
+                if (editText.getText().toString().isEmpty()) {
+                    Toast.makeText(context, "닉네임을 입력해주세요.", Toast.LENGTH_SHORT).show();
                 }
-
-                RequestUtil.asyncHttp(url, new OnRequest() {
-                    @Override
-                    public void onSuccess(String url, byte[] receiveData) {
-                        String query = "UPDATE app_info SET check_registration=1,user_nick='" + data.getUser_nick() + "' WHERE app_id='" + data.getPackageInfo().packageName + "'";
-                        DBManager.getInstance().write(query);
+                else {
+                    try {
+                        data.setUser_nick(editText.getText().toString());
+                        url += URLEncoder.encode(data.getUser_nick(), "utf-8");
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
                     }
 
-                    @Override
-                    public void onFail(String url, String error) {
-                    }
-                });
+                    RequestUtil.asyncHttp(url, new OnRequest() {
+                        @Override
+                        public void onSuccess(String url, byte[] receiveData) {
+                            String query = "UPDATE app_info SET check_registration=1,user_nick='" + data.getUser_nick() + "' WHERE app_id='" + data.getPackageInfo().packageName + "'";
+                            DBManager.getInstance().write(query);
+                        }
 
-                data.setFlag(1);
-                viewHolder.imageButton_regist.setBackgroundResource(R.mipmap.ic_minus);
+                        @Override
+                        public void onFail(String url, String error) {
+                        }
+                    });
+
+                    data.setFlag(1);
+                    viewHolder.imageButton_regist.setBackgroundResource(R.mipmap.ic_minus);
+                }
             }
         });
 
