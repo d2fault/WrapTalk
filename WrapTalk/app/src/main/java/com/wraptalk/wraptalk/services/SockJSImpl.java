@@ -26,7 +26,7 @@ public class SockJSImpl extends WebSocketClient {
     private final static String dictionary = "abcdefghijklmnopqrstuvwxyz0123456789_";
     private String roomname;
     private Timer timer;
-    private String nickname;
+    private String nickname = "";
 
     public SockJSImpl(String serverURI, String roomname, String nickname) throws URISyntaxException{
         super(new URI(generatePrimusUrl(serverURI)), new Draft_17());

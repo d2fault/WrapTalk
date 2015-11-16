@@ -32,6 +32,14 @@ public class ChannelData {
     private int check_favorite = 0;
     private int check_registeration = 0;
 
+    public ChannelData(String channel_id, String channel_name, String app_id) {
+        this.channel_id = channel_id;
+        this.channel_name = channel_name;
+        this.app_id = app_id;
+    }
+
+    public ChannelData(){}
+
     public String getChannel_name() {
         return channel_name;
     }
