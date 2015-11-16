@@ -78,8 +78,6 @@ public class SplashActivity extends AppCompatActivity {
             }
         }, 1000);
 
-        startService(new Intent(SplashActivity.this, TaskWatchService.class));
-        startService(new Intent(SplashActivity.this, ChattingService.class));   //todo remove
     }
 
 

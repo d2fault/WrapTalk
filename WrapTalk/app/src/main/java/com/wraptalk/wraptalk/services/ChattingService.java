@@ -140,21 +140,23 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
 
     private void initData() {
 
-        DBManager.getInstance().select("SELECT * FROM chat_info where app_id = " + taskWatchService.getCurrentTask(), new DBManager.OnSelect() {
+        DBManager.getInstance().select("SELECT * FROM app_info where app_id = '" + taskWatchService.getCurrentTask()+"';", new DBManager.OnSelect() {
             @Override
             public void onSelect(Cursor cursor) {
+                cursor.moveToFirst();
                 cursor.moveToPosition(cursor.getCount());
                 Log.e("device_id", String.valueOf(cursor.getColumnIndex("channel_id")));
             }
 
             @Override
             public void onComplete() {
-
+                Log.i("DB", "Complete");
             }
 
             @Override
             public void onErrorHandler(Exception e) {
                 channelId = "channel_id";
+                e.printStackTrace();
             }
         });
 
@@ -162,7 +164,7 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
     }
 
     private void changeChannel(final String task) {
-        DBManager.getInstance().select("SELECT * FROM chat_info where app_id = '" + task + "';", new DBManager.OnSelect() {
+        DBManager.getInstance().select("SELECT * FROM app_info where app_id = '" + task + "';", new DBManager.OnSelect() {
             @Override
             public void onSelect(Cursor cursor) {
                 cursor.moveToFirst();
@@ -211,7 +213,7 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
         try {
             chatdata.clear();
             adapter.notifyDataSetChanged();
-            sockJS = new SockJSImpl("http://192.168.1.19:8080/eventbus", channelId, nickname) {
+            sockJS = new SockJSImpl("http://133.130.113.101:7030/eventbus", channelId, nickname) {
                 //channel_
                 @Override
                 public void parseSockJS(String s) {
