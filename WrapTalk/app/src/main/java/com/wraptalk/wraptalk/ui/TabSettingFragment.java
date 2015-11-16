@@ -172,6 +172,13 @@ public class TabSettingFragment extends android.support.v4.app.Fragment {
         builder.setPositiveButton("LOGOUT", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                SharedPreferences pref = getActivity().getSharedPreferences("app", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = pref.edit();
+                editor.putString("token", "");
+                editor.commit();
+                Intent intent = new Intent(getActivity(), SplashActivity.class);
+                startActivity(intent);
+                getActivity().finish();
             }
         });
 
