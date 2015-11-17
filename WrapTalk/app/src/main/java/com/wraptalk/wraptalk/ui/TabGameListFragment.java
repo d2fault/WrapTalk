@@ -19,6 +19,7 @@ import com.wraptalk.wraptalk.models.GameListData;
 import com.wraptalk.wraptalk.utils.DBManager;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 
 /**
@@ -95,7 +96,8 @@ public class TabGameListFragment extends android.support.v4.app.Fragment {
 
             @Override
             public void onComplete(int cnt) {
-
+                Collections.sort(source);
+                customAdapter.notifyDataSetChanged();
             }
 
             @Override

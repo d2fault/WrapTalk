@@ -6,7 +6,7 @@ import android.graphics.drawable.Drawable;
 /**
  * Created by jiyoungpark on 15. 10. 21..
  */
-public class GameListData {
+public class GameListData implements Comparable {
 
     private PackageInfo packageInfo;
     private String appName;

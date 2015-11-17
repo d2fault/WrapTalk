@@ -237,13 +237,12 @@ public class ChannelAdapter extends BaseAdapter{
 
     private void quitChannel(final ChannelData data) {
         String url = "http://133.130.113.101:7010/user/withdrawChannel?token=" + UserInfo.getInstance().token + "&channel_id=" + data.getChannel_id();
-
         RequestUtil.asyncHttp(url, new OnRequest() {
             @Override
             public void onSuccess(String url, byte[] receiveData) {
                 query = "DELETE FROM chat_info WHERE channel_id='" + data.getChannel_id() + "';";
                 DBManager.getInstance().write(query);
-
+                source.remove(data);
                 notifyDataSetChanged();
             }
 
