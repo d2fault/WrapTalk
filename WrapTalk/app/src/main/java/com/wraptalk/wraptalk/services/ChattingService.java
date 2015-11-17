@@ -42,6 +42,7 @@ import com.wraptalk.wraptalk.models.UserInfo;
 import com.wraptalk.wraptalk.ui.MainActivity;
 
 
+import org.java_websocket.exceptions.WebsocketNotConnectedException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -262,6 +263,7 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
 
     private void connectSockJS() {
         try {
+            Log.i("ConectJS", "Connect");
             chatdata.clear();
             adapter.notifyDataSetChanged();
             sockJS = new SockJSImpl("http://133.130.113.101:7030/eventbus", channelId, nickname, title) {
@@ -477,7 +479,12 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
                     if ("".equals(mEditText.getText().toString()))
                         return;
                     Log.i("json", obj.toString());
-                    sockJS.send(obj);
+                    try {
+                        sockJS.send(obj);
+                    }catch (WebsocketNotConnectedException e){
+                        chatdata.add("메시지 전송에 실패했습니다.");
+                        adapter.notifyDataSetChanged();
+                    }
                     mEditText.setText("");
                 }
                 Log.i("Enter ", s.toString());
@@ -749,7 +756,7 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
         if (showchat == 0) {
             //mParams2.alpha = Integer.parseInt(pref.getString("chathead_alpha", "80"));
             //chatheadLayout.setAlpha((float) (Integer.parseInt(pref.getString("chathead_alpha", "80"))*0.01));
-            chatheadLayout.setBackgroundColor(Color.parseColor("#" + String.format("%02X",Integer.parseInt(pref.getString("chathead_alpha", "80")) & 0xFF)+"000000"));
+            chatheadLayout.setBackgroundColor(Color.parseColor("#" + String.format("%02X", Integer.parseInt(pref.getString("chathead_alpha", "80")) & 0xFF) + "000000"));
             mChatList.setAlpha(1);
             mEditText.setHint("쓰기모드로 변경해보세요!");
             mWindowManager.addView(chatheadView, mParams2);
@@ -770,7 +777,7 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
             bt4.setBackground(getResources().getDrawable(R.drawable.seeicon));
             //mParams2.alpha = Integer.parseInt(pref.getString("chathead_alpha", "80"));
             //chatheadLayout.setAlpha((float) (Integer.parseInt(pref.getString("chathead_alpha", "80"))*0.01));
-            chatheadLayout.setBackgroundColor(Color.parseColor("#" + String.format("%02X", Integer.parseInt(pref.getString("chathead_alpha", "80")) & 0xFF)+"000000"));
+            chatheadLayout.setBackgroundColor(Color.parseColor("#" + String.format("%02X", Integer.parseInt(pref.getString("chathead_alpha", "80")) & 0xFF) + "000000"));
             mChatList.setAlpha(1);
             mWindowManager.updateViewLayout(chatheadView, mParams2);
             Log.i("alpha", mParams2.alpha + "");
@@ -790,7 +797,7 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
             mEditText.setHint("쓰기모드로 변경해보세요!");
             //mParams2.alpha = Integer.parseInt(pref.getString("chathead_alpha", "80"));
             //chatheadLayout.setAlpha((float) (Integer.parseInt(pref.getString("chathead_alpha", "80"))*0.01));
-            chatheadLayout.setBackgroundColor(Color.parseColor("#" + String.format("%02X", Integer.parseInt(pref.getString("chathead_alpha", "80")) & 0xFF)+"000000"));
+            chatheadLayout.setBackgroundColor(Color.parseColor("#" + String.format("%02X", Integer.parseInt(pref.getString("chathead_alpha", "80")) & 0xFF) + "000000"));
             mChatList.setAlpha(1);
             bt4.setBackground(getResources().getDrawable(R.drawable.writeicon));
             mWindowManager.updateViewLayout(chatheadView, mParams2);
@@ -865,7 +872,12 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
             e.printStackTrace();
             Log.e("ExitMessage", e.toString());
         }
-        sockJS.send(log);
+        try {
+            sockJS.send(log);
+        }catch (WebsocketNotConnectedException e){
+            e.printStackTrace();
+            Log.e("ExitMessage", "Fail");
+        }
     }
 
     private class LongPressClass implements Runnable {
@@ -899,15 +911,14 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         // OK 버튼 클릭시 , 여기서 선택한 값을 메인 Activity 로 넘기면 된다.
-
+                        sockJS.closeSession();
                         try {
-                            sockJS.closeSession();
                             ExitMessage();
                         } catch (NullPointerException e) {
                             e.printStackTrace();
                         }
 
-                        if(showchat > 0){
+                        if (showchat > 0) {
                             showchat = -1;
                         }
                         controlChatView();
@@ -918,28 +929,13 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
                             public void onSelect(Cursor cursor) {
                                 Log.d("SelectRoom ", cursor.getString(1));
                                 nickname = cursor.getString(2);
+                                title = chatroomlist.get(cnt[0]).getChannel_name();
+                                connectSockJS();
                             }
 
                             @Override
                             public void onComplete(int c) {
 
-                                SDBManager.getInstance().select("SELECT * FROM chat_info where app_id = " + chatroomlist.get(cnt[0]).getApp_id() + "';",
-                                new SDBManager.OnSelect() {
-                                    @Override
-                                    public void onSelect(Cursor cursor) {
-                                        title = cursor.getString(5);
-                                    }
-
-                                    @Override
-                                    public void onComplete(int cnt) {
-                                        connectSockJS();
-                                    }
-
-                                    @Override
-                                    public void onErrorHandler(Exception e) {
-
-                                    }
-                                });
                             }
 
                             @Override
