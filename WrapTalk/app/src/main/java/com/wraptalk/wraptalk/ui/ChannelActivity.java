@@ -40,6 +40,7 @@ import org.json.JSONObject;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.regex.Pattern;
 
 public class ChannelActivity extends AppCompatActivity {
@@ -314,13 +315,13 @@ public class ChannelActivity extends AppCompatActivity {
                                         app_id, channelData.getChannel_name(), channelData.getChief_id(), channelData.getUser_color(), 0);
 
                                 DBManager.getInstance().write(query);
-
                                 source.add(channelData);
 
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
 
+                            Collections.sort(source);
                             customAdapter.notifyDataSetChanged();
                             Toast.makeText(ChannelActivity.this, "채널 생성에 성공하셨습니다.", Toast.LENGTH_SHORT).show();
                         }
@@ -450,7 +451,7 @@ public class ChannelActivity extends AppCompatActivity {
                         });
                         source.add(data);
                     }
-
+                    Collections.sort(source);
                     customAdapter.notifyDataSetChanged();
 
                 } catch (JSONException e) {
@@ -528,7 +529,7 @@ public class ChannelActivity extends AppCompatActivity {
                         });
                         source.add(data);
                     }
-
+                    Collections.sort(source);
                     customAdapter.notifyDataSetChanged();
 
                 } catch (JSONException e) {

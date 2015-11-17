@@ -3,7 +3,7 @@ package com.wraptalk.wraptalk.models;
 /**
  * Created by jiyoungpark on 15. 10. 30..
  */
-public class ChannelData {
+public class ChannelData implements Comparable {
     /*
     channel_name
     public_onoff
@@ -134,5 +134,17 @@ public class ChannelData {
 
     public void setCheck_registeration(int check_registeration) {
         this.check_registeration = check_registeration;
+    }
+
+    public int compareTo(Object o) {
+        // String의 compareTo 메소드를 호출(사전순서적( lexicographically)으로 비교)
+
+        ChannelData data = (ChannelData)o;
+        int flagCompare = Integer.toString(data.check_registeration).compareTo(Integer.toString(this.check_registeration));
+//        if(this.flag != data.flag)
+        if(flagCompare == 0)
+            return channel_name.compareTo(((ChannelData) o).channel_name);
+        else
+            return flagCompare;
     }
 }

@@ -23,6 +23,7 @@ import com.wraptalk.wraptalk.utils.RequestUtil;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Collections;
 
 //import android.support.v7.app.AlertDialog;
 
@@ -225,6 +226,7 @@ public class ChannelAdapter extends BaseAdapter{
                 Log.e("query", query);
                 DBManager.getInstance().write(query);
 
+                Collections.sort(source);
                 notifyDataSetChanged();
             }
 
@@ -243,6 +245,7 @@ public class ChannelAdapter extends BaseAdapter{
                 query = "DELETE FROM chat_info WHERE channel_id='" + data.getChannel_id() + "';";
                 DBManager.getInstance().write(query);
                 source.remove(data);
+                Collections.sort(source);
                 notifyDataSetChanged();
             }
 
