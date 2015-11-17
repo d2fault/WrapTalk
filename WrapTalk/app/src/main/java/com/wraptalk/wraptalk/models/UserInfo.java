@@ -6,6 +6,7 @@ package com.wraptalk.wraptalk.models;
 public class UserInfo {
 
     public String email;
+    public String password;
     public String deviceId;
     public String gcmKey;
     public String token;

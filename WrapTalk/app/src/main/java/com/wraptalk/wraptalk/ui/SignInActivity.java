@@ -49,11 +49,8 @@ public class SignInActivity extends AppCompatActivity implements LoaderCallbacks
     };
 
     private String email;
+    private String password;
 
-//    private UserLoginTask mAuthTask = null;
-    //private SendPostSignIn sendPostSignIn;
-
-    // UI references.
     private AutoCompleteTextView mEmailView;
     private EditText mPasswordView;
     private View mProgressView;
@@ -102,8 +99,6 @@ public class SignInActivity extends AppCompatActivity implements LoaderCallbacks
 
     private void Init() {
 
-        //sendPostSignIn = new ();
-
         mEmailView = (AutoCompleteTextView) findViewById(R.id.editText_email);
         mPasswordView = (EditText) findViewById(R.id.editText_password);
 
@@ -126,7 +121,7 @@ public class SignInActivity extends AppCompatActivity implements LoaderCallbacks
 
         // Store values at the time of the login attempt.
         email = mEmailView.getText().toString();
-        String password = mPasswordView.getText().toString();
+        password = mPasswordView.getText().toString();
 
         boolean cancel = false;
         View focusView = null;
@@ -168,6 +163,7 @@ public class SignInActivity extends AppCompatActivity implements LoaderCallbacks
                         JSONObject json = new JSONObject(jsonStr);
                         int result_code = json.optInt("result_code", -1);
                         UserInfo.getInstance().email = email;
+                        UserInfo.getInstance().password = password;
 
                         if (result_code == 0) {
                             String token = json.optString("token");
