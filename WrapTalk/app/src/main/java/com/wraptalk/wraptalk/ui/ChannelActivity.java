@@ -248,11 +248,10 @@ public class ChannelActivity extends AppCompatActivity {
         checkBox_channelOnoff.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked) {
+                if (isChecked) {
                     textView_password.setVisibility(View.INVISIBLE);
                     editText_setPassword.setVisibility(View.INVISIBLE);
-                }
-                else {
+                } else {
                     textView_password.setVisibility(View.VISIBLE);
                     editText_setPassword.setVisibility(View.VISIBLE);
                 }
@@ -270,6 +269,7 @@ public class ChannelActivity extends AppCompatActivity {
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, list);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner_userCount.setAdapter(adapter); // OK!!
+        spinner_userCount.setSelection(19);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
