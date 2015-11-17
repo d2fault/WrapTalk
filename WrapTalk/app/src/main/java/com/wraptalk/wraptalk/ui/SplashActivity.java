@@ -39,8 +39,6 @@ public class SplashActivity extends AppCompatActivity {
     private BroadcastReceiver mRegistrationBroadcastReceiver;
     TelephonyManager tm;
 
-//    String regid;
-
     UserInfo data;
 
     @Override
@@ -77,8 +75,6 @@ public class SplashActivity extends AppCompatActivity {
     }
 
 
-
-
     private boolean checkPlayServices() {
         int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
         if (resultCode != ConnectionResult.SUCCESS) {
@@ -113,8 +109,6 @@ public class SplashActivity extends AppCompatActivity {
             @Override
             public void onReceive(Context context, Intent intent) {
                 String action = intent.getAction();
-
-
 
                 if(action.equals(QuickstartPreferences.REGISTRATION_READY)){
                     // 액션이 READY일 경우

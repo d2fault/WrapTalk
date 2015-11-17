@@ -6,7 +6,7 @@ import android.graphics.drawable.Drawable;
 /**
  * Created by jiyoungpark on 15. 10. 21..
  */
-public class GameListData {
+public class GameListData implements Comparable {
 
     private PackageInfo packageInfo;
     private String appName;
@@ -15,7 +15,7 @@ public class GameListData {
 
     private Drawable appIcon;
 
-    private int flag = 0;
+    private int flag = 0; // 1: 가입된 앱, 0:미가입 앱
 
     public PackageInfo getPackageInfo() {
         return packageInfo;
@@ -57,6 +57,13 @@ public class GameListData {
 
     public int compareTo(Object o) {
         // String의 compareTo 메소드를 호출(사전순서적( lexicographically)으로 비교)
-        return appName.compareTo(((GameListData) o).appName);
+
+        GameListData data = (GameListData)o;
+        int flagCompare = Integer.toString(data.flag).compareTo(Integer.toString(this.flag));
+//        if(this.flag != data.flag)
+        if(flagCompare == 0)
+            return appName.compareTo(((GameListData) o).appName);
+        else
+            return flagCompare;
     }
 }
