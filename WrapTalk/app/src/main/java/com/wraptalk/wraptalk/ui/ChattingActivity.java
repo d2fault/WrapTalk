@@ -47,13 +47,14 @@ public class ChattingActivity extends AppCompatActivity {
     private ColorPicker cp;
     private Button colorButton;
     private String nickname;
+    private String title;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chatting);
         Intent intent = getIntent();
-        String title = intent.getStringExtra("channelName"); // bell on off 유무도 받아야 한다.
+        title = intent.getStringExtra("channelName"); // bell on off 유무도 받아야 한다.
         channel_id = intent.getStringExtra("channel_id");
         nickname = intent.getStringExtra("nickname");
 
@@ -233,7 +234,7 @@ public class ChattingActivity extends AppCompatActivity {
 
     private void connectSockJS() {
         try {
-            sockJS = new SockJSImpl("http://133.130.113.101:7030/eventbus", channel_id, nickname) {
+            sockJS = new SockJSImpl("http://133.130.113.101:7030/eventbus", channel_id, nickname, title) {
                 //channel_
                 @Override
                 public void parseSockJS(String s) {

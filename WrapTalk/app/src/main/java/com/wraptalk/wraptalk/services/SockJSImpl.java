@@ -4,6 +4,7 @@ import android.util.Log;
 
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.drafts.Draft_17;
+import org.java_websocket.exceptions.WebsocketNotConnectedException;
 import org.java_websocket.handshake.ServerHandshake;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -27,26 +28,28 @@ public class SockJSImpl extends WebSocketClient {
     private String roomname;
     private Timer timer;
     private String nickname = "";
+    private String title;
 
-    public SockJSImpl(String serverURI, String roomname, String nickname) throws URISyntaxException{
+    public SockJSImpl(String serverURI, String roomname, String nickname, String title) throws URISyntaxException {
         super(new URI(generatePrimusUrl(serverURI)), new Draft_17());
         Log.i("test", "Test");
         this.openHandShakeFields = new HashMap<>();
         this.roomname = roomname;
         this.nickname = nickname;
+        this.title = title;
     }
 
     @Override
     public void onOpen(ServerHandshake handshakedata) {
         Log.i("SockJS", "Open");
         Iterator<String> it = handshakedata.iterateHttpFields();
-        while(it.hasNext()){
+        while (it.hasNext()) {
             String key = it.next();
             openHandShakeFields.put(key, handshakedata.getFieldValue(key));
         }
 
         scheduleHeartbeat();
-        registAddress("to.channel."+roomname);
+        registAddress("to.channel." + roomname);
     }
 
     @Override
@@ -54,11 +57,10 @@ public class SockJSImpl extends WebSocketClient {
         JSONObject response;
         if (s.charAt(0) == 'o' || s.charAt(0) == 'h') {
             // ignore
-        }
-        else if (s.charAt(0) == 'a') {
+        } else if (s.charAt(0) == 'a') {
             parseSockJS(s);
         } else {
-            System.out.println("onMessage "+s);
+            System.out.println("onMessage " + s);
         }
     }
 
@@ -84,7 +86,7 @@ public class SockJSImpl extends WebSocketClient {
             String address = json.getString("address");
             String body = json.getString("body");
 
-            if("to.channel.channel_id".equals(address))
+            if ("to.channel.channel_id".equals(address))
                 System.out.printf("%s, %s, %s\n", type, address, body);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -93,6 +95,7 @@ public class SockJSImpl extends WebSocketClient {
 
     /**
      * JSON을 websocket 전송용 문자열로 변환하여 전
+     *
      * @param json
      */
     public void send(JSONObject json) {
@@ -125,7 +128,7 @@ public class SockJSImpl extends WebSocketClient {
             body.put("channel_id", roomname);
             body.put("sender_id", "aaa");
             body.put("sender_nick", nickname);
-            body.put("msg", "님이 입장하셨습니다.");
+            body.put("msg", "님이 " + title + "방에 입장하셨습니다.");
             log.put("body", body);
             send(log);
         } catch (JSONException e) {
@@ -171,7 +174,7 @@ public class SockJSImpl extends WebSocketClient {
         return baseUrl + "/" + server + "/" + connId + "/websocket";
     }
 
-    public void closeSession(){
+    public void closeSession() {
         timer.cancel();
     }
 }
