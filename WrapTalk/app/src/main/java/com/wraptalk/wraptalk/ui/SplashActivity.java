@@ -69,12 +69,10 @@ public class SplashActivity extends AppCompatActivity {
                 if("".equals(token)) {
                     Intent intent = new Intent(SplashActivity.this, SignInActivity.class);
                     startActivity(intent);
+                    finish();
                 }else{
                     autoLogin();
-                    Intent intent = new Intent(SplashActivity.this, MainActivity.class);
-                    startActivity(intent);
                 }
-                finish();
             }
         }, 1000);
 
