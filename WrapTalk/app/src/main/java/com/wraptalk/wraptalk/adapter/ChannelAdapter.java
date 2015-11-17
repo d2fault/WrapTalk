@@ -20,6 +20,8 @@ import com.wraptalk.wraptalk.utils.DBManager;
 import com.wraptalk.wraptalk.utils.OnRequest;
 import com.wraptalk.wraptalk.utils.RequestUtil;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 
 //import android.support.v7.app.AlertDialog;
@@ -198,8 +200,13 @@ public class ChannelAdapter extends BaseAdapter{
 
     private void joinChannel(final ChannelData data) {
 
-        String url = "http://133.130.113.101:7010/user/joinChannel?token=" + UserInfo.getInstance().token + "&channel_id=" + data.getChannel_id() +
-                "&user_nick=" + nickname;
+        String url = null;
+        try {
+            url = "http://133.130.113.101:7010/user/joinChannel?token=" + UserInfo.getInstance().token + "&channel_id=" + data.getChannel_id() +
+                    "&user_nick=" + URLEncoder.encode(nickname, "utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         if (data.getPublic_onoff().equals("off")) {
             url += "&channel_pw=" + "1234"; // 현재는 임시. 나중에는 dialog 띄워서 받아야함
         }
