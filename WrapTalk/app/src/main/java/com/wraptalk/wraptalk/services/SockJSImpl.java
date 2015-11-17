@@ -4,6 +4,7 @@ import android.util.Log;
 
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.drafts.Draft_17;
+import org.java_websocket.exceptions.WebsocketNotConnectedException;
 import org.java_websocket.handshake.ServerHandshake;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -27,13 +28,15 @@ public class SockJSImpl extends WebSocketClient {
     private String roomname;
     private Timer timer;
     private String nickname = "";
+    private String title;
 
-    public SockJSImpl(String serverURI, String roomname, String nickname) throws URISyntaxException{
+    public SockJSImpl(String serverURI, String roomname, String nickname, String title) throws URISyntaxException{
         super(new URI(generatePrimusUrl(serverURI)), new Draft_17());
         Log.i("test", "Test");
         this.openHandShakeFields = new HashMap<>();
         this.roomname = roomname;
         this.nickname = nickname;
+        this.title = title;
     }
 
     @Override
@@ -99,7 +102,11 @@ public class SockJSImpl extends WebSocketClient {
         String str = json.toString();
         str = str.replaceAll("\"", "\\\\\"");
         str = "[\"" + str + "\"]";
-        send(str);
+        try {
+            send(str);
+        }catch (WebsocketNotConnectedException e){
+            e.printStackTrace();
+        }
     }
 
     void registAddress(String address) {
@@ -125,7 +132,7 @@ public class SockJSImpl extends WebSocketClient {
             body.put("channel_id", roomname);
             body.put("sender_id", "aaa");
             body.put("sender_nick", nickname);
-            body.put("msg", "님이 입장하셨습니다.");
+            body.put("msg", "님이 "+ title + "방에 입장하셨습니다.");
             log.put("body", body);
             send(log);
         } catch (JSONException e) {

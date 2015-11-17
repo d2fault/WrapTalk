@@ -40,7 +40,7 @@ import com.wraptalk.wraptalk.adapter.ChatListAdapter;
 import com.wraptalk.wraptalk.models.ChannelData;
 import com.wraptalk.wraptalk.models.UserInfo;
 import com.wraptalk.wraptalk.ui.MainActivity;
-import com.wraptalk.wraptalk.utils.DBManager;
+
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -67,20 +67,17 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
     private WindowManager.LayoutParams mParamsbt3;
     private WindowManager.LayoutParams mParamsbt4;
     private WindowManager.LayoutParams mParamsbt5;
-    private WindowManager.LayoutParams mParamsclsbt;
 
     private WindowManager mWindowManager;
     private ListView mChatList;
     private Button mColorButton;
     private EditText mEditText;
-    private TextView mChatheadTitle;
 
     private ImageButton bt1;
     private ImageButton bt2;
     private ImageButton bt3;
     private ImageButton bt4;
     private ImageButton bt5;
-    private ImageButton clsbt;
 
     /**
      * For Floating Button
@@ -113,6 +110,7 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
     private SharedPreferences pref;
     private com.wraptalk.wraptalk.ui.ColorPicker cp;
     private int nickColor = -1;
+    private RelativeLayout chatheadLayout;
 
     private String nickname = "닉넴";
     private String title;
@@ -132,6 +130,7 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
         LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
         chatheadView = (RelativeLayout) inflater.inflate(R.layout.chathead, null);
         pref = getSharedPreferences("chathead", MODE_PRIVATE);
+
 
         initView();
         initParams();
@@ -164,8 +163,8 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
     }
 
     private void initData() {
-
-        DBManager.getInstance().select("SELECT * FROM app_info where app_id = '" + taskWatchService.getCurrentTask() + "';", new DBManager.OnSelect() {
+        SDBManager s = new SDBManager(getApplicationContext(), "wraptalkdb.sqlite", null, 1);
+        SDBManager.getInstance().select("SELECT * FROM app_info where app_id = '" + taskWatchService.getCurrentTask() + "';", new SDBManager.OnSelect() {
             @Override
             public void onSelect(Cursor cursor) {
                 //cursor.moveToFirst();
@@ -188,7 +187,7 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
             }
         });
 
-        DBManager.getInstance().select("SELECT * FROM chat_info", new DBManager.OnSelect() {
+        SDBManager.getInstance().select("SELECT * FROM chat_info", new SDBManager.OnSelect() {
             @Override
             public void onSelect(Cursor cursor) {
                 ChannelData data = new ChannelData(cursor.getString(0), cursor.getString(5), cursor.getString(4));
@@ -211,7 +210,7 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
     }
 
     private void changeChannel(final String task) {
-        DBManager.getInstance().select("SELECT * FROM app_info where app_id = '" + task + "';", new DBManager.OnSelect() {
+        SDBManager.getInstance().select("SELECT * FROM app_info where app_id = '" + task + "';", new SDBManager.OnSelect() {
             @Override
             public void onSelect(Cursor cursor) {
                 Log.e("DB", cursor.getInt(3) + "");
@@ -219,7 +218,6 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
                     Log.e("DB", cursor.getString(1));
                     title = cursor.getString(1);
                     nickname = cursor.getString(2);
-                    mChatheadTitle.setText(title + "");
                     if (showchat < 0) {   //챗해드가 없음
                         mWindowManager.addView(mImageView, mParams);
                         showchat = 0;
@@ -257,7 +255,6 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
             }
             if (showchat > 0) {
                 mWindowManager.removeView(chatheadView);
-                mWindowManager.removeView(clsbt);
             }
         }
         showchat = -1;
@@ -267,7 +264,7 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
         try {
             chatdata.clear();
             adapter.notifyDataSetChanged();
-            sockJS = new SockJSImpl("http://133.130.113.101:7030/eventbus", channelId, nickname) {
+            sockJS = new SockJSImpl("http://133.130.113.101:7030/eventbus", channelId, nickname, title) {
                 //channel_
                 @Override
                 public void parseSockJS(String s) {
@@ -322,10 +319,10 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
         int dpi = matrix.densityDpi;
         int buttonSize;
         if (dpi > 350) {
-            buttonSize = 150;
+            buttonSize = 140;
             dpiCorrection = 1;
         } else {
-            buttonSize = 100;
+            buttonSize = 95;
             dpiCorrection = (float) 0.75;
         }
         mParamsbt1 = new WindowManager.LayoutParams(
@@ -371,14 +368,6 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
                 PixelFormat.TRANSLUCENT);
         mParamsbt5.gravity = Gravity.TOP | Gravity.LEFT;
 
-        mParamsclsbt = new WindowManager.LayoutParams(
-                (int) (buttonSize * 0.6), (int) (buttonSize * 0.6),
-                WindowManager.LayoutParams.TYPE_PHONE,
-                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
-                PixelFormat.TRANSLUCENT);
-        mParamsclsbt.gravity = Gravity.TOP | Gravity.LEFT;
-
-
         mParams2 = new WindowManager.LayoutParams(
                 WindowManager.LayoutParams.MATCH_PARENT,
                 WindowManager.LayoutParams.MATCH_PARENT,
@@ -386,7 +375,7 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
                         | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                 PixelFormat.TRANSLUCENT);
-        mParams2.alpha = Integer.parseInt(pref.getString("chathead_alpha", "80"));
+        //mParams2.alpha = Integer.parseInt(pref.getString("chathead_alpha", "80"));
         Log.i("alpha", mParams2.alpha + "");
         mParams3 = new WindowManager.LayoutParams(
                 WindowManager.LayoutParams.MATCH_PARENT,
@@ -417,32 +406,29 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
         bt1.setOnClickListener(this);
 
         bt2 = new ImageButton(this);
-        bt2.setBackground(getResources().getDrawable(R.drawable.hearticon));
+        bt2.setBackground(getResources().getDrawable(R.drawable.selecticon));
         bt2.setOnClickListener(this);
 
         bt3 = new ImageButton(this);
-        bt3.setBackground(getResources().getDrawable(R.drawable.selecticon));
+        bt3.setBackground(getResources().getDrawable(R.drawable.chaticon));
         bt3.setOnClickListener(this);
 
         bt4 = new ImageButton(this);
-        bt4.setBackground(getResources().getDrawable(R.drawable.chaticon));
+        bt4.setBackground(getResources().getDrawable(R.drawable.writeicon));
         bt4.setOnClickListener(this);
 
         bt5 = new ImageButton(this);
-        bt5.setBackground(getResources().getDrawable(R.drawable.trashicon));
+        bt5.setBackground(getResources().getDrawable(R.drawable.xicon));
         bt5.setOnClickListener(this);
 
-        clsbt = new ImageButton(this);
-        clsbt.setBackground(getResources().getDrawable(R.drawable.closeicon));
-        clsbt.setOnClickListener(this);
-
         mChatList = (ListView) chatheadView.findViewById(R.id.lv_chathead_chatlist);
-        mChatheadTitle = (TextView) chatheadView.findViewById(R.id.chathead_title);
 
         chatdata = new ArrayList<>();
         adapter = new ChatListAdapter(getApplicationContext(), chatdata);
         mChatList.setAdapter(adapter);
         mChatList.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
+
+        chatheadLayout = (RelativeLayout) chatheadView.findViewById(R.id.rl_chathead_layout);
 
         adapter.registerDataSetObserver(new DataSetObserver() {
             @Override
@@ -550,8 +536,6 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
 
         max_X = matrix.widthPixels - mImageView.getWidth();
         max_Y = matrix.heightPixels - mImageView.getHeight();
-        mParamsclsbt.x = (int) (max_X * 0.9);
-        mParamsclsbt.y = 10;
     }
 
     private void optimizePosition() {
@@ -722,17 +706,24 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
             startActivity(i);
 
             buttonClick();
-        } else if (v.getBackground() == bt2.getBackground()) {
-
+        } else if (v.getBackground() == bt2.getBackground()) {  // 선택 채팅방
             AlertDialog dialog = ChatSelectDialog();
             dialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
             dialog.show();
-
-        } else if (v.getBackground() == bt3.getBackground()) {
-
-        } else if (v.getBackground() == bt4.getBackground()) {
+        } else if (v.getBackground() == bt3.getBackground()) {  // 최소화 최대화
+            if(showchat > 0){
+                mWindowManager.removeView(chatheadView);
+                showchat = 0;
+                showView = false;
+                bt3.setBackground(getResources().getDrawable(R.drawable.openicon));
+                buttonClick();
+            }else{
+                controlChatView();
+                bt3.setBackground(getResources().getDrawable(R.drawable.closeicon));
+            }
+        } else if (v.getBackground() == bt4.getBackground()) {  // 수정모드 보기모드
             controlChatView();
-        } else if (v.getBackground() == bt5.getBackground()) {
+        } else if (v.getBackground() == bt5.getBackground()) {  // 앱 종료
             stopSelf();
         } else if (v.getBackground() == mColorButton.getBackground()) {
             Log.i("color", "color");
@@ -749,12 +740,6 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
                     cp.dismiss();
                 }
             });
-        } else if(v.getBackground() == clsbt.getBackground()){
-            mWindowManager.removeView(chatheadView);
-            showchat = 0;
-            showView = false;
-            bt4.setBackground(getResources().getDrawable(R.drawable.chaticon));
-            mWindowManager.removeView(clsbt);
         }
     }
 
@@ -762,14 +747,16 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
         buttonClick();
         SharedPreferences pref = getSharedPreferences("chathead", MODE_PRIVATE);
         if (showchat == 0) {
-            mParams2.alpha = Integer.parseInt(pref.getString("chathead_alpha", "80"));
+            //mParams2.alpha = Integer.parseInt(pref.getString("chathead_alpha", "80"));
+            //chatheadLayout.setAlpha((float) (Integer.parseInt(pref.getString("chathead_alpha", "80"))*0.01));
+            chatheadLayout.setBackgroundColor(Color.parseColor("#" + String.format("%02X",Integer.parseInt(pref.getString("chathead_alpha", "80")) & 0xFF)+"000000"));
+            mChatList.setAlpha(1);
             mEditText.setHint("쓰기모드로 변경해보세요!");
             mWindowManager.addView(chatheadView, mParams2);
             mWindowManager.removeView(mImageView);
-            bt4.setBackground(getResources().getDrawable(R.drawable.mic_icon));
+            bt4.setBackground(getResources().getDrawable(R.drawable.writeicon));
             mWindowManager.addView(mImageView, mParams);
             showchat++;
-            mWindowManager.addView(clsbt, mParamsclsbt);
             mEditText.setVisibility(View.INVISIBLE);
             mColorButton.setVisibility(View.INVISIBLE);
         } else if (showchat == 1) {
@@ -780,14 +767,15 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
                     WindowManager.LayoutParams.TYPE_PHONE,
                     WindowManager.LayoutParams.FLAG_SPLIT_TOUCH,
                     PixelFormat.TRANSLUCENT);
-            bt4.setBackground(getResources().getDrawable(R.drawable.music_icon));
-            mParams2.alpha = Integer.parseInt(pref.getString("chathead_alpha", "80"));
+            bt4.setBackground(getResources().getDrawable(R.drawable.seeicon));
+            //mParams2.alpha = Integer.parseInt(pref.getString("chathead_alpha", "80"));
+            //chatheadLayout.setAlpha((float) (Integer.parseInt(pref.getString("chathead_alpha", "80"))*0.01));
+            chatheadLayout.setBackgroundColor(Color.parseColor("#" + String.format("%02X", Integer.parseInt(pref.getString("chathead_alpha", "80")) & 0xFF)+"000000"));
+            mChatList.setAlpha(1);
             mWindowManager.updateViewLayout(chatheadView, mParams2);
             Log.i("alpha", mParams2.alpha + "");
             mWindowManager.removeView(mImageView);
             mWindowManager.addView(mImageView, mParams);
-            mWindowManager.removeView(clsbt);
-            mWindowManager.addView(clsbt, mParamsclsbt);
             mEditText.setVisibility(View.VISIBLE);
             mColorButton.setVisibility(View.VISIBLE);
             showchat++;
@@ -800,13 +788,14 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
                             | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                     PixelFormat.TRANSLUCENT);
             mEditText.setHint("쓰기모드로 변경해보세요!");
-            mParams2.alpha = Integer.parseInt(pref.getString("chathead_alpha", "80"));
-            bt4.setBackground(getResources().getDrawable(R.drawable.mic_icon));
+            //mParams2.alpha = Integer.parseInt(pref.getString("chathead_alpha", "80"));
+            //chatheadLayout.setAlpha((float) (Integer.parseInt(pref.getString("chathead_alpha", "80"))*0.01));
+            chatheadLayout.setBackgroundColor(Color.parseColor("#" + String.format("%02X", Integer.parseInt(pref.getString("chathead_alpha", "80")) & 0xFF)+"000000"));
+            mChatList.setAlpha(1);
+            bt4.setBackground(getResources().getDrawable(R.drawable.writeicon));
             mWindowManager.updateViewLayout(chatheadView, mParams2);
             mWindowManager.removeView(mImageView);
             mWindowManager.addView(mImageView, mParams);
-            mWindowManager.removeView(clsbt);
-            mWindowManager.addView(clsbt, mParamsclsbt);
             mEditText.setVisibility(View.INVISIBLE);
             mColorButton.setVisibility(View.INVISIBLE);
             showchat--;
@@ -821,11 +810,11 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
                             | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                     PixelFormat.TRANSLUCENT);
             mWindowManager.updateViewLayout(chatheadView, mParams2);
-            mParams2.alpha = Integer.parseInt(pref.getString("chathead_alpha", "80"));
+            //mParams2.alpha = Integer.parseInt(pref.getString("chathead_alpha", "80"));
+            //chatheadLayout.setAlpha((float) (Integer.parseInt(pref.getString("chathead_alpha", "80"))*0.01));
+            chatheadLayout.setBackgroundColor(Color.parseColor("#" + String.format("%02X", Integer.parseInt(pref.getString("chathead_alpha", "80")) & 0xFF) + "000000"));
             mWindowManager.removeView(mImageView);
             mWindowManager.addView(mImageView, mParams);
-            mWindowManager.removeView(clsbt);
-            mWindowManager.addView(clsbt, mParamsclsbt);
             showchat = 1;
         }
     }
@@ -924,18 +913,33 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
                         controlChatView();
                         //channelId = "96da751edc63634c4c5958ce90e6a889ee1cdda247d92a978f340336791d5fb3";
                         channelId = chatroomlist.get(cnt[0]).getChannel_id();
-                        DBManager.getInstance().select("SELECT * FROM app_info where app_id = '" + chatroomlist.get(cnt[0]).getApp_id() + "';", new DBManager.OnSelect() {
+                        SDBManager.getInstance().select("SELECT * FROM app_info where app_id = '" + chatroomlist.get(cnt[0]).getApp_id() + "';", new SDBManager.OnSelect() {
                             @Override
                             public void onSelect(Cursor cursor) {
                                 Log.d("SelectRoom ", cursor.getString(1));
-                                title = cursor.getString(1);
                                 nickname = cursor.getString(2);
-                                mChatheadTitle.setText(title + "");
                             }
 
                             @Override
-                            public void onComplete(int cnt) {
-                                connectSockJS();
+                            public void onComplete(int c) {
+
+                                SDBManager.getInstance().select("SELECT * FROM chat_info where app_id = " + chatroomlist.get(cnt[0]).getApp_id() + "';",
+                                new SDBManager.OnSelect() {
+                                    @Override
+                                    public void onSelect(Cursor cursor) {
+                                        title = cursor.getString(5);
+                                    }
+
+                                    @Override
+                                    public void onComplete(int cnt) {
+                                        connectSockJS();
+                                    }
+
+                                    @Override
+                                    public void onErrorHandler(Exception e) {
+
+                                    }
+                                });
                             }
 
                             @Override

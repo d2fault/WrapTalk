@@ -1,4 +1,4 @@
-package com.wraptalk.wraptalk.utils;
+package com.wraptalk.wraptalk.services;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -9,16 +9,16 @@ import android.util.Log;
 /**
  * Created by jiyoungpark on 15. 11. 10..
  */
-public class DBManager extends SQLiteOpenHelper {
+public class SDBManager extends SQLiteOpenHelper {
 
-    static DBManager g_this;
+    static SDBManager g_this;
 
-    public DBManager(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
+    public SDBManager(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);
         g_this = this;
     }
 
-    public static DBManager getInstance() {
+    public static SDBManager getInstance() {
         if(g_this == null)
             Log.e("DBManager", "Instance NULL");
         return g_this;
