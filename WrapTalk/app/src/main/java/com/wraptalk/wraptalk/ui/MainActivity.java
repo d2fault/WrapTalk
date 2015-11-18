@@ -13,10 +13,12 @@ import android.support.v7.widget.Toolbar;
 import com.wraptalk.wraptalk.R;
 import com.wraptalk.wraptalk.services.ChattingService;
 import com.wraptalk.wraptalk.services.TaskWatchService;
+import com.wraptalk.wraptalk.utils.BackPressCloseHandler;
 
 
 public class MainActivity extends AppCompatActivity {
 
+    private BackPressCloseHandler backPressCloseHandler;
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
     private TabLayout tabLayout;
@@ -25,6 +27,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        backPressCloseHandler = new BackPressCloseHandler(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -75,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
-            }
+            }d
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
@@ -84,6 +88,11 @@ public class MainActivity extends AppCompatActivity {
 
         startService(new Intent(MainActivity.this, TaskWatchService.class));
         startService(new Intent(MainActivity.this, ChattingService.class));
+    }
+
+    @Override
+    public void onBackPressed() {
+        backPressCloseHandler.onBackPressed();
     }
 
     /**
