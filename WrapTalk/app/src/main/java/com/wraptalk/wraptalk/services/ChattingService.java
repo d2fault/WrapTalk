@@ -738,6 +738,7 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
         } else if (v.getBackground() == bt4.getBackground()) {  // 수정모드 보기모드
             controlChatView();
         } else if (v.getBackground() == bt5.getBackground()) {  // 앱 종료
+            sockJS.closeSession();
             stopSelf();
         } else if (v.getBackground() == mColorButton.getBackground()) {
             Log.i("color", "color");
