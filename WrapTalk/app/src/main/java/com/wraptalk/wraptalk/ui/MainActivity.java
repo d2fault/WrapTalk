@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
-            }d
+            }
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
