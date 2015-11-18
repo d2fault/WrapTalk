@@ -1,7 +1,7 @@
  ####이 프로젝트는 SockJS를 이용한 안드로이드 채팅 어플리케이션입니다. 당신은 휴대폰 어디에서나 채팅을 할 수 있습니다. 우리는 당신의 채팅을 위해 반투명한 채팅창을 제공하고, 챗해드를 제공합니다. 
  
  
-#####Server Github : https://github.com/soma-6th/recipe-api-ml
+#####Server Github : https://github.com/hbyullee/ggamtalk
 
 ######우리는 SockJS를 사용하기 위해 Vert.x를 이용한 Java Server Program을 사용했습니다. The project is connected with this server. You can easily set up the project.
 
