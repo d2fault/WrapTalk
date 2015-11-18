@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
                         getSupportActionBar().setTitle("My Channels");
                         break;
                     case 2:
-                        getSupportActionBar().setTitle("Setting");
+                        getSupportActionBar().setTitle("AppSetting");
                         break;
                 }
                 mViewPager.setCurrentItem(tab.getPosition());

@@ -264,7 +264,7 @@ public class ColorPicker extends Dialog implements SeekBar.OnSeekBarChangeListen
 
         colorView.setBackgroundColor(Color.rgb(red, green, blue));
 
-        //Setting the inputText hex color
+        //AppSetting the inputText hex color
         codHex.setText(String.format("%02x%02x%02x", red, green, blue));
 
     }

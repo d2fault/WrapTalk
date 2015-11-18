@@ -20,6 +20,7 @@ import com.wraptalk.wraptalk.R;
 import com.wraptalk.wraptalk.adapter.SettingAdapter;
 import com.wraptalk.wraptalk.models.SettingData;
 import com.wraptalk.wraptalk.models.UserInfo;
+import com.wraptalk.wraptalk.utils.AppSetting;
 import com.wraptalk.wraptalk.utils.OnRequest;
 import com.wraptalk.wraptalk.utils.RequestUtil;
 
@@ -217,7 +218,7 @@ public class TabSettingFragment extends android.support.v4.app.Fragment {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
-                String url = "http://133.130.113.101:7010/user/deleteUser?token=" + UserInfo.getInstance().token + "&user_pw=" + UserInfo.getInstance().password;
+                String url = AppSetting.REST_URL + "/user/deleteUser?token=" + UserInfo.getInstance().token + "&user_pw=" + UserInfo.getInstance().password;
                 RequestUtil.asyncHttp(url, new OnRequest() {
                     @Override
                     public void onSuccess(String url, byte[] receiveData) {

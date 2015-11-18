@@ -20,6 +20,7 @@ import com.wraptalk.wraptalk.R;
 import com.wraptalk.wraptalk.adapter.CategoryAdapter;
 import com.wraptalk.wraptalk.models.CategoryData;
 import com.wraptalk.wraptalk.models.UserInfo;
+import com.wraptalk.wraptalk.utils.AppSetting;
 import com.wraptalk.wraptalk.utils.DBManager;
 import com.wraptalk.wraptalk.utils.OnRequest;
 import com.wraptalk.wraptalk.utils.RequestUtil;
@@ -141,7 +142,7 @@ public class TabCategoryFragment extends android.support.v4.app.Fragment {
             public void onClick(DialogInterface dialog, int which) {
 
                 EditText editText = (EditText) dialogView.findViewById(R.id.editText_nickname);
-                String url = "http://133.130.113.101:7010/user/registApp?" +
+                String url = AppSetting.REST_URL + "/user/registApp?" +
                         "token=" + UserInfo.getInstance().token + "&app_id=" + source.get(position).getApp_id() +
                         "&user_nick=";
                 try {

@@ -14,6 +14,7 @@ import com.wraptalk.wraptalk.R;
 import com.wraptalk.wraptalk.adapter.MyChannelAdapter;
 import com.wraptalk.wraptalk.models.ChannelData;
 import com.wraptalk.wraptalk.models.UserInfo;
+import com.wraptalk.wraptalk.utils.AppSetting;
 import com.wraptalk.wraptalk.utils.DBManager;
 import com.wraptalk.wraptalk.utils.OnRequest;
 import com.wraptalk.wraptalk.utils.RequestUtil;
@@ -69,7 +70,7 @@ public class TabMyChannelFragment extends android.support.v4.app.Fragment {
 
     public void getMyChannelList() {
 
-        String url = "http://133.130.113.101:7010/user/listChannel?" + "token=" + UserInfo.getInstance().token;
+        String url = AppSetting.REST_URL + "/user/listChannel?" + "token=" + UserInfo.getInstance().token;
 
         RequestUtil.asyncHttp(url, new OnRequest() {
             @Override

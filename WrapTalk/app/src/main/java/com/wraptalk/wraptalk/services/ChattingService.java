@@ -39,6 +39,7 @@ import com.wraptalk.wraptalk.adapter.ChatListAdapter;
 import com.wraptalk.wraptalk.models.ChannelData;
 import com.wraptalk.wraptalk.models.UserInfo;
 import com.wraptalk.wraptalk.ui.MainActivity;
+import com.wraptalk.wraptalk.utils.AppSetting;
 
 import org.java_websocket.exceptions.WebsocketNotConnectedException;
 import org.json.JSONException;
@@ -262,7 +263,7 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
             Log.i("ConectJS", "Connect");
             chatdata.clear();
             adapter.notifyDataSetChanged();
-            sockJS = new SockJSImpl("http://133.130.113.101:7030/eventbus", channelId, nickname, title) {
+            sockJS = new SockJSImpl(AppSetting.SOCKJS_URL + "/eventbus", channelId, nickname, title) {
                 //channel_
                 @Override
                 public void parseSockJS(String s) {

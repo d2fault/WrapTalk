@@ -23,6 +23,7 @@ import com.wraptalk.wraptalk.R;
 import com.wraptalk.wraptalk.models.QuickstartPreferences;
 import com.wraptalk.wraptalk.models.UserInfo;
 import com.wraptalk.wraptalk.services.RegistrationIntentService;
+import com.wraptalk.wraptalk.utils.AppSetting;
 import com.wraptalk.wraptalk.utils.DBManager;
 import com.wraptalk.wraptalk.utils.OnRequest;
 import com.wraptalk.wraptalk.utils.RequestUtil;
@@ -207,7 +208,7 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     private void autoLogin() {
-        String url = "http://133.130.113.101:7010/user/login?" +
+        String url = AppSetting.REST_URL + "/user/login?" +
                 "user_id=" + UserInfo.getInstance().email + "&user_pw=" + UserInfo.getInstance().password + "&device_id=" + UserInfo.getInstance().deviceId + "&gcm_id=" + UserInfo.getInstance().gcmKey;
         RequestUtil.asyncHttp(url, new OnRequest() {
             @Override

@@ -28,6 +28,7 @@ import android.widget.Toast;
 import com.gc.materialdesign.views.ButtonRectangle;
 import com.wraptalk.wraptalk.R;
 import com.wraptalk.wraptalk.models.UserInfo;
+import com.wraptalk.wraptalk.utils.AppSetting;
 import com.wraptalk.wraptalk.utils.DBManager;
 import com.wraptalk.wraptalk.utils.OnRequest;
 import com.wraptalk.wraptalk.utils.RequestUtil;
@@ -153,7 +154,7 @@ public class SignInActivity extends AppCompatActivity implements LoaderCallbacks
             // perform the user login attempt.
             showProgress(true);
 
-            String url = "http://133.130.113.101:7010/user/login?" +
+            String url = AppSetting.REST_URL + "/user/login?" +
                 "user_id=" + email + "&user_pw=" + password + "&device_id=" + UserInfo.getInstance().deviceId + "&gcm_id=" + UserInfo.getInstance().gcmKey;
             RequestUtil.asyncHttp(url, new OnRequest() {
                 @Override

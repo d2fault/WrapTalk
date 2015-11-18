@@ -26,6 +26,7 @@ import android.widget.Toast;
 
 import com.wraptalk.wraptalk.R;
 import com.wraptalk.wraptalk.models.UserInfo;
+import com.wraptalk.wraptalk.utils.AppSetting;
 import com.wraptalk.wraptalk.utils.OnRequest;
 import com.wraptalk.wraptalk.utils.RequestUtil;
 
@@ -153,7 +154,7 @@ public class SignUpActivity extends AppCompatActivity implements LoaderManager.L
 
 
             String body = "user_id=" + email + "&user_pw=" + password1 + "&device_id=" + UserInfo.getInstance().deviceId + "&gcm_id=" + UserInfo.getInstance().gcmKey;
-            String url = "http://133.130.113.101:7010/user/join?" + body;
+            String url = AppSetting.REST_URL + "/user/join?" + body;
             RequestUtil.asyncHttp(url, new OnRequest() {
                 @Override
                 public void onSuccess(String url, byte[] receiveData) {

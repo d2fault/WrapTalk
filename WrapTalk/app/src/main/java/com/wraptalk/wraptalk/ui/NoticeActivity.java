@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import com.wraptalk.wraptalk.adapter.NoticeAdapter;
 import com.wraptalk.wraptalk.R;
+import com.wraptalk.wraptalk.utils.AppSetting;
 import com.wraptalk.wraptalk.utils.RequestUtil;
 import com.wraptalk.wraptalk.models.NoticeData;
 import com.wraptalk.wraptalk.models.UserInfo;
@@ -59,7 +60,7 @@ public class NoticeActivity extends AppCompatActivity {
     }
 
     private void getNoticecList() {
-        String url = "http://133.130.113.101:7010/user/getNoticeList?" + "token=" + UserInfo.getInstance().token;
+        String url = AppSetting.REST_URL + "/user/getNoticeList?" + "token=" + UserInfo.getInstance().token;
 
         RequestUtil.asyncHttp(url, new OnRequest() {
             @Override

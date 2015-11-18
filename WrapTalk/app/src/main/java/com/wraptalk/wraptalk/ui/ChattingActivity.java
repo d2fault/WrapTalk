@@ -23,6 +23,7 @@ import com.wraptalk.wraptalk.R;
 import com.wraptalk.wraptalk.adapter.ChattingAdapter;
 import com.wraptalk.wraptalk.models.UserInfo;
 import com.wraptalk.wraptalk.services.SockJSImpl;
+import com.wraptalk.wraptalk.utils.AppSetting;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -234,7 +235,7 @@ public class ChattingActivity extends AppCompatActivity {
 
     private void connectSockJS() {
         try {
-            sockJS = new SockJSImpl("http://133.130.113.101:7030/eventbus", channel_id, nickname, title) {
+            sockJS = new SockJSImpl(AppSetting.SOCKJS_URL + "/eventbus", channel_id, nickname, title) {
                 //channel_
                 @Override
                 public void parseSockJS(String s) {

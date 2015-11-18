@@ -29,6 +29,7 @@ import com.wraptalk.wraptalk.R;
 import com.wraptalk.wraptalk.adapter.ChannelAdapter;
 import com.wraptalk.wraptalk.models.ChannelData;
 import com.wraptalk.wraptalk.models.UserInfo;
+import com.wraptalk.wraptalk.utils.AppSetting;
 import com.wraptalk.wraptalk.utils.DBManager;
 import com.wraptalk.wraptalk.utils.OnRequest;
 import com.wraptalk.wraptalk.utils.RequestUtil;
@@ -159,7 +160,7 @@ public class ChannelActivity extends AppCompatActivity {
 
         builder.setView(dialogView);
 
-        url = "http://133.130.113.101:7010/user/registNick?token=" + UserInfo.getInstance().token + "&app_id=" + app_id;
+        url = AppSetting.REST_URL + "/user/registNick?token=" + UserInfo.getInstance().token + "&app_id=" + app_id;
 
         if(packageInfo != null) {
             builder.setIcon(packageManager.getApplicationIcon(packageInfo.applicationInfo));
@@ -362,7 +363,7 @@ public class ChannelActivity extends AppCompatActivity {
         channelData.setChannel_name(editText_channelName.getText().toString());
         /* url 생성 */
 
-        url = "http://133.130.113.101:7010/user/makeChannel?token=" + UserInfo.getInstance().token + "&app_id=" + app_id;
+        url = AppSetting.REST_URL + "/user/makeChannel?token=" + UserInfo.getInstance().token + "&app_id=" + app_id;
 
         try {
             url += "&channel_name=" + URLEncoder.encode(channelData.getChannel_name(), "utf-8") + "&public_onoff=";
@@ -394,7 +395,7 @@ public class ChannelActivity extends AppCompatActivity {
 
     private void getChannelList() {
 
-        url = "http://133.130.113.101:7010/user/appChannel?" + "token=" + UserInfo.getInstance().token + "&app_id=" + app_id;
+        url = AppSetting.REST_URL + "/user/appChannel?" + "token=" + UserInfo.getInstance().token + "&app_id=" + app_id;
 
         RequestUtil.asyncHttp(url, new OnRequest() {
             @Override
@@ -470,7 +471,7 @@ public class ChannelActivity extends AppCompatActivity {
 
     private void searchChannel() {
 
-        String url = "http://133.130.113.101:7010/user/appChannel?" + "token=" + UserInfo.getInstance().token + "&channel_name=" + searchKeyword + "&app_id=" + app_id;
+        String url = AppSetting.REST_URL + "/user/appChannel?" + "token=" + UserInfo.getInstance().token + "&channel_name=" + searchKeyword + "&app_id=" + app_id;
 
         RequestUtil.asyncHttp(url, new OnRequest() {
             @Override

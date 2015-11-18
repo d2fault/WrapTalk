@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.wraptalk.wraptalk.R;
 import com.wraptalk.wraptalk.models.ChannelData;
 import com.wraptalk.wraptalk.models.UserInfo;
+import com.wraptalk.wraptalk.utils.AppSetting;
 import com.wraptalk.wraptalk.utils.ChannelHolder;
 import com.wraptalk.wraptalk.utils.DBManager;
 import com.wraptalk.wraptalk.utils.OnRequest;
@@ -203,7 +204,7 @@ public class ChannelAdapter extends BaseAdapter{
 
         String url = null;
         try {
-            url = "http://133.130.113.101:7010/user/joinChannel?token=" + UserInfo.getInstance().token + "&channel_id=" + data.getChannel_id() +
+            url = AppSetting.REST_URL + "/user/joinChannel?token=" + UserInfo.getInstance().token + "&channel_id=" + data.getChannel_id() +
                     "&user_nick=" + URLEncoder.encode(nickname, "utf-8");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
@@ -238,7 +239,7 @@ public class ChannelAdapter extends BaseAdapter{
     }
 
     private void quitChannel(final ChannelData data) {
-        String url = "http://133.130.113.101:7010/user/withdrawChannel?token=" + UserInfo.getInstance().token + "&channel_id=" + data.getChannel_id();
+        String url = AppSetting.REST_URL + "/user/withdrawChannel?token=" + UserInfo.getInstance().token + "&channel_id=" + data.getChannel_id();
         RequestUtil.asyncHttp(url, new OnRequest() {
             @Override
             public void onSuccess(String url, byte[] receiveData) {

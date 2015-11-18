@@ -20,6 +20,7 @@ import android.widget.Toast;
 import com.wraptalk.wraptalk.R;
 import com.wraptalk.wraptalk.models.GameListData;
 import com.wraptalk.wraptalk.models.UserInfo;
+import com.wraptalk.wraptalk.utils.AppSetting;
 import com.wraptalk.wraptalk.utils.DBManager;
 import com.wraptalk.wraptalk.utils.GameListHolder;
 import com.wraptalk.wraptalk.utils.OnRequest;
@@ -157,7 +158,7 @@ public class GameListAdapter extends BaseAdapter {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
-                String url = "http://133.130.113.101:7010/user/registApp?" +
+                String url = AppSetting.REST_URL + "/user/registApp?" +
                         "token=" + UserInfo.getInstance().token + "&app_id=" + data.getPackageInfo().applicationInfo.packageName +
                         "&user_nick=";
                 if (editText.getText().toString().isEmpty()) {
@@ -218,7 +219,7 @@ public class GameListAdapter extends BaseAdapter {
         builder.setPositiveButton("SUB", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                String url = "http://133.130.113.101:7010/user/removeApp?" +
+                String url = AppSetting.REST_URL + "/user/removeApp?" +
                         "token=" + UserInfo.getInstance().token + "&app_id=" + data.getPackageInfo().applicationInfo.packageName;
 
                 RequestUtil.asyncHttp(url, new OnRequest() {
