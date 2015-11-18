@@ -170,8 +170,6 @@ public class SignInActivity extends AppCompatActivity implements LoaderCallbacks
                             SharedPreferences pref = getSharedPreferences("app", MODE_PRIVATE);
                             SharedPreferences.Editor editor = pref.edit();
                             editor.putString("token", token);
-                            editor.putString("email", email);
-                            editor.putString("password", password);
                             editor.commit();
                             UserInfo.getInstance().token = token;
                         } else {

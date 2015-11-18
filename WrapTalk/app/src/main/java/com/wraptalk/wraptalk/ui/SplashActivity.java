@@ -70,7 +70,7 @@ public class SplashActivity extends AppCompatActivity {
                     Intent intent = new Intent(SplashActivity.this, SignInActivity.class);
                     startActivity(intent);
                     finish();
-                }else{
+                } else{
                     autoLogin();
                 }
             }
@@ -238,7 +238,10 @@ public class SplashActivity extends AppCompatActivity {
             @Override
             public void onFail(String url, String error) {
                 if (error == null) {
-                    Toast.makeText(getApplicationContext(), "서버와의 접속이 원활하지 않습니다.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "로그인 세션이 만료되었습니다.", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(SplashActivity.this, SignInActivity.class);
+                    startActivity(intent);
+                    finish();
                 }
             }
         });
