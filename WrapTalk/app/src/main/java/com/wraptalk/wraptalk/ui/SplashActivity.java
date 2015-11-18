@@ -55,7 +55,16 @@ public class SplashActivity extends AppCompatActivity {
         Init();
         getInstanceIdToken();
 
+        SharedPreferences pref = getSharedPreferences("app", MODE_PRIVATE);
+        String token = pref.getString("token", "");
+        String email = pref.getString("email", "");
+        String pw = pref.getString("password", "");
+
+
+
         UserInfo.getInstance().deviceId = tm.getDeviceId();
+        UserInfo.getInstance().email = email;
+        UserInfo.getInstance().password = pw;
 
         Handler hd = new Handler();
 

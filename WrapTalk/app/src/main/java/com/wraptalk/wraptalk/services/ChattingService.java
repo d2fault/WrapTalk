@@ -110,6 +110,7 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
     private com.wraptalk.wraptalk.ui.ColorPicker cp;
     private int nickColor = -1;
     private RelativeLayout chatheadLayout;
+    private boolean animationDone = true;
 
     private String nickname = "닉넴";
     private String title;
@@ -476,7 +477,7 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
                     Log.i("json", obj.toString());
                     try {
                         sockJS.send(obj);
-                    }catch (WebsocketNotConnectedException e){
+                    } catch (WebsocketNotConnectedException e) {
                         chatdata.add("메시지 전송에 실패했습니다.");
                         adapter.notifyDataSetChanged();
                     }
@@ -626,6 +627,7 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
         Log.i("XY", mParams.x + "/" + mParams.y + "/" + showView);
 
         if (!showView) {
+            animationDone = false;
             mParamsbt1.x = mParams.x;
             mParamsbt2.x = mParams.x;
             mParamsbt3.x = mParams.x;
@@ -642,8 +644,8 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
             mWindowManager.addView(bt4, mParamsbt4);
             mWindowManager.addView(bt5, mParamsbt5);
 
-            showButton = true;
             showView = true;
+            showButton = true;
 
             n1 = new Runnable() {
                 @Override
@@ -665,15 +667,24 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
                     mParamsbt5.x = (int) (mParams.x + (mImageView.getWidth() / 2) + side * animationR * Math.cos(Math.toRadians(80)));
                     mParamsbt5.y = (int) (mParams.y + animationR * Math.sin(Math.toRadians(80)));
                     time1 += 1;
-                    mWindowManager.updateViewLayout(bt1, mParamsbt1);
-                    mWindowManager.updateViewLayout(bt2, mParamsbt2);
-                    mWindowManager.updateViewLayout(bt3, mParamsbt3);
-                    mWindowManager.updateViewLayout(bt4, mParamsbt4);
-                    mWindowManager.updateViewLayout(bt5, mParamsbt5);
+                    try {
+                        mWindowManager.updateViewLayout(bt1, mParamsbt1);
+                        mWindowManager.updateViewLayout(bt2, mParamsbt2);
+                        mWindowManager.updateViewLayout(bt3, mParamsbt3);
+                        mWindowManager.updateViewLayout(bt4, mParamsbt4);
+                        mWindowManager.updateViewLayout(bt5, mParamsbt5);
+                    } catch (IllegalArgumentException e) {
+                        e.printStackTrace();
+                        time1 = 0;
+                        return;
+                    }
                     //Log.i("jj", mParamsbt1.x + "x1");
                     if (time1 < 11)
                         mHandler.postDelayed(n1, 30);
-                    else time1 = 0;
+                    else {
+                        time1 = 0;
+                    }
+
                 }
             };
 //
@@ -713,13 +724,13 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
             dialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
             dialog.show();
         } else if (v.getBackground() == bt3.getBackground()) {  // 최소화 최대화
-            if(showchat > 0){
+            if (showchat > 0) {
                 mWindowManager.removeView(chatheadView);
                 showchat = 0;
                 showView = false;
                 bt3.setBackground(getResources().getDrawable(R.drawable.openicon));
                 buttonClick();
-            }else{
+            } else {
                 controlChatView();
                 bt3.setBackground(getResources().getDrawable(R.drawable.closeicon));
             }
@@ -781,7 +792,7 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
             mEditText.setVisibility(View.VISIBLE);
             mColorButton.setVisibility(View.VISIBLE);
             showchat++;
-        } else if(showchat == 2) {
+        } else if (showchat == 2) {
             mParams2 = new WindowManager.LayoutParams(
                     WindowManager.LayoutParams.MATCH_PARENT,
                     WindowManager.LayoutParams.MATCH_PARENT,
@@ -802,7 +813,7 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
             mColorButton.setVisibility(View.INVISIBLE);
             showchat--;
 
-        }else{
+        } else {
 
             mParams2 = new WindowManager.LayoutParams(
                     WindowManager.LayoutParams.MATCH_PARENT,
@@ -831,14 +842,14 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
             e.printStackTrace();
         }
         changeChannel(task);
-        if(task.equals("com.supercell.clashofclans")) {
+        if (task.equals("com.supercell.clashofclans")) {
             //mImageView.setBackground(getResources().getDrawable(R.drawable.cocchat));
             mImageView.setImageResource(R.drawable.cocchat);
             mParams.x = 1174;
             mParams.y = 213;
             mWindowManager.removeView(mImageView);
             mWindowManager.addView(mImageView, mParams);
-        }else{
+        } else {
             mImageView.setImageResource(R.drawable.chathead);
         }
         //channelId = "96da751edc63634c4c5958ce90e6a889ee1cdda247d92a978f340336791d5fb3";
@@ -847,7 +858,6 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
 
         return true;
     }
-
 
 
     public void ExitMessage() {
@@ -869,7 +879,7 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
         }
         try {
             sockJS.send(log);
-        }catch (WebsocketNotConnectedException e){
+        } catch (WebsocketNotConnectedException e) {
             e.printStackTrace();
             Log.e("ExitMessage", "Fail");
         }
