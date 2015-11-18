@@ -14,10 +14,14 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SeekBar;
+import android.widget.Toast;
 
 import com.wraptalk.wraptalk.R;
 import com.wraptalk.wraptalk.adapter.SettingAdapter;
 import com.wraptalk.wraptalk.models.SettingData;
+import com.wraptalk.wraptalk.models.UserInfo;
+import com.wraptalk.wraptalk.utils.OnRequest;
+import com.wraptalk.wraptalk.utils.RequestUtil;
 
 import java.util.ArrayList;
 
@@ -212,6 +216,22 @@ public class TabSettingFragment extends android.support.v4.app.Fragment {
         builder.setPositiveButton("탈퇴하기", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+
+                String url = "http://133.130.113.101:7010/user/deleteUser?token=" + UserInfo.getInstance().token + "&user_pw=" + UserInfo.getInstance().password;
+                RequestUtil.asyncHttp(url, new OnRequest() {
+                    @Override
+                    public void onSuccess(String url, byte[] receiveData) {
+                        Toast.makeText(getActivity(), "성공적으로 탈퇴하셨습니다.", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(getActivity(), SignInActivity.class);
+                        startActivity(intent);
+                        getActivity().finish();
+                    }
+
+                    @Override
+                    public void onFail(String url, String error) {
+                        Toast.makeText(getActivity(), "error : 탈퇴하지 못하셨습니다.", Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         });
 
