@@ -32,6 +32,7 @@
         android:icon="@mipmap/ic_ggamtalk"
         android:label="@string/app_name"
         android:supportsRtl="true"
+        android:largeHeap="true"
         android:theme="@style/AppTheme" >
 
 

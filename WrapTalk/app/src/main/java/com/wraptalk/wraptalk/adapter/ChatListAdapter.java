@@ -81,6 +81,7 @@ public class ChatListAdapter extends BaseAdapter {
             textView.setText("ERROR");
             textView.append(" ");
         }
+        textView.append("   ");
         return row;
     }
 }
