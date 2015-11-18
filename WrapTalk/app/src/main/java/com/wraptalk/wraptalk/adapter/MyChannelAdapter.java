@@ -35,7 +35,7 @@ public class MyChannelAdapter extends BaseAdapter {
     public void setSource(ArrayList<ChannelData> source){
 
         this.source = source;
-        notifyDataSetChanged();
+        MyChannelAdapter.this.notifyDataSetChanged();
     }
 
     @Override
