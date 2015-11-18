@@ -227,7 +227,7 @@ public class ChannelAdapter extends BaseAdapter{
                 DBManager.getInstance().write(query);
 
                 Collections.sort(source);
-                notifyDataSetChanged();
+                ChannelAdapter.this.notifyDataSetChanged();
             }
 
             @Override

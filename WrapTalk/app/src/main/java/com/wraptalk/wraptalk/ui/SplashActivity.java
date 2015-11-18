@@ -185,6 +185,14 @@ public class SplashActivity extends AppCompatActivity {
 
         /*To filter out System apps*/
         for(PackageInfo pi : tempPackageList) {
+
+            query = String.format("INSERT INTO app_info (app_id, app_name, user_nick, check_registration) VALUES ('%s', '%s', '%s', %d)",
+                    pi.packageName, packageManager.getApplicationLabel(pi.applicationInfo).toString(), "", 0);
+
+            try {
+                DBManager.getInstance().write(query);
+            } catch (RuntimeException e) {
+            }/*
             boolean flag = isSystemPackage(pi);
             if(!flag) {
                 query = String.format("INSERT INTO app_info (app_id, app_name, user_nick, check_registration) VALUES ('%s', '%s', '%s', %d)",
@@ -193,7 +201,7 @@ public class SplashActivity extends AppCompatActivity {
                     DBManager.getInstance().write(query);
                 } catch (RuntimeException e) {
                 }
-            }
+            }*/
         }
     }
 
