@@ -130,6 +130,7 @@ public class ChannelActivity extends AppCompatActivity {
             @Override
             public void onSelect(Cursor cursor) {
                 nickname = cursor.getString(cursor.getColumnIndex("user_nick"));
+                Log.e("nickname", nickname);
             }
 
             @Override

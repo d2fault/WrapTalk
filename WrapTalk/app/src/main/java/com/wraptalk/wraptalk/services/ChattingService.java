@@ -33,14 +33,12 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.wraptalk.wraptalk.R;
 import com.wraptalk.wraptalk.adapter.ChatListAdapter;
 import com.wraptalk.wraptalk.models.ChannelData;
 import com.wraptalk.wraptalk.models.UserInfo;
 import com.wraptalk.wraptalk.ui.MainActivity;
-
 
 import org.java_websocket.exceptions.WebsocketNotConnectedException;
 import org.json.JSONException;
@@ -132,7 +130,6 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
         chatheadView = (RelativeLayout) inflater.inflate(R.layout.chathead, null);
         pref = getSharedPreferences("chathead", MODE_PRIVATE);
 
-
         initView();
         initParams();
 
@@ -168,8 +165,6 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
         SDBManager.getInstance().select("SELECT * FROM app_info where app_id = '" + taskWatchService.getCurrentTask() + "';", new SDBManager.OnSelect() {
             @Override
             public void onSelect(Cursor cursor) {
-                //cursor.moveToFirst();
-                //cursor.moveToPosition(cursor.getCount());
                 Log.e("DB", cursor.getInt(3) + "");
                 Log.e("device_id", cursor.getString(1));
                 title = cursor.getString(1);
@@ -864,7 +859,7 @@ public class ChattingService extends Service implements View.OnClickListener, Ta
             JSONObject body = new JSONObject();
             body.put("type", "log");
             body.put("channel_id", channelId);
-            body.put("sender_id", "aaa");
+            body.put("sender_id", UserInfo.getInstance().email);
             body.put("sender_nick", nickname);
             body.put("msg", "님이 퇴장하셨습니다.");
             log.put("body", body);
