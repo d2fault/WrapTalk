@@ -221,6 +221,10 @@ public class TabSettingFragment extends android.support.v4.app.Fragment {
                 RequestUtil.asyncHttp(url, new OnRequest() {
                     @Override
                     public void onSuccess(String url, byte[] receiveData) {
+                        SharedPreferences pref = getActivity().getSharedPreferences("app", Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = pref.edit();
+                        editor.putString("token", "");
+                        editor.commit();
                         Toast.makeText(getActivity(), "성공적으로 탈퇴하셨습니다.", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(getActivity(), SignInActivity.class);
                         startActivity(intent);
