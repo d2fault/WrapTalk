@@ -1,9 +1,9 @@
- ####이 프로젝트는 SockJS를 이용한 안드로이드 채팅 어플리케이션입니다. 당신은 휴대폰 어디에서나 채팅을 할 수 있습니다. 우리는 당신의 채팅을 위해 반투명한 채팅창을 제공하고, 챗해드를 제공합니다. 
+#### 이 프로젝트는 SockJS를 이용한 안드로이드 채팅 어플리케이션입니다. 당신은 휴대폰 어디에서나 채팅을 할 수 있습니다. 우리는 당신의 채팅을 위해 반투명한 채팅창을 제공하고, 챗해드를 제공합니다.
  
  
-#####Server Github : https://github.com/hbyullee/ggamtalk
+##### Server Github : https://github.com/hbyullee/ggamtalk
 
-######우리는 SockJS를 사용하기 위해 Vert.x를 이용한 Java Server Program을 사용했습니다. The project is connected with this server. You can easily set up the project.
+###### 우리는 SockJS를 사용하기 위해 Vert.x를 이용한 Java Server Program을 사용했습니다. The project is connected with this server. You can easily set up the project.
 
 
 	//util/AppSetting.java
@@ -18,24 +18,24 @@
 
 
 
-###SockJS Chat on Activity
+### SockJS Chat on Activity
 ![Chat](https://cloud.githubusercontent.com/assets/8899510/11249234/08dd980c-8e69-11e5-9bc7-6edd5594aa7f.jpeg)
 
 
-###Chathead
+### Chathead
 ![Chat](https://cloud.githubusercontent.com/assets/8899510/11249333/84dce41c-8e69-11e5-8720-de1ae58b57db.png)
 
 
-###SockJS Chat on Chathead Service
+### SockJS Chat on Chathead Service
 ![Chat](https://cloud.githubusercontent.com/assets/8899510/11249241/0deb1374-8e69-11e5-87fb-44800895f35f.png)
 
 
-###With COC (We provide optimized icon on the app.)
+### With COC (We provide optimized icon on the app.)
 ![coc chat](https://cloud.githubusercontent.com/assets/8899510/11249222/f8fc9dac-8e68-11e5-99f1-4731516ab72d.jpeg)
 
 
-#License and Copyright Notices
-##This application is licensed under Apache License, Version 2.0
+# License and Copyright Notices
+## This application is licensed under Apache License, Version 2.0
 
 
 	Copyright 2015 Software Maestro 6th GGamTalk Team
